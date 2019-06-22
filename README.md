@@ -1,4 +1,4 @@
-# Project - Footbalize
+# Project - Footballize
 
 ## Type - Football Gathering System
 
