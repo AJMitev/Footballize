@@ -41,5 +41,6 @@ The project also supports Administration. Administrators have all rights a Regul
   - City (Entity)
   - StartingAt (DateTime)
   - Duration (TimeSpan)
+  - Game Format (Enumeration - SixPlusOne, FivePlusOne, FourPlusOne, ElevenPlayers)
   - Team Home (list of User)
   - Team Away (list of User)
