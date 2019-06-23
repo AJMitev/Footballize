@@ -21,10 +21,11 @@ The project also supports Administration. Administrators have all rights a Regul
   - Full Name (string)
   - Phone Number (string)
   - Playpals (list of User)
+  - PlayedGames (list of Events)
 ### Country
   - Id (string)
   - Name (string)
-  - Cities (list of City)
+  - Provinces (list of Province)
 ### Province
   - Id (string)
   - Name (string)
@@ -38,21 +39,21 @@ The project also supports Administration. Administrators have all rights a Regul
 ### Town
   - Id (string)
   - Name (string)
-  - Playfields (list of Playfield)
   - Manicipality (ref Manicipality)
-  - Adresses (list of Address)
+  - Addresses (list of Address)
 ### Address
   - Id (string)
-  - Text (string)
+  - Street (string)
+  - Number (int)
   - Town (ref Town)
-### Playfiled
+### Pitch
   - Id (string)
   - Name (string)
   - Address (ref Address)
 ### Event
   - Id (string)
   - Name (string)
-  - Playfield (ref Playfield)
+  - Pitch (ref Pitch)
   - StartingAt (DateTime)
   - Duration (TimeSpan)
   - Game Format (Enumeration - SixPlusOne, FivePlusOne, FourPlusOne, ElevenPlayers)
