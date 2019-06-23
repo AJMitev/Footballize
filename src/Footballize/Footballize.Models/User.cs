@@ -1,8 +1,7 @@
-﻿using System;
-
-namespace Footballize.Models
+﻿namespace Footballize.Models
 {
-    public class Class1
+    public class User
     {
+        public string Id { get; set; }
     }
 }
