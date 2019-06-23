@@ -25,20 +25,34 @@ The project also supports Administration. Administrators have all rights a Regul
   - Id (string)
   - Name (string)
   - Cities (list of City)
-### City
+### Province
+  - Id (string)
+  - Name (string)
+  - Country (ref Country)
+  - Municipalities (list of Municipality)
+### Municipality
+  - Id (string)
+  - Name (string)
+  - Province (ref Province)
+  - Towns (list of Town)
+### Town
   - Id (string)
   - Name (string)
   - Playfields (list of Playfield)
+  - Manicipality (ref Manicipality)
+  - Adresses (list of Address)
+### Address
+  - Id (string)
+  - Text (string)
+  - Town (ref Town)
 ### Playfiled
   - Id (string)
   - Name (string)
-  - Country (Entity)
-  - City (Entity)
+  - Address (ref Address)
 ### Event
   - Id (string)
   - Name (string)
-  - Country (Entity)
-  - City (Entity)
+  - Playfield (ref Playfield)
   - StartingAt (DateTime)
   - Duration (TimeSpan)
   - Game Format (Enumeration - SixPlusOne, FivePlusOne, FourPlusOne, ElevenPlayers)
