@@ -4,12 +4,9 @@
 
 ## Description
 
-Footballize is a simple Football Gathering System project which allows its users to easily organize a football event in their city or take part in an event that has already been created. It is only necessary to register and fill out several details.
+Footballize is a simple Football Gathering System project which allows its users to easily organize a football event in their city or take a part of one that has already been created.
 
-Guest Users can register, login to their accounts and view created events.
-Regular Users can view and create events. Also they can save other users to their "Playpals" list and invite them to participate when createing a new event.
-
-The project also supports Administration. Administrators have all rights a Regular User has. They can also take away Users permission to publish new event if he breaks the laws. Administrators can Add and Remove system information like add new city or playfield.
+Guest User can register, login to his account and view created events. Regular User can view all events, also he can create, edit and delete his own events. Also can save other users to his "Playpals" list and invite them to participate when createing a new match. The project also supports Administration. Administrator have all rights that a Regular User has. He can delete and edit all events in the system. He can also take away Users permission to publish a new event, if he break a law. Administrators can Add and Remove system information like add new city or playfield.
 
 ## Entities
 
