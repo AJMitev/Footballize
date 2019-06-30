@@ -17,6 +17,7 @@ Guest User can register, login to his account and view created events. Regular U
   - Email (string)
   - Full Name (string)
   - Phone Number (string)
+  - IsBannded (bool)
   - Playpals (list of User)
   - PlayedGames (list of Events)
 ### Country
