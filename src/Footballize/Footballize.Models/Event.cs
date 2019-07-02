@@ -18,7 +18,7 @@
         public TimeSpan Duration { get; set; }
         public Pitch Pitch { get; set; }
         public string PitchId { get; set; }
-        public GameFormat GameFormat { get; set; }
+        public TeamFormat TeamFormat { get; set; }
 
         public ICollection<User> HomeTeam { get; set; }
         public ICollection<User> AwayTeam { get; set; }
