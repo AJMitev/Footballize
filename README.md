@@ -51,6 +51,7 @@ Guest User can register, login to his account and view created events. Regular U
 ### Event
   - Id (string)
   - Name (string)
+  - Description (string)
   - Pitch (ref Pitch)
   - StartingAt (DateTime)
   - Duration (TimeSpan)
