@@ -11,11 +11,4 @@
         public Playfield Playfield { get; set; }
         public string PlayfieldId { get; set; }
     }
-
-    public class Playfield
-    {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public Address Address { get; set; }
-    }
 }
