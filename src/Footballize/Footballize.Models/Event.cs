@@ -14,6 +14,7 @@
 
         public string Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
         public DateTime StartingAt { get; set; }
         public TimeSpan Duration { get; set; }
         public Pitch Pitch { get; set; }

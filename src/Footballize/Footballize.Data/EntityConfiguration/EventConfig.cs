@@ -14,6 +14,11 @@
                 .HasColumnType("NVARCHAR(30)")
                 .HasMaxLength(30)
                 .IsUnicode();
+
+            builder.Property(e => e.Description)
+                .HasColumnType("NVARCHAR(300)")
+                .HasMaxLength(300)
+                .IsUnicode();
         }
     }
 }
