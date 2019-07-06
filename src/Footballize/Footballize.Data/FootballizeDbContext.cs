@@ -1,37 +1,44 @@
 ﻿namespace Footballize.Data
 {
+    using System;
+    using System.Linq;
+    using System.Reflection;
     using EntityConfiguration;
     using Footballize.Models;
+    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
+    using Models.Interfaces;
 
-    public class FootballizeDbContext : DbContext
+    public class FootballizeDbContext : IdentityDbContext<User,Role,string>
     {
-        public DbSet<User> Users { get; set; }
+        private static readonly MethodInfo SetIsDeletedQueryFilterMethod =
+            typeof(FootballizeDbContext).GetMethod(
+                nameof(SetIsDeletedQueryFilter),
+                BindingFlags.NonPublic | BindingFlags.Static);
+
+        public FootballizeDbContext(DbContextOptions<FootballizeDbContext> options)
+            : base(options)
+        {
+        }
+
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<Event> Events { get; set; }
+        public DbSet<EventUser> EventUsers { get; set; }
         public DbSet<Municipality> Municipalities { get; set; }
         public DbSet<Pitch> Pitches { get; set; }
         public DbSet<Province> Provinces { get; set; }
         public DbSet<Playfield> Playfields { get; set; }
         public DbSet<Town> Towns { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer(DbSettings.ConnectionString);
-            }
-
-            base.OnConfiguring(optionsBuilder);
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.ApplyConfiguration(new AddressConfig());
             modelBuilder.ApplyConfiguration(new CountryConfig());
             modelBuilder.ApplyConfiguration(new EventConfig());
+            modelBuilder.ApplyConfiguration(new EventUserConfig());
             modelBuilder.ApplyConfiguration(new MunicipalityConfig());
             modelBuilder.ApplyConfiguration(new PitchConfig());
             modelBuilder.ApplyConfiguration(new PlayfieldConfig());
@@ -39,7 +46,61 @@
             modelBuilder.ApplyConfiguration(new TownConfig());
             modelBuilder.ApplyConfiguration(new UserConfig());
 
-            base.OnModelCreating(modelBuilder);
+            EntityIndexesConfiguration.Configure(modelBuilder);
+            var entityTypes = modelBuilder.Model.GetEntityTypes().ToList();
+
+            // Set global query filter for not deleted entities only
+            var deletableEntityTypes = entityTypes
+                .Where(et => et.ClrType != null && typeof(IDeletableEntity).IsAssignableFrom(et.ClrType));
+            foreach (var deletableEntityType in deletableEntityTypes)
+            {
+                var method = SetIsDeletedQueryFilterMethod.MakeGenericMethod(deletableEntityType.ClrType);
+                method.Invoke(null, new object[] { modelBuilder });
+            }
+
+            // Disable cascade delete
+            var foreignKeys = entityTypes
+                .SelectMany(e => e.GetForeignKeys().Where(f => f.DeleteBehavior == DeleteBehavior.Cascade));
+            foreach (var foreignKey in foreignKeys)
+            {
+                foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+        }
+
+        public override int SaveChanges() => this.SaveChanges(true);
+
+        public override int SaveChanges(bool acceptAllChangesOnSuccess)
+        {
+            this.ApplyAuditInfoRules();
+            return base.SaveChanges(acceptAllChangesOnSuccess);
+        }
+
+        private void ApplyAuditInfoRules()
+        {
+            var changedEntries = this.ChangeTracker
+                .Entries()
+                .Where(e =>
+                    e.Entity is IAuditInfo &&
+                    (e.State == EntityState.Added || e.State == EntityState.Modified));
+
+            foreach (var entry in changedEntries)
+            {
+                var entity = (IAuditInfo)entry.Entity;
+                if (entry.State == EntityState.Added && entity.CreatedOn == default)
+                {
+                    entity.CreatedOn = DateTime.UtcNow;
+                }
+                else
+                {
+                    entity.ModifiedOn = DateTime.UtcNow;
+                }
+            }
+        }
+
+        private static void SetIsDeletedQueryFilter<T>(ModelBuilder builder)
+            where T : class, IDeletableEntity
+        {
+            builder.Entity<T>().HasQueryFilter(e => !e.IsDeleted);
         }
     }
 }

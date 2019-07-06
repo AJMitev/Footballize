@@ -13,6 +13,7 @@
             builder.Property(e => e.Name)
                 .HasColumnType("NVARCHAR(50)")
                 .HasMaxLength(50)
+                .IsRequired()
                 .IsUnicode();
         }
     }

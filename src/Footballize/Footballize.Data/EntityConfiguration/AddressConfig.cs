@@ -14,6 +14,10 @@
                 .HasMaxLength(300)
                 .IsRequired();
 
+            builder.Property(x => x.Number)
+                .HasMaxLength(3)
+                .IsRequired();
+
             builder.HasOne(a => a.Town)
                 .WithMany(t => t.Addresses)
                 .HasForeignKey(a => a.TownId);

@@ -9,6 +9,12 @@
         public void Configure(EntityTypeBuilder<Pitch> builder)
         {
             builder.HasKey(x => x.Id);
+
+            builder.Property(x => x.Name)
+                .HasMaxLength(50)
+                .HasColumnType("NVARCHAR(50)")
+                .IsRequired()
+                .IsUnicode();
         }
     }
 }
