@@ -1,16 +1,16 @@
 ﻿namespace Footballize.Models
 {
     using System.Collections.Generic;
+    using Abstracts;
 
-    public class Country
+    public class Country : BaseDeletableModel<string>
     {
         public Country()
         {
             this.Provinces = new HashSet<Province>();
         }
 
-        public string Id { get; set; }
         public string Name { get; set; }
-        public ICollection<Province> Provinces { get; set; }
+        public virtual ICollection<Province> Provinces { get; set; }
     }
 }

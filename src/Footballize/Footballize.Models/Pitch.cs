@@ -1,9 +1,11 @@
 ﻿namespace Footballize.Models
 {
-    public class Pitch
+    using Abstracts;
+
+    public class Pitch : BaseDeletableModel<string>
     {
-        public string Id { get; set; }
         public string Name { get; set; }
-        public Address Address { get; set; }
+        public virtual Address Address { get; set; }
+        public string AddresId { get; set; }
     }
 }

@@ -1,10 +1,11 @@
 ﻿namespace Footballize.Models
 {
-    public class Playfield
+    using Abstracts;
+
+    public class Playfield : BaseDeletableModel<string>
     {
-        public string Id { get; set; }
         public string Name { get; set; }
-        public Address Address { get; set; }
+        public virtual Address Address { get; set; }
         public string AddressId { get; set; }
     }
 }
