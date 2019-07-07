@@ -1,0 +1,119 @@
+﻿@page
+@model LoginModel
+
+@{
+    Layout = "~/Views/Shared/_AuthenticationLayout.cshtml";
+    ViewData["Title"] = "Log in";
+
+
+}
+@*<form id="account" method="post">
+    <div class="card-header card-header-primary text-center">
+        <h4 class="card-title">@ViewData["Title"]</h4>
+        <div class="social-line">
+            <a href="#pablo" class="btn btn-just-icon btn-link">
+                <i class="fa fa-facebook-square"></i>
+            </a>
+            <a href="#pablo" class="btn btn-just-icon btn-link">
+                <i class="fa fa-twitter"></i>
+            </a>
+            <a href="#pablo" class="btn btn-just-icon btn-link">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </div>
+    </div>
+        <p class="description text-center">Use a local account to log in.</p>
+        <div class="form-group">
+            <label asp-for="Input.Email"></label>
+            <input asp-for="Input.Email" class="form-control" />
+            <span asp-validation-for="Input.Email" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Input.Password"></label>
+            <input asp-for="Input.Password" class="form-control" />
+            <span asp-validation-for="Input.Password" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <label asp-for="Input.RememberMe">
+                    <input asp-for="Input.RememberMe" />
+                    @Html.DisplayNameFor(m => m.Input.RememberMe)
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Log in</button>
+        </div>
+        <div class="form-group">
+            <p>
+                <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+            </p>
+            <p>
+                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+            </p>
+        </div>*@
+
+
+
+
+<form class="form" id="account" method="post">
+    <div class="card-header card-header-primary text-center">
+        <h4 class="card-title">@ViewData["Title"]</h4>
+        <div class="social-line">
+            <a href="#pablo" class="btn btn-just-icon btn-link">
+                <i class="fa fa-facebook-square"></i>
+            </a>
+            <a href="#pablo" class="btn btn-just-icon btn-link">
+                <i class="fa fa-twitter"></i>
+            </a>
+            <a href="#pablo" class="btn btn-just-icon btn-link">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </div>
+    </div>
+    <p class="description text-center">Please enter your credentials.</p>
+    <div class="card-body">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="material-icons">mail</i>
+                </span>
+            </div>
+            <input asp-for="Input.Email" class="form-control" placeholder="Email..." />
+        </div>
+        <div class="text-center"><span asp-validation-for="Input.Email" class="text-danger"></span></div>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="material-icons">lock_outline</i>
+                </span>
+            </div>
+            <input asp-for="Input.Password" class="form-control" placeholder="Password..." />
+        </div>
+        <div class="text-center"><span asp-validation-for="Input.Password" class="text-danger"></span></div>
+        <div >
+            <div class="form-check">
+                <label asp-for="Input.RememberMe" class="form-check-label">
+                    <input asp-for="Input.RememberMe" class="form-check-input"> Remember Me
+                    <span class="form-check-sign">
+                        <span class="check"></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-primary">Log In<div class="ripple-container"></div></button>
+        </div>
+
+        <div class="footer text-center">
+            <p class="text-gray text-center">Forgot your password? <a asp-area="Identity" asp-page="/Account/ForgotPassword" class="text-success">Ask for new</a></p>
+            <p class="text-gray text-center">Don't Have an Account? <a asp-area="Identity" asp-page="/Account/Register" class="text-success">Register.</a></p>
+        </div>
+    </div>
+
+</form>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

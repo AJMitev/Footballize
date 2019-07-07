@@ -42,7 +42,7 @@
                 .AddDefaultTokenProviders()
                 .AddDefaultUI(UIFramework.Bootstrap4);
 
-            services.AddMvc()
+            services.AddMvc(options => options.Filters.Add(new  AutoValidateAntiforgeryTokenAttribute()))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // Identity stores

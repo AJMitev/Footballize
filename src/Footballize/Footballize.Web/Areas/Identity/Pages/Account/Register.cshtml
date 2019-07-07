@@ -1,0 +1,89 @@
+﻿@page
+@model RegisterModel
+@{
+
+    Layout = "~/Views/Shared/_AuthenticationLayout.cshtml";
+    ViewData["Title"] = "Register";
+}
+
+
+
+
+<form class="form" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+    <div class="card-header card-header-primary text-center">
+        <h4 class="card-title">@ViewData["Title"]</h4>
+        <div class="social-line">
+            <a href="#pablo" class="btn btn-just-icon btn-link">
+                <i class="fa fa-facebook-square"></i>
+            </a>
+            <a href="#pablo" class="btn btn-just-icon btn-link">
+                <i class="fa fa-twitter"></i>
+            </a>
+            <a href="#pablo" class="btn btn-just-icon btn-link">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </div>
+    </div>
+    <p class="description text-center">Create a new account.</p>
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="card-body">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="material-icons">face</i>
+                </span>
+            </div>
+            <input asp-for="Input.FirstName" class="form-control" placeholder="First Name..." />
+        </div>
+        <div class="text-center"><span asp-validation-for="Input.FirstName" class="text-danger"></span></div>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="material-icons">face</i>
+                </span>
+            </div>
+            <input asp-for="Input.LastName" class="form-control" placeholder="Last Name..." />
+        </div>
+        <div class="text-center"><span asp-validation-for="Input.LastName" class="text-danger"></span></div>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="material-icons">mail</i>
+                </span>
+            </div>
+            <input asp-for="Input.Email" class="form-control" placeholder="Email..." />
+        </div>
+        <div class="text-center"><span asp-validation-for="Input.Email" class="text-danger"></span></div>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="material-icons">lock_outline</i>
+                </span>
+            </div>
+            <input asp-for="Input.Password" class="form-control" placeholder="Password..." />
+        </div>
+        <div class="text-center"><span asp-validation-for="Input.Password" class="text-danger"></span></div>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="material-icons">lock_outline</i>
+                </span>
+            </div>
+            <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="Confirm Password..." />
+        </div>
+        <div class="text-center"><span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span></div>
+        <div class="text-center">
+            <div class="text-center">
+                <button class="btn btn-primary">Register<div class="ripple-container"></div></button>
+            </div>
+        </div>
+        <div class="footer text-center">
+            <span class="text-gray text-center">Already have an account? <a asp-area="Identity" asp-page="/Account/Login" class="text-success">Log in.</a></span>
+        </div>
+    </div>
+</form>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

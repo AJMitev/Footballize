@@ -1,0 +1,18 @@
+#information{
+    margin-top: 2rem
+}
+
+div.tab-content{
+    margin-left: 1rem
+}
+
+
+span.bmd-form-group > div.input-group {
+    padding-bottom: 0px !important;
+    margin: 13px 0 0 0 !important;
+}
+
+
+div> div.form-check {
+    padding-top: 3px !important;
+}
