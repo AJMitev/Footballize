@@ -10,7 +10,7 @@
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     </environment>
-    <environment exclude="Development">
+    <environment excludre="Development">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-fallback-test-class="sr-only"
               asp-fallback-test-property="position" asp-fallback-test-value="absolute" crossorigin="anonymous"
@@ -20,6 +20,8 @@
     <link rel="stylesheet" type="text/css"
           href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <!-- Material Kit CSS -->
     <link href="~/css/material-kit.css?v=2.0.5" rel="stylesheet" />
     <!-- Custom CSS -->
@@ -65,17 +67,17 @@
             </div>
         </div>
     </div>
-<div class="main main-raised">
-    
-    <partial name="_CookieConsentPartial" />
-    <div class="container">
-        <div class="row">
+    <div class="main main-raised">
+
+        <partial name="_CookieConsentPartial" />
+        <div class="container">
+            <div class="row">
+            </div>
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
         </div>
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
     </div>
-</div>
     <footer class="footer footer-default">
         <div class="container">
             <nav class="float-left">
@@ -115,6 +117,11 @@
 
     @RenderSection("Scripts", required: false)
 
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    
     <!--   Core JS Files   -->
     <script src="~/js/core/jquery.min.js" type="text/javascript"></script>
     <script src="~/js/core/popper.min.js" type="text/javascript"></script>
@@ -128,6 +135,7 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
     <!-- Control Center for Material Kit: parallax effects, scripts for the example pages etc -->
     <script src="~/js/material-kit.js?v=2.0.5" type="text/javascript"></script>
+    <script src="~/js/site.js" type="text/javascript"></script>
     <script>
         $(document).ready(function () {
             //init DateTimePickers
@@ -136,16 +144,6 @@
             // Sliders Init
             materialKit.initSliders();
         });
-
-
-        function scrollToDownload() {
-            if ($('.section-download').length != 0) {
-                $("html, body").animate({
-                    scrollTop: $('.section-download').offset().top
-                }, 1000);
-            }
-        }
-
     </script>
 </body>
 </html>
