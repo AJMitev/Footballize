@@ -10,7 +10,6 @@
         public Event()
         {
             this.Status = GameStatus.Registration;
-
             this.Players = new HashSet<EventUser>();
         }
 

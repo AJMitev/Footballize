@@ -16,3 +16,19 @@ span.bmd-form-group > div.input-group {
 div> div.form-check {
     padding-top: 3px !important;
 }
+
+#main-header {
+    height: 60vh;
+    background-position: center center;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    display: flex;
+    align-items: center;
+}
+
+
+.table th, .table td {
+    vertical-align: middle;
+}
