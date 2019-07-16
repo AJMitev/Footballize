@@ -5,3 +5,8 @@
 div.tab-content{
     margin-left: 1rem
 }
+
+
+.table th, .table td{
+    vertical-align: middle;
+}

@@ -18,7 +18,8 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-color-on-scroll navbar-transparent fixed-top navbar-expand-lg bg-info" color-on-scroll="100">
+  <nav class="navbar navbar-color-on-scroll navbar-transparent fixed-top navbar-expand-lg bg-info"
+    color-on-scroll="100">
     <div class="container">
       <div class="navbar-translate">
         <a class="navbar-brand" href="/">
@@ -43,10 +44,19 @@
               <i class="material-icons">create</i> Register
             </a>
           </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="material-icons">apps</i> Entities
-            </a>
+          <li class="dropdown nav-item hide">
+            <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="true"><i
+                class="material-icons">apps</i> Entities</a>
+            <div class="dropdown-menu hide">
+              <h6 class="dropdown-header">Dropdown header</h6>
+              <a href="#pablo" class="dropdown-item">Action</a>
+              <a href="#pablo" class="dropdown-item">Another action</a>
+              <a href="#pablo" class="dropdown-item">Something else here</a>
+              <div class="dropdown-divider"></div>
+              <a href="#pablo" class="dropdown-item">Separated link</a>
+              <div class="dropdown-divider"></div>
+              <a href="#pablo" class="dropdown-item">One more separated link</a>
+            </div>
           </li>
         </ul>
       </div>
@@ -123,96 +133,156 @@
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-12">
-            <h3>
-              <small>Tabs with Icons on Card</small>
-            </h3>
-            <!-- Tabs with icons on Card -->
-            <div class="card card-nav-tabs">
-              <div class="card-header  card-header-info">
-                <!-- colors: "header-primary", "header-info", "header-success", "header-warning", "header-danger" -->
-                <div class="nav-tabs-navigation">
-                  <div class="nav-tabs-wrapper">
-                    <ul class="nav nav-tabs" data-tabs="tabs">
-                      <li class="nav-item">
-                        <a class="nav-link active show" href="#profile" data-toggle="tab">
-                          <i class="material-icons">face</i> Profile
-                          <div class="ripple-container"></div></a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#messages" data-toggle="tab">
-                          <i class="material-icons">chat</i> Messages
-                          <div class="ripple-container"></div></a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#settings" data-toggle="tab">
-                          <i class="material-icons">build</i> Settings
-                          <div class="ripple-container"></div></a>
-                      </li>
-                    </ul>
+        <div class="section-fluid" id="carousel">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-8 mr-auto ml-auto">
+                <!-- Carousel Card -->
+                <div class="card card-raised card-carousel">
+                  <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="3000">
+                    <ol class="carousel-indicators">
+                      <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                      <li data-target="#carouselExampleIndicators" data-slide-to="1" class=""></li>
+                      <li data-target="#carouselExampleIndicators" data-slide-to="2" class=""></li>
+                    </ol>
+                    <div class="carousel-inner">
+                      <div class="carousel-item active">
+                        <img class="d-block w-100" src="./assets/img/bg2.jpg" alt="First slide">
+                        <div class="carousel-caption d-none d-md-block">
+                          <h4>
+                            <i class="material-icons">location_on</i> Yellowstone National Park, United States
+                          </h4>
+                        </div>
+                      </div>
+                      <div class="carousel-item">
+                        <img class="d-block w-100" src="./assets/img/bg3.jpg" alt="Second slide">
+                        <div class="carousel-caption d-none d-md-block">
+                          <h4>
+                            <i class="material-icons">location_on</i> Somewhere Beyond, United States
+                          </h4>
+                        </div>
+                      </div>
+                      <div class="carousel-item">
+                        <img class="d-block w-100" src="./assets/img/bg.jpg" alt="Third slide">
+                        <div class="carousel-caption d-none d-md-block">
+                          <h4>
+                            <i class="material-icons">location_on</i> Yellowstone National Park, United States
+                          </h4>
+                        </div>
+                      </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                      <i class="material-icons">keyboard_arrow_left</i>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                      <i class="material-icons">keyboard_arrow_right</i>
+                      <span class="sr-only">Next</span>
+                    </a>
                   </div>
+
                 </div>
+
+                <!-- End Carousel Card -->
               </div>
-              <div class="card-body ">
-                <div class="tab-content text-center">
-                  <div class="tab-pane active show" id="profile">
-                    <p> I will be the leader of a company that ends up being worth billions of dollars, because I got
-                      the answers. I understand culture. I am the nucleus. I think that’s a responsibility that I have,
-                      to push possibilities, to show people, this is the level that things could be at. I think that’s a
-                      responsibility that I have, to push possibilities, to show people, this is the level that things
-                      could be at. </p>
-                  </div>
-                  <div class="tab-pane" id="messages">
-                    <p> I think that’s a responsibility that I have, to push possibilities, to show people, this is the
-                      level that things could be at. I will be the leader of a company that ends up being worth billions
-                      of dollars, because I got the answers. I understand culture. I am the nucleus. I think that’s a
-                      responsibility that I have, to push possibilities, to show people, this is the level that things
-                      could be at.</p>
-                  </div>
-                  <div class="tab-pane" id="settings">
-                    <p>I think that’s a responsibility that I have, to push possibilities, to show people, this is the
-                      level that things could be at. So when you get something that has the name Kanye West on it, it’s
-                      supposed to be pushing the furthest possibilities. I will be the leader of a company that ends up
-                      being worth billions of dollars, because I got the answers. I understand culture. I am the
-                      nucleus.</p>
-                  </div>
-                </div>
+              <div class="col-md-4">
+                <h1>h1. Bootstrap heading</h1>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                  et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                  aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                  dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+                  officia deserunt mollit anim id est laborum.</p>
               </div>
             </div>
-            <!-- End Tabs with icons on Card -->
           </div>
         </div>
+
+
       </div>
       <div class="section">
         <h2 class="title text-center">Games Avaliable</h2>
         <table class="table">
           <thead>
             <tr>
-              <th scope="col">#</th>
-              <th scope="col">First</th>
-              <th scope="col">Last</th>
-              <th scope="col">Handle</th>
+              <th scope="col">Starting Time</th>
+              <th scope="col">Playfiled</th>
+              <th scope="col">City</th>
+              <th scope="col">Description</th>
+              <th scope="col">Players</th>
+              <th scope="col">Creator</th>
+              <th scope="col">Created On</th>
+              <th scope="col">Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
+              <th scope="row"><span class="align-middle">22:00 @ 27.05.2019</span></th>
+              <td>Optimum</td>
+              <td>Plovdiv</td>
+              <td>Lest Play Togather</td>
+              <td>10/12</td>
+              <td>Bili The Kid</td>
+              <td>11:00AM 27.05.2019</td>
+              <td>
+                  <button class="btn btn-primary btn-fab btn-round">
+                      <i class="material-icons">toc</i>
+                      <div class="ripple-container"></div>
+                    </button>
+                <button class="btn btn-info btn-fab btn-round">
+                  <i class="material-icons">edit</i>
+                  <div class="ripple-container"></div>
+                </button>
+                <button class="btn btn-danger btn-fab btn-round">
+                  <i class="material-icons">delete</i>
+                  <div class="ripple-container"></div>
+                </button>
+              </td>
             </tr>
             <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-              <td>@fat</td>
+              <th scope="row">20:00 @ 27.05.2019</th>
+              <td>Optimum</td>
+              <td>Plovdiv</td>
+              <td>Lest Play Togather</td>
+              <td>10/12</td>
+              <td>Bili The Kid</td>
+              <td>11:00AM 27.05.2019</td>
+              <td>
+                  <button class="btn btn-primary btn-fab btn-round">
+                      <i class="material-icons">toc</i>
+                      <div class="ripple-container"></div>
+                    </button>
+                <button class="btn btn-info btn-fab btn-round">
+                  <i class="material-icons">edit</i>
+                  <div class="ripple-container"></div>
+                </button>
+                <button class="btn btn-danger btn-fab btn-round">
+                  <i class="material-icons">delete</i>
+                  <div class="ripple-container"></div>
+                </button>
+              </td>
             </tr>
             <tr>
-              <th scope="row">3</th>
-              <td>Larry</td>
-              <td>the Bird</td>
-              <td>@twitter</td>
+              <th scope="row">19:00 @ 27.05.2019</th>
+              <td>Atrim Arena</td>
+              <td>Plovdiv</td>
+              <td>Skilled Only!</td>
+              <td><span class="red">4</span>/12</td>
+              <td>Bili The Kid</td>
+              <td>11:00AM 27.05.2019</td>
+              <td>
+                  <button class="btn btn-primary btn-fab btn-round">
+                      <i class="material-icons">toc</i>
+                      <div class="ripple-container"></div>
+                    </button>
+                <button class="btn btn-info btn-fab btn-round">
+                  <i class="material-icons">edit</i>
+                  <div class="ripple-container"></div>
+                </button>
+                <button class="btn btn-danger btn-fab btn-round">
+                  <i class="material-icons">delete</i>
+                  <div class="ripple-container"></div>
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
