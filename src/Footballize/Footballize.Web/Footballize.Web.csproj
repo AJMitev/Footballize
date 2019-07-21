@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Footballize.Data\Footballize.Data.csproj" />
     <ProjectReference Include="..\Footballize.Models\Footballize.Models.csproj" />
+    <ProjectReference Include="..\Footballize.Services\Footballize.Services.csproj" />
   </ItemGroup>
 
 </Project>

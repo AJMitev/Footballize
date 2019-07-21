@@ -11,6 +11,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Data;
     using Footballize.Models;
+    using Services;
 
     public class Startup
     {
@@ -48,6 +49,7 @@
             // Identity stores
             services.AddTransient<IUserStore<User>, FootballizeUserStore>();
             services.AddTransient<IRoleStore<Role>, FootballizeRoleStore>();
+            services.AddTransient<ICountryService, CountryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

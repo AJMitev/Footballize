@@ -1,5 +1,3 @@
-using System;
-
 namespace Footballize.Web.Models
 {
     public class ErrorViewModel
