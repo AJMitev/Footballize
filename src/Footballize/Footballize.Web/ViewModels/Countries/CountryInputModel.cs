@@ -2,8 +2,9 @@
 
 namespace Footballize.Web.Models.Countries
 {
-    public class CountryAddInputModel
+    public class CountryInputModel
     {
+        public string Id { get; set; }
         [Required]
         [MinLength(4)]
         [StringLength(30)]

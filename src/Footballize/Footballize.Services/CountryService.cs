@@ -1,9 +1,10 @@
 ﻿namespace Footballize.Services
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading.Tasks;
     using Data;
+    using Microsoft.EntityFrameworkCore;
     using Models;
 
     public class CountryService : ICountryService
@@ -15,25 +16,45 @@
             this.dbContext = dbContext;
         }
 
-        public async Task<int> AddCountry(Country country)
+        public int AddCountry(Country country)
         {
-           await this.dbContext.Countries.AddAsync(country);
-           return await this.dbContext.SaveChangesAsync();
+            this.dbContext.Countries.Add(country);
+            return this.dbContext.SaveChanges();
         }
 
         public IEnumerable<Country> GetCountries()
         {
-            return this.dbContext.Countries.ToList();
+            return this.dbContext.Countries
+                .Where(x=>!x.IsDeleted)
+                .OrderBy(x=>x.Name)
+                .ToList();
         }
 
-        public async Task<Country> GetCountry(string id)
+        public void UpdateCountry(Country country)
         {
-            return await this.dbContext.Countries.FindAsync(id);
+
+            var entry = this.dbContext.Entry(country);
+            if (entry.State == EntityState.Detached)
+            {
+                this.dbContext.Attach(country);
+            }
+
+            entry.State = EntityState.Modified;
+            this.dbContext.SaveChanges();
         }
 
-        public void RemoveCountry(Country country)
+        public Country GetCountry(string id)
         {
-            this.dbContext.Countries.Remove(country);
+            return  this.dbContext.Countries.Find(id);
+        }
+
+        public void RemoveCountry(string countryId)
+        {
+            var countryToRemove =  this.dbContext.Find<Country>(countryId);
+            countryToRemove.IsDeleted = true;
+            countryToRemove.DeletedOn = DateTime.UtcNow;
+
+            this.dbContext.Countries.Update(countryToRemove);
             this.dbContext.SaveChanges();
         }
     }
