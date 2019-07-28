@@ -1,5 +1,6 @@
 ﻿namespace Footballize.Web
 {
+    using AutoMapper;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.UI;
@@ -11,6 +12,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Data;
     using Footballize.Models;
+    using MappingProfiles;
     using Services;
 
     public class Startup
@@ -42,6 +44,16 @@
                 .AddRoleStore<FootballizeRoleStore>()
                 .AddDefaultTokenProviders()
                 .AddDefaultUI(UIFramework.Bootstrap4);
+            
+            // Auto Mapper Configurations
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new CountryMappingProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
 
             services.AddMvc(options => options.Filters.Add(new  AutoValidateAntiforgeryTokenAttribute()))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

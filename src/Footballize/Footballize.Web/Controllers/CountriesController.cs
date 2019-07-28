@@ -1,32 +1,32 @@
 ﻿namespace Footballize.Web.Controllers
 {
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
+    using AutoMapper;
     using Footballize.Models;
     using Footballize.Services;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Server.IIS.Core;
     using Models.Countries;
 
     public class CountriesController : Controller
     {
+        private readonly IMapper mapper;
         private readonly ICountryService countryService;
 
-        public CountriesController(ICountryService countryService)
+        public CountriesController(IMapper mapper,ICountryService countryService)
         {
+            this.mapper = mapper;
             this.countryService = countryService;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            var countries = this.countryService.GetCountries()
-                .Select(x => new CountriesIndexViewModel
-                {
-                    Name = x.Name,
-                    Id = x.Id
-                });
-
-            return View(countries);
+            var countriesFromDb = this.countryService.GetCountries();
+            var countriesModel = this.mapper.Map<IEnumerable<CountriesIndexViewModel>>(countriesFromDb);
+            
+            return View(countriesModel);
         }
 
         [HttpGet]
@@ -36,19 +36,14 @@
         }
 
         [HttpPost]
-        public IActionResult Add(CountryInputModel model)
+        public async Task<IActionResult> Add(CountryInputModel model)
         {
             if (!ModelState.IsValid)
             {
                 return this.View(model);
             }
 
-            var country = new Country
-            {
-                Name = model.Name
-            };
-
-            this.countryService.AddCountry(country);
+            await this.countryService.AddCountry(this.mapper.Map<Country>(model));
 
             return this.RedirectToAction("Index");
         }
