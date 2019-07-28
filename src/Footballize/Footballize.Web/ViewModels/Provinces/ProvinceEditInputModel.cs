@@ -1,20 +1,18 @@
 ﻿namespace Footballize.Web.ViewModels.Provinces
 {
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using Countries;
     using Footballize.Models;
-    using Microsoft.AspNetCore.Mvc.Rendering;
     using Services.Mapping;
 
-    public class ProvinceAddViewModel : IMapFrom<Province>
+    public class ProvinceEditInputModel : IMapTo<Province>
     {
-        public SelectList Countries { get; set; }
-        [Required]
-        public string CountryId { get; set; }
+        public string Id { get; set; }
         [Required]
         [MinLength(5)]
         [StringLength(75)]
         public string Name { get; set; }
+        [Required]
+        [RegularExpression(@"[({]?[a-fA-F0-9]{8}[-]?([a-fA-F0-9]{4}[-]?){3}[a-fA-F0-9]{12}[})]?")]
+        public string CountryId { get; set; }
     }
 }

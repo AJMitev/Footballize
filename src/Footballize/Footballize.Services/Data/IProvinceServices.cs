@@ -8,5 +8,8 @@
     {
         IEnumerable<TViewModel> GetProvinces<TViewModel>();
         Task CreateProvince(Province province);
+        Task RemoveProvince(string id);
+        TViewModel GetProvince<TViewModel>(string id);
+        Task UpdateProvince(Province province);
     }
 }

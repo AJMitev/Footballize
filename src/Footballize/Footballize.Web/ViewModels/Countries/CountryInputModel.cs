@@ -4,7 +4,7 @@
     using Footballize.Models;
     using Services.Mapping;
 
-    public class CountryInputModel : IMapFrom<Country>
+    public class CountryInputModel : IMapFrom<Country>, IMapTo<Country>
     {
         public string Id { get; set; }
         [Required]

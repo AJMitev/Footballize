@@ -1,6 +1,7 @@
 ﻿namespace Footballize.Web.Controllers
 {
     using System.Threading.Tasks;
+    using AutoMapper;
     using Footballize.Models;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -34,7 +35,7 @@
             var countriesAvailable = this.countryService.GetCountries<CountryNameAndIdViewModel>();
             var model = new ProvinceAddViewModel
             {
-                Countries = new SelectList(countriesAvailable,"Id", "Name")
+                Countries = new SelectList(countriesAvailable, "Id", "Name")
             };
 
 
@@ -42,39 +43,66 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(ProvinceInputModel model)
+        public async Task<IActionResult> Add(ProvinceAddInputModel model)
         {
             if (!ModelState.IsValid)
-              return this.View();
+                return this.View();
 
-            var newProvince = new Province
-            {
-                Name = model.Name,
-                CountryId = model.SelectedCountryId
-            };
+            await this.provinceServices.CreateProvince(Mapper.Map<Province>(model));
 
-            await this.provinceServices.CreateProvince(newProvince);
-
-           return this.RedirectToAction("Index");
+            return this.RedirectToAction("Index");
         }
 
 
         [HttpGet]
         public IActionResult Edit(string id)
         {
-            return this.View();
+            var province = provinceServices.GetProvince<ProvinceEditViewModel>(id);
+            var countriesAvailable = this.countryService.GetCountries<CountryNameAndIdViewModel>();
+            province.Countries = new SelectList(countriesAvailable, "Id", "Name");
+
+            return this.View(province);
         }
 
-        [HttpGet]
-        public IActionResult Delete(string id)
+        [HttpPost]
+        public async Task<IActionResult> Edit(ProvinceEditInputModel model)
         {
-            return this.View();
+            if (!ModelState.IsValid)
+            {
+                return this.NotFound();
+            }
+
+            var province = this.provinceServices.GetProvince<Province>(model.Id);
+
+            province.Name = model.Name;
+            province.CountryId = model.CountryId;
+
+            await this.provinceServices.UpdateProvince(province);
+
+            return this.RedirectToAction("Index");
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(string id)
+        {
+            await this.provinceServices.RemoveProvince(id);
+
+            return this.RedirectToAction("Index");
         }
 
         [HttpGet]
         public IActionResult Details(string id)
         {
-            return this.View();
+            var province = this.provinceServices.GetProvince<ProvinceDetailsViewModel>(id);
+
+
+            if (province == null)
+            {
+                return this.NotFound();
+            }
+
+            return this.View(province);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace Footballize.Web.Controllers
 {
     using System.Threading.Tasks;
+    using AutoMapper;
     using Footballize.Models;
     using Microsoft.AspNetCore.Mvc;
     using Models.Countries;
@@ -36,12 +37,7 @@
             if (!ModelState.IsValid)
                 return this.View(model);
 
-            var newCountry = new Country
-            {
-                Name = model.Name
-            };
-
-            await this.countryService.AddCountry(newCountry);
+            await this.countryService.AddCountry(Mapper.Map<Country>(model));
 
             return this.RedirectToAction("Index");
         }
