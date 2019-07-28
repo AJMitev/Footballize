@@ -3,6 +3,8 @@
     using System;
     using System.Linq;
     using System.Reflection;
+    using System.Threading;
+    using System.Threading.Tasks;
     using EntityConfiguration;
     using Footballize.Models;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -68,6 +70,15 @@
         }
 
         public override int SaveChanges() => this.SaveChanges(true);
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken()) =>
+            this.SaveChangesAsync(true, cancellationToken);
+
+        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())
+        {
+            this.ApplyAuditInfoRules();
+            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        }
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
