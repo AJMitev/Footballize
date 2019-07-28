@@ -61,6 +61,11 @@ namespace Footballize.Data.Migrations
 
                     b.Property<bool>("IsDeleted");
 
+                    b.Property<string>("IsoCode")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(5)")
+                        .HasMaxLength(5);
+
                     b.Property<DateTime?>("ModifiedOn");
 
                     b.Property<string>("Name")
@@ -140,36 +145,6 @@ namespace Footballize.Data.Migrations
                     b.HasIndex("IsDeleted");
 
                     b.ToTable("EventUsers");
-                });
-
-            modelBuilder.Entity("Footballize.Models.Municipality", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("CreatedOn");
-
-                    b.Property<DateTime?>("DeletedOn");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<DateTime?>("ModifiedOn");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("NVARCHAR(30)")
-                        .HasMaxLength(30)
-                        .IsUnicode(true);
-
-                    b.Property<string>("ProvinceId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IsDeleted");
-
-                    b.HasIndex("ProvinceId");
-
-                    b.ToTable("Municipalities");
                 });
 
             modelBuilder.Entity("Footballize.Models.Pitch", b =>
@@ -301,19 +276,19 @@ namespace Footballize.Data.Migrations
 
                     b.Property<DateTime?>("ModifiedOn");
 
-                    b.Property<string>("MunicipalityId");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("NVARCHAR(30)")
                         .HasMaxLength(30)
                         .IsUnicode(true);
 
+                    b.Property<string>("ProvinceId");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IsDeleted");
 
-                    b.HasIndex("MunicipalityId");
+                    b.HasIndex("ProvinceId");
 
                     b.ToTable("Towns");
                 });
@@ -510,13 +485,6 @@ namespace Footballize.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("Footballize.Models.Municipality", b =>
-                {
-                    b.HasOne("Footballize.Models.Province", "Province")
-                        .WithMany("Municipalities")
-                        .HasForeignKey("ProvinceId");
-                });
-
             modelBuilder.Entity("Footballize.Models.Pitch", b =>
                 {
                     b.HasOne("Footballize.Models.Address", "Address")
@@ -540,9 +508,9 @@ namespace Footballize.Data.Migrations
 
             modelBuilder.Entity("Footballize.Models.Town", b =>
                 {
-                    b.HasOne("Footballize.Models.Municipality", "Municipality")
+                    b.HasOne("Footballize.Models.Province", "Province")
                         .WithMany("Towns")
-                        .HasForeignKey("MunicipalityId");
+                        .HasForeignKey("ProvinceId");
                 });
 
             modelBuilder.Entity("Footballize.Models.User", b =>

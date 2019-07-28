@@ -10,7 +10,7 @@
         {
             builder.HasKey(x => x.Id);;
 
-            builder.HasMany(p => p.Municipalities)
+            builder.HasMany(p => p.Towns)
                 .WithOne(m => m.Province);
 
             builder.Property(p => p.Name)

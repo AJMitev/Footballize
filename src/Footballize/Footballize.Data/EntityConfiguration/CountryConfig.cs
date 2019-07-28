@@ -18,6 +18,11 @@
                 .HasMaxLength(30)
                 .IsRequired()
                 .IsUnicode();
+
+            builder.Property(e => e.IsoCode)
+                .HasColumnType("VARCHAR(5)")
+                .HasMaxLength(5)
+                .IsRequired();
         }
     }
 }

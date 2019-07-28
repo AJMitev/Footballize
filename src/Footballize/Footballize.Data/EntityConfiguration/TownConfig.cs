@@ -10,9 +10,9 @@
         {
             builder.HasKey(x => x.Id);
 
-            builder.HasOne(e => e.Municipality)
+            builder.HasOne(e => e.Province)
                 .WithMany(e => e.Towns)
-                .HasForeignKey(e => e.MunicipalityId);
+                .HasForeignKey(e => e.ProvinceId);
 
             builder.HasMany(e => e.Addresses)
                 .WithOne(e => e.Town);

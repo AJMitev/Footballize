@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Footballize.Data.Migrations
 {
-    public partial class InitializeDb : Migration
+    public partial class InitializeData : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -70,7 +70,8 @@ namespace Footballize.Data.Migrations
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
                     DeletedOn = table.Column<DateTime>(nullable: true),
-                    Name = table.Column<string>(type: "NVARCHAR(30)", maxLength: 30, nullable: false)
+                    Name = table.Column<string>(type: "NVARCHAR(30)", maxLength: 30, nullable: false),
+                    IsoCode = table.Column<string>(type: "VARCHAR(5)", maxLength: 5, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -207,7 +208,7 @@ namespace Footballize.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Municipalities",
+                name: "Towns",
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
@@ -220,34 +221,11 @@ namespace Footballize.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Municipalities", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Municipalities_Provinces_ProvinceId",
-                        column: x => x.ProvinceId,
-                        principalTable: "Provinces",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Towns",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    DeletedOn = table.Column<DateTime>(nullable: true),
-                    Name = table.Column<string>(type: "NVARCHAR(30)", maxLength: 30, nullable: false),
-                    MunicipalityId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
                     table.PrimaryKey("PK_Towns", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Towns_Municipalities_MunicipalityId",
-                        column: x => x.MunicipalityId,
-                        principalTable: "Municipalities",
+                        name: "FK_Towns_Provinces_ProvinceId",
+                        column: x => x.ProvinceId,
+                        principalTable: "Provinces",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -464,16 +442,6 @@ namespace Footballize.Data.Migrations
                 column: "IsDeleted");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Municipalities_IsDeleted",
-                table: "Municipalities",
-                column: "IsDeleted");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Municipalities_ProvinceId",
-                table: "Municipalities",
-                column: "ProvinceId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Pitches_AddressId",
                 table: "Pitches",
                 column: "AddressId");
@@ -509,9 +477,9 @@ namespace Footballize.Data.Migrations
                 column: "IsDeleted");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Towns_MunicipalityId",
+                name: "IX_Towns_ProvinceId",
                 table: "Towns",
-                column: "MunicipalityId");
+                column: "ProvinceId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -554,9 +522,6 @@ namespace Footballize.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Towns");
-
-            migrationBuilder.DropTable(
-                name: "Municipalities");
 
             migrationBuilder.DropTable(
                 name: "Provinces");
