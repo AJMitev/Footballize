@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Data;
     using Microsoft.EntityFrameworkCore;
     using Models;
@@ -16,10 +17,10 @@
             this.dbContext = dbContext;
         }
 
-        public int AddCountry(Country country)
+        public Task<int> AddCountry(Country country)
         {
-            this.dbContext.Countries.Add(country);
-            return this.dbContext.SaveChanges();
+            this.dbContext.Countries.AddAsync(country);
+            return this.dbContext.SaveChangesAsync();
         }
 
         public IEnumerable<Country> GetCountries()

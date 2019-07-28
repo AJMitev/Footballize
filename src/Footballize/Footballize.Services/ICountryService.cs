@@ -6,7 +6,7 @@
 
     public interface ICountryService
     {
-        int AddCountry(Country country);
+        Task<int> AddCountry(Country country);
         void RemoveCountry(string countryId);
         Country GetCountry(string id);
         IEnumerable<Country> GetCountries();
