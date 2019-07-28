@@ -1,5 +1,6 @@
 ﻿namespace Footballize.Web
 {
+    using System.Reflection;
     using AutoMapper;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Identity;
@@ -11,9 +12,13 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Data;
+    using Data.Repositories;
     using Footballize.Models;
     using MappingProfiles;
+    using Models;
     using Services;
+    using Services.Data;
+    using Services.Mapping;
 
     public class Startup
     {
@@ -46,13 +51,14 @@
                 .AddDefaultUI(UIFramework.Bootstrap4);
             
             // Auto Mapper Configurations
-            var mappingConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new CountryMappingProfile());
-            });
+            //var mappingConfig = new MapperConfiguration(mc =>
+            //{
+            //    mc.AddProfile(new CountryMappingProfile());
+            //});
 
-            IMapper mapper = mappingConfig.CreateMapper();
-            services.AddSingleton(mapper);
+            //IMapper mapper = mappingConfig.CreateMapper();
+            //services.AddSingleton(mapper);
+            AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
 
 
             services.AddMvc(options => options.Filters.Add(new  AutoValidateAntiforgeryTokenAttribute()))
@@ -61,6 +67,12 @@
             // Identity stores
             services.AddTransient<IUserStore<User>, FootballizeUserStore>();
             services.AddTransient<IRoleStore<Role>, FootballizeRoleStore>();
+           
+            // Data repositories
+            services.AddScoped(typeof(IDeletableEntityRepository<>), typeof(EfDeletableEntityRepository<>));
+            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+
+            // Application services
             services.AddTransient<ICountryService, CountryService>();
         }
 

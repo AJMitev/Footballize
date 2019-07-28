@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Footballize.Web.Models.Countries
+﻿namespace Footballize.Web.ViewModels.Countries
 {
-    public class CountryInputModel
+    using System.ComponentModel.DataAnnotations;
+    using Footballize.Models;
+    using Services.Mapping;
+
+    public class CountryInputModel : IMapFrom<Country>
     {
         public string Id { get; set; }
         [Required]

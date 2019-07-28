@@ -33,15 +33,14 @@
                         <i class="material-icons">edit</i>
                         <div class="ripple-container"></div>
                     </a>
-
                     <a class="btn btn-danger btn-fab btn-round" asp-action="Delete" asp-route-id="@Model.ToList()[i].Id" data-toggle="tooltip" data-placement="top" title="Delete">
                         <i class="material-icons">delete</i>
                         <div class="ripple-container"></div>
                     </a>
-
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
 <p>We have @Model.Count() countries in total.</p>

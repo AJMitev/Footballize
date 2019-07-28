@@ -1,32 +1,27 @@
 ﻿namespace Footballize.Web.Controllers
 {
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
-    using AutoMapper;
     using Footballize.Models;
-    using Footballize.Services;
     using Microsoft.AspNetCore.Mvc;
     using Models.Countries;
+    using Services.Data;
+    using ViewModels.Countries;
 
     public class CountriesController : Controller
     {
-        private readonly IMapper mapper;
         private readonly ICountryService countryService;
 
-        public CountriesController(IMapper mapper,ICountryService countryService)
+        public CountriesController(ICountryService countryService)
         {
-            this.mapper = mapper;
             this.countryService = countryService;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            var countriesFromDb = this.countryService.GetCountries();
-            var countriesModel = this.mapper.Map<IEnumerable<CountriesIndexViewModel>>(countriesFromDb);
+            var countries = this.countryService.GetCountries<CountriesIndexViewModel>();
             
-            return View(countriesModel);
+            return View(countries);
         }
 
         [HttpGet]
@@ -39,11 +34,14 @@
         public async Task<IActionResult> Add(CountryInputModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return this.View(model);
-            }
 
-            await this.countryService.AddCountry(this.mapper.Map<Country>(model));
+            var newCountry = new Country
+            {
+                Name = model.Name
+            };
+
+            await this.countryService.AddCountry(newCountry);
 
             return this.RedirectToAction("Index");
         }
@@ -51,45 +49,35 @@
         [HttpGet]
         public IActionResult Edit(string id)
         {
-            var dbModel = this.countryService.GetCountry(id);
+            var model = this.countryService.GetCountry<CountryInputModel>(id);
 
-            if (dbModel == null)
-            {
+            if (model == null)
                 this.NotFound();
-            }
-
-
-            var model = new CountryInputModel
-            {
-                Id = dbModel.Id,
-                Name = dbModel.Name
-            };
 
             return this.View(model);
         }
 
         [HttpPost]
-        public IActionResult Edit(CountryInputModel model)
+        public async Task<IActionResult> Edit(CountryInputModel model)
         {
 
             if (!ModelState.IsValid)
-            {
                 return this.View(model);
-            }
 
-
-            var country = this.countryService.GetCountry(model.Id);
+            var country = await this.countryService.GetCountryById(model.Id);
             country.Name = model.Name;
 
-            this.countryService.UpdateCountry(country);
+
+            await this.countryService.UpdateCountry(country);
 
            return this.RedirectToAction("Index");
         }
 
         [HttpGet]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            this.countryService.RemoveCountry(id);
+            await this.countryService.RemoveCountry(id);
+
             return this.RedirectToAction("Index");
         }
     }
