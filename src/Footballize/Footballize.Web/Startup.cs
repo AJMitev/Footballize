@@ -13,6 +13,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Data;
     using Data.Repositories;
+    using Data.Seeding;
     using Footballize.Models;
     using MappingProfiles;
     using Models;
@@ -43,13 +44,21 @@
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<User,Role>(IdentityOptionsProvider.GetIdentityOptions)
+            services.AddIdentity<User, Role>(IdentityOptionsProvider.GetIdentityOptions)
                 .AddEntityFrameworkStores<FootballizeDbContext>()
                 .AddUserStore<FootballizeUserStore>()
                 .AddRoleStore<FootballizeRoleStore>()
                 .AddDefaultTokenProviders()
                 .AddDefaultUI(UIFramework.Bootstrap4);
-            
+
+            // Seed data on application startup
+            using (var serviceScope = services.BuildServiceProvider().CreateScope())
+            {
+                var dbContext = serviceScope.ServiceProvider.GetRequiredService<FootballizeDbContext>();
+                dbContext.Database.Migrate();
+                ApplicationDbContextSeeder.Seed(dbContext, serviceScope.ServiceProvider);
+            }
+
             // Auto Mapper Configurations
             //var mappingConfig = new MapperConfiguration(mc =>
             //{
@@ -61,19 +70,21 @@
             AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
 
 
-            services.AddMvc(options => options.Filters.Add(new  AutoValidateAntiforgeryTokenAttribute()))
+            services.AddMvc(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()))
+                .AddViewOptions(options => options.HtmlHelperOptions.ClientValidationEnabled = true)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // Identity stores
             services.AddTransient<IUserStore<User>, FootballizeUserStore>();
             services.AddTransient<IRoleStore<Role>, FootballizeRoleStore>();
-           
+
             // Data repositories
             services.AddScoped(typeof(IDeletableEntityRepository<>), typeof(EfDeletableEntityRepository<>));
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
             // Application services
             services.AddTransient<ICountryService, CountryService>();
+            services.AddTransient<IProvinceServices, ProvinceService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

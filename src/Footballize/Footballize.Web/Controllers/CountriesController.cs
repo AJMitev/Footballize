@@ -66,6 +66,7 @@
 
             var country = await this.countryService.GetCountryById(model.Id);
             country.Name = model.Name;
+            country.IsoCode = model.IsoCode;
 
 
             await this.countryService.UpdateCountry(country);
@@ -79,6 +80,12 @@
             await this.countryService.RemoveCountry(id);
 
             return this.RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Details(string id)
+        {
+            return this.View();
         }
     }
 }
