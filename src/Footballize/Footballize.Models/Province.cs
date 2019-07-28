@@ -7,12 +7,12 @@
     {
         public Province()
         {
-            this.Municipalities = new HashSet<Municipality>();
+            this.Towns = new HashSet<Town>();
         }
 
         public string Name { get; set; }
         public virtual Country Country { get; set; }
         public string CountryId { get; set; }
-        public virtual ICollection<Municipality> Municipalities { get; set; }
+        public virtual ICollection<Town> Towns { get; set; }
     }
 }
