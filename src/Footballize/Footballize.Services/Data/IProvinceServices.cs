@@ -7,6 +7,7 @@
     public interface IProvinceServices
     {
         IEnumerable<TViewModel> GetProvinces<TViewModel>();
+        IEnumerable<TViewModel> GetProvincesByCountry<TViewModel>(string countryId);
         Task CreateProvince(Province province);
         Task RemoveProvince(string id);
         TViewModel GetProvince<TViewModel>(string id);

@@ -24,6 +24,16 @@
                 .To<TViewModel>();
         }
 
+        public IEnumerable<TViewModel> GetProvincesByCountry<TViewModel>(string countryId)
+        {
+            return this.provincesRepository
+                .All()
+                .Where(p => p.CountryId.Equals(countryId))
+                .OrderBy(p=>p.Name)
+                .ThenByDescending(p=>p.Towns.Count)
+                .To<TViewModel>();
+        }
+
         public async Task CreateProvince(Province province)
         {
             await this.provincesRepository.AddAsync(province);
