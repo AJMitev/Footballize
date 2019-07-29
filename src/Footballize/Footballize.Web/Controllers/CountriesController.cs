@@ -81,7 +81,15 @@
         [HttpGet]
         public IActionResult Details(string id)
         {
-            return this.View();
+            var country = this.countryService.GetCountry<CountryDetailsViewModel>(id);
+
+            if (country == null)
+            {
+                return this.NotFound();
+            }
+
+
+            return this.View(country);
         }
     }
 }
