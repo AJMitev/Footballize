@@ -3,7 +3,7 @@
     ViewData["Title"] = "Edit";
 }
 
-    <h1>Edit Country</h1>
+    <p class="h1">Modify Country: @Model.Name</p>
 
 <h4></h4>
 <hr />
@@ -22,16 +22,19 @@
                 <span asp-validation-for="IsoCode" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Edit" class="btn btn-primary" />
             </div>
         </form>
+    </div>
+    <div class="offset-2 col-md-5">
+        <img src="/img/flags/@(Model.Name.ToLower()).png" width="256"/>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back to all countries.</a>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+}s

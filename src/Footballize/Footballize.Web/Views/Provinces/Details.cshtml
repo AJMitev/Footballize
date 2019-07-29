@@ -7,52 +7,30 @@
     <nav aria-label="breadcrumb" role="navigation">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-            <li class="breadcrumb-item"><a asp-controller="Provinces" asp-action="Index">Province</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Provinces" asp-action="Index">Provinces</a></li>
             <li class="breadcrumb-item active" aria-current="page">Details</li>
         </ol>
     </nav>
 </div>
 
 <div class="row">
-    <div class="col-md-5 offset-md-1">
-        <h1>@Model.Name</h1>
+    <div class="offset-4 col-md-8">
+        <h2 class="title">Towns in province @Model.Name</h2>
     </div>
 </div>
 <div class="row">
-    <div class="offset-md-1 col-md-1 text-center">
-        <img src="/img/flags/@(Model.CountryName.ToLower()).png" width="48px" />
+    <div class="col-md-1 text-center">
+        <img id="country-image" src="/img/flags/@(Model.CountryName.ToLower()).png" width="48px" />
 
     </div>
-    <div class="col-md-3">
-        <h3>@Model.CountryName</h3>
+    <div class="col-md-10">
+        <h2>@Model.Name, @Model.CountryName</h2>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-8">
-        <h2>Towns in @Model.Name Province</h2>
-    </div>
-    <@*div class="col-md-1">
-        <button class="btn btn-primary btn-fab btn-round">
-            <i class="material-icons">add</i>
-            <div class="ripple-container"></div>
-        </button>
-    </div>*@
-</div>
-@*<div class="row">
-        <div class="col-md-12">
-            <ul class="list-group list-group-flush">
-            @foreach (var city in Model.Towns)
-            {
-                <li class="list-group-item">@city.Name</li>
-            }
-            </ul>
-        </div>
-    </div>*@
-
 <div class="row">
     <div class="col-md-12">
         <div class="text-right">
-            <a asp-action="Add">
+            <a asp-controller="Towns" asp-action="Add">
                 <button class="btn btn-primary btn-round">
                     <i class="material-icons">add</i> New Town
                     <div class="ripple-container"></div>
@@ -68,24 +46,24 @@
                 </tr>
             </thead>
             <tbody>
-            
-            @for (int i = 0; i < Model.Towns.Count; i++)
-            {
-                <tr>
-                    <th scope="row">@(i + 1)</th>
-                    <td><a asp-action="Details" asp-route-id="@Model.Towns.ToList()[i].Id">@Model.Towns.ToList()[i].Name</a></td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@Model.Towns.ToList()[i].Id" class="btn btn-info btn-fab btn-round" data-toggle="tooltip" data-placement="top" title="Modify">
-                            <i class="material-icons">edit</i>
-                            <div class="ripple-container"></div>
-                        </a>
-                        <a class="btn btn-danger btn-fab btn-round" asp-action="Delete" asp-route-id="@Model.Towns.ToList()[i].Id" data-toggle="tooltip" data-placement="top" title="Delete">
-                            <i class="material-icons">delete</i>
-                            <div class="ripple-container"></div>
-                        </a>
-                    </td>
-                </tr>
-            }
+
+                @for (int i = 0; i < Model.Towns.Count; i++)
+                {
+                    <tr>
+                        <th scope="row">@(i + 1)</th>
+                        <td><a asp-action="Details" asp-route-id="@Model.Towns.ToList()[i].Id">@Model.Towns.ToList()[i].Name</a></td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@Model.Towns.ToList()[i].Id" class="btn btn-info btn-fab btn-round" data-toggle="tooltip" data-placement="top" title="Modify">
+                                <i class="material-icons">edit</i>
+                                <div class="ripple-container"></div>
+                            </a>
+                            <a class="btn btn-danger btn-fab btn-round" asp-action="Delete" asp-route-id="@Model.Towns.ToList()[i].Id" data-toggle="tooltip" data-placement="top" title="Delete">
+                                <i class="material-icons">delete</i>
+                                <div class="ripple-container"></div>
+                            </a>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
 

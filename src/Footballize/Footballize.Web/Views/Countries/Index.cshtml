@@ -4,7 +4,15 @@
     ViewData["Title"] = "Countries";
 }
 
-<h1>@ViewData["Title"]</h1>
+    <div id="breadcrumb">
+        <nav aria-label="breadcrumb" role="navigation">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Countries</li>
+            </ol>
+        </nav>
+    </div>
+
 
 <div class="text-right">
     <a asp-action="Add">

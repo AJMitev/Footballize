@@ -85,6 +85,7 @@
             // Application services
             services.AddTransient<ICountryService, CountryService>();
             services.AddTransient<IProvinceServices, ProvinceService>();
+            services.AddTransient<ITownService, TownService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

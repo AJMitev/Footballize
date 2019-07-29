@@ -3,10 +3,10 @@
     ViewData["Title"] = "Add";
 }
 
-<h1>Add new province</h1>
+<h1 class="title">Add a new province</h1>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-6">
         <form asp-action="Add">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -26,10 +26,13 @@
             </div>
         </form>
     </div>
+    <div class="col-6">
+        
+    </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back to all provinces.</a>
 </div>
 
 @section Scripts {
