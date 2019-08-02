@@ -1,56 +1,32 @@
 ﻿namespace Footballize.Web.Controllers
 {
-    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using AutoMapper;
-    using Data.Repositories;
     using Footballize.Models;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Rendering;
     using Models.Towns;
     using Services.Data;
-    using ViewModels.Countries;
 
     public class TownsController : Controller
     {
-        private readonly ICountryService countryService;
         private readonly ITownService townService;
 
-        public TownsController(ICountryService countryService, ITownService townService)
+        public TownsController(ITownService townService)
         {
-            this.countryService = countryService;
             this.townService = townService;
         }
 
-        [HttpGet]
-        public IActionResult Index()
-        {
-            return this.View();
-        }
 
         [HttpGet]
-        public IActionResult Details(string id)
+        public IActionResult Add(string countryId, string provinceId)
         {
-            return this.View();
-        }
-
-        [HttpGet]
-        public IActionResult Add()
-        {
-            var model = new TownAddViewModel();
-
-            return this.View(model);
-        }
-
-        private TownAddViewModel GetTownViewModel()
-        {
-            var countries = this.countryService.GetCountries<CountryNameAndIdViewModel>();
-
             var model = new TownAddViewModel
             {
-                Countries = new SelectList(countries, nameof(Country.Id), nameof(Country.Name)),
-                Provinces = null,
+                CountryId = countryId,
+                ProvinceId = provinceId
             };
-            return model;
+
+            return this.View(model);
         }
 
         [HttpPost]
@@ -58,13 +34,43 @@
         {
             if (!ModelState.IsValid)
             {
-                //var model = GetTownViewModel();
-                return this.View(model);
+                return this.View(new TownAddViewModel());
+            }
+
+            var newTown = Mapper.Map<Town>(model);
+            this.townService.AddTown(newTown);
+
+            return this.RedirectToAction("Details", "Provinces", new { id = model.ProvinceId });
+        }
+
+        [HttpGet]
+        public IActionResult Edit(string id)
+        {
+            var townToEdit = this.townService.GetTown<TownEditViewModel>(id);
+
+            return this.View(townToEdit);
+        }
+
+        [HttpPost]
+        public async  Task<IActionResult> Edit(TownEditInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return this.View(Mapper.Map<TownEditViewModel>(model));
             }
 
 
+            await this.townService.UpdateTown(Mapper.Map<Town>(model));
+            return this.RedirectToAction("Details", "Provinces", new { id = model.ProvinceId });
+        }
 
-            return this.RedirectToAction("Index");
+        [HttpGet]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var provinceId = this.townService.GetTown<TownEditViewModel>(id).ProvinceId;
+            await this.townService.DeleteTown(id);
+
+            return this.RedirectToAction("Details", "Provinces", new { id = provinceId });
         }
     }
 }

@@ -11,6 +11,7 @@
     {
         public SelectList Countries { get; set; }
         [Required]
+        [Display(Name = "Country")]
         public string CountryId { get; set; }
         [Required]
         [MinLength(5)]

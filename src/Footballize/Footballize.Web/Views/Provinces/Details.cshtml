@@ -7,8 +7,8 @@
     <nav aria-label="breadcrumb" role="navigation">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-            <li class="breadcrumb-item"><a asp-controller="Provinces" asp-action="Index">Provinces</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Details</li>
+            <li class="breadcrumb-item"><a asp-controller="Countries" asp-action="Details" asp-route-id="@Model.CountryId">Country</a></li>
+            <li class="breadcrumb-item active" aria-current="page"> Province Details</li>
         </ol>
     </nav>
 </div>
@@ -30,7 +30,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="text-right">
-            <a asp-controller="Towns" asp-action="Add">
+            <a asp-controller="Towns" asp-action="Add" asp-route-countryId="@Model.CountryId" asp-route-provinceId="@Model.Id">
                 <button class="btn btn-primary btn-round">
                     <i class="material-icons">add</i> New Town
                     <div class="ripple-container"></div>
@@ -51,13 +51,13 @@
                 {
                     <tr>
                         <th scope="row">@(i + 1)</th>
-                        <td><a asp-action="Details" asp-route-id="@Model.Towns.ToList()[i].Id">@Model.Towns.ToList()[i].Name</a></td>
+                        <td>@Model.Towns.ToList()[i].Name</td>
                         <td>
-                            <a asp-action="Edit" asp-route-id="@Model.Towns.ToList()[i].Id" class="btn btn-info btn-fab btn-round" data-toggle="tooltip" data-placement="top" title="Modify">
+                            <a asp-controller="Towns" asp-action="Edit" asp-route-id="@Model.Towns.ToList()[i].Id" class="btn btn-info btn-fab btn-round" data-toggle="tooltip" data-placement="top" title="Modify">
                                 <i class="material-icons">edit</i>
                                 <div class="ripple-container"></div>
                             </a>
-                            <a class="btn btn-danger btn-fab btn-round" asp-action="Delete" asp-route-id="@Model.Towns.ToList()[i].Id" data-toggle="tooltip" data-placement="top" title="Delete">
+                            <a class="btn btn-danger btn-fab btn-round" asp-controller="Towns" asp-action="Delete" asp-route-id="@Model.Towns.ToList()[i].Id" data-toggle="tooltip" data-placement="top" title="Delete">
                                 <i class="material-icons">delete</i>
                                 <div class="ripple-container"></div>
                             </a>

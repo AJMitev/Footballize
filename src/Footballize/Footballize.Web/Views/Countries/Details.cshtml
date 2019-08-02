@@ -33,28 +33,12 @@
             <i class="material-icons">edit</i> Edit
             <div class="ripple-container"></div>
         </a>
-        <a asp-controller="Provinces" asp-action="Add" class="btn btn-primary btn-round">
+        <a asp-controller="Provinces" asp-action="Add" asp-route-countryId="@Model.Id" class="btn btn-primary btn-round">
             <i class="material-icons">add</i>Province
-            <div class="ripple-container"></div>
-        </a>
-        <a asp-controller="Towns" asp-action="Add" class="btn btn-primary btn-round">
-            <i class="material-icons">add</i>Town
             <div class="ripple-container"></div>
         </a>
     </div>
 </div>
-@*<div class="row">
-    <div class="offset-2 col-md-10 text-right">
-        <a asp-controller="Provinces" asp-action="Add" class="btn btn-primary btn-round">
-            <i class="material-icons">add</i>Province
-            <div class="ripple-container"></div>
-        </a>
-        <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-round">
-            <i class="material-icons">add</i>Town
-            <div class="ripple-container"></div>
-        </a>
-    </div>
-</div>*@
 <div class="row">
     <div class="col-md-12">
         @foreach (var province in @Model.Provinces.OrderBy(p=>p.Name))
@@ -65,7 +49,7 @@
                     <div class="list-group list-inline">
                         @foreach (var town in province.Towns.OrderBy(t=>t.Name))
                         {
-                            <a asp-controller="Towns" asp-action="Details" asp-route-id="@town.Id" class="list-group-item list-inline-item"><i class="material-icons">place</i> @town.Name</a>
+                            <span  class="list-group-item list-inline-item"><i class="material-icons">place</i> @town.Name</span>
                         }
                     </div>
                 </div>

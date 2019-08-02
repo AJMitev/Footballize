@@ -30,7 +30,7 @@
 
         [HttpGet]
 
-        public IActionResult Add()
+        public IActionResult Add(string countryId)
         {
             var countriesAvailable = this.countryService.GetCountries<CountryNameAndIdViewModel>();
             var model = new ProvinceAddViewModel
@@ -50,7 +50,7 @@
 
             await this.provinceServices.CreateProvince(Mapper.Map<Province>(model));
 
-            return this.RedirectToAction("Index");
+            return this.RedirectToAction("Details", "Countries", new { id = model.CountryId});
         }
 
 
@@ -72,12 +72,12 @@
                 return this.NotFound();
             }
 
-            var province = this.provinceServices.GetProvince<Province>(model.Id);
+            //var province = this.provinceServices.GetProvince<Province>(model.Id);
 
-            province.Name = model.Name;
-            province.CountryId = model.CountryId;
+            //province.Name = model.Name;
+            //province.CountryId = model.CountryId;
 
-            await this.provinceServices.UpdateProvince(province);
+            await this.provinceServices.UpdateProvince(Mapper.Map<Province>(model));
 
             return this.RedirectToAction("Index");
         }

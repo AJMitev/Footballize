@@ -11,14 +11,14 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="CountryId" class="control-label"></label>
-                <select id="country" asp-for="CountryId" asp-items="@Model.Countries" class="form-control">
+                <select id="country" asp-for="CountryId" class="form-control">
                     <option value="-1">Select an option</option>
                 </select>
                 <span asp-validation-for="CountryId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ProvinceId" class="control-label"></label>
-                <select id="province" asp-for="ProvinceId" asp-items="@Model.Provinces" class="form-control">
+                <select id="province" asp-for="ProvinceId" class="form-control">
                     <option value="-1">Select an option</option>
                 </select>
                 <span asp-validation-for="CountryId" class="text-danger"></span>
@@ -28,6 +28,8 @@
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
+            <input asp-for="CountryId" class="text-hide" id="countryId" />
+            <input asp-for="ProvinceId" class="text-hide" id="provinceId" />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -57,6 +59,8 @@
                     $.each(result, function (i, item) {
                         $list.append('<option value="' + item["id"] + '"> ' + item["name"] + ' </option>');
                     });
+                    $selectedCountryId = $("#countryId").val();
+                    $list.val($selectedCountryId).change();
                 },
                 error: function () {
                     alert("Something went wrong call the police");
@@ -76,6 +80,9 @@
                         $.each(result, function (i, item) {
                             $provinceList.append('<option value="' + item["id"] + '"> ' + item["name"] + ' </option>');
                         });
+
+                        $selectedProvinceId = $("#provinceId").val();
+                        $provinceList.val($selectedProvinceId);
                     },
                     error: function () {
                         alert("Something went wrong call the police");
