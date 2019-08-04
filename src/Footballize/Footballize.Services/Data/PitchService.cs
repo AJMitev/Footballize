@@ -35,6 +35,15 @@
                 .OrderBy(x => x.Name)
                 .To<TViewModel>();
 
+        public IEnumerable<TViewModel> GetPitchesByTownId<TViewModel>(string id)
+        {
+           return this._pitchRepository
+                .All()
+                .Where(x=>x.Address.TownId.Equals(id))
+                .OrderBy(x => x.Name)
+                .To<TViewModel>();
+        }
+
         public async Task RemovePitchAsync(Pitch pitch)
         {
             this._pitchRepository.Delete(pitch);

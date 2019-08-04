@@ -12,5 +12,6 @@
         Task<Pitch> GetPitchAsync(string id);
         Task UpdatePitchAsync(Pitch pitch);
         Task RemovePitchAsync(Pitch pitch);
+        IEnumerable<TViewModel> GetPitchesByTownId<TViewModel>(string id);
     }
 }

@@ -14,7 +14,7 @@
         public DateTime StartingAt { get; set; }
 
         public PitchIndexViewModel Pitch { get; set; }
-
+        
         public string Description { get; set; }
 
         public int PlayersEnrolled { get; set; }

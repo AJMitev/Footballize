@@ -6,16 +6,7 @@
 
     public class Gather : BaseDeletableModel<string>
     {
-        public Gather()
-        {
-            
-        }
-
-        public Gather(int maxPlayers = 12)
-        {
-            this.Players = new GatherUser[maxPlayers];
-        }
-        
+      
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime StartingAt { get; set; }

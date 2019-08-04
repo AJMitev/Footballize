@@ -15,7 +15,6 @@
     using Data.Repositories;
     using Data.Seeding;
     using Footballize.Models;
-    using MappingProfiles;
     using ViewModels;
     using Services;
     using Services.Data;
