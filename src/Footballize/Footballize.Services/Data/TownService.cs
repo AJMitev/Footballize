@@ -1,6 +1,7 @@
 ﻿namespace Footballize.Services.Data
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Footballize.Data.Repositories;
@@ -41,6 +42,15 @@
                 .Where(x=>x.Id == id)
                 .To<TViewModel>()
                 .SingleOrDefault();
+        }
+
+        public IEnumerable<TViewModel> GetTownsByProvince<TViewModel>(string countryId)
+        {
+            return this.townRepository
+                .All()
+                .Where(p => p.ProvinceId.Equals(countryId))
+                .OrderBy(p => p.Name)
+                .To<TViewModel>();
         }
 
         public async Task UpdateTown(Town town)
