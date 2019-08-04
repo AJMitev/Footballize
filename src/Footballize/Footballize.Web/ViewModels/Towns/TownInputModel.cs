@@ -1,4 +1,4 @@
-﻿namespace Footballize.Web.Models.Towns
+﻿namespace Footballize.Web.ViewModels.Towns
 {
     using System.ComponentModel.DataAnnotations;
     using Footballize.Models;

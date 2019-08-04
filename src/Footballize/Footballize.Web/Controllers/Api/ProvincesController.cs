@@ -2,8 +2,6 @@
 {
     using System.Collections.Generic;
     using Microsoft.AspNetCore.Mvc;
-    using Data.Repositories;
-    using Footballize.Models;
     using Services.Data;
     using ViewModels.Provinces;
 
@@ -19,7 +17,7 @@
         }
 
         // GET: api/Provinces/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}")]
         public IEnumerable<ProvinceNameAndIdViewModel> Get(string id)
         {
             var provinces = this.provinceServices.GetProvincesByCountry<ProvinceNameAndIdViewModel>(id);

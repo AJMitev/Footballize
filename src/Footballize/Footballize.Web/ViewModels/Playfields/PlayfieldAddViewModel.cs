@@ -1,11 +1,8 @@
-﻿namespace Footballize.Web.ViewModels.Towns
+﻿namespace Footballize.Web.ViewModels.Playfields
 {
     using System.ComponentModel.DataAnnotations;
-    using AutoMapper;
-    using Footballize.Models;
-    using Services.Mapping;
 
-    public class TownAddViewModel : IMapFrom<Town>
+    public class PlayfieldAddViewModel
     {
         [Required]
         [MinLength(5)]
@@ -18,5 +15,18 @@
         [Display(Name = "Province")]
         [Required(ErrorMessage = "Select Province")]
         public string ProvinceId { get; set; }
+
+        [Display(Name = "Town")]
+        [Required(ErrorMessage = "Select Town")]
+        public string TownId { get; set; }
+
+        [Required]
+        [MinLength(3)]
+        [MaxLength(300)]
+        public string Street { get; set; }
+
+        [Required]
+        [MaxLength(3)]
+        public int Number { get; set; }
     }
 }

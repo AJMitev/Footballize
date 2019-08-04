@@ -4,7 +4,6 @@
     using AutoMapper;
     using Footballize.Models;
     using Microsoft.AspNetCore.Mvc;
-    using Models.Countries;
     using Services.Data;
     using ViewModels.Countries;
 

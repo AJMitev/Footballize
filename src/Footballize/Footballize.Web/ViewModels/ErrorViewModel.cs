@@ -1,4 +1,4 @@
-namespace Footballize.Web.Models
+namespace Footballize.Web.ViewModels
 {
     public class ErrorViewModel
     {

@@ -1,4 +1,4 @@
-﻿namespace Footballize.Web.Models.Countries
+﻿namespace Footballize.Web.ViewModels.Countries
 {
     using AutoMapper;
     using Footballize.Models;

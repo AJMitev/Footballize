@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using Footballize.Models;
-    using Models.Towns;
+    using ViewModels.Towns;
     using Provinces;
     using Services.Mapping;
 

@@ -1,9 +1,9 @@
-﻿namespace Footballize.Web.Models.Towns
+﻿namespace Footballize.Web.ViewModels.Towns
 {
     using Footballize.Models;
     using Services.Mapping;
 
-    public class TownNameViewModel : IMapFrom<Town>
+    public class TownNameAndIdViewModel : IMapFrom<Town>
     {
         public string Id { get; set; }
         public string Name { get; set; }

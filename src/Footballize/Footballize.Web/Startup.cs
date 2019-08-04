@@ -16,7 +16,7 @@
     using Data.Seeding;
     using Footballize.Models;
     using MappingProfiles;
-    using Models;
+    using ViewModels;
     using Services;
     using Services.Data;
     using Services.Mapping;
@@ -86,6 +86,8 @@
             services.AddTransient<ICountryService, CountryService>();
             services.AddTransient<IProvinceServices, ProvinceService>();
             services.AddTransient<ITownService, TownService>();
+            services.AddTransient<IPlayfieldService, PlayfieldService>();
+            services.AddTransient<IAddressService, AddressService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

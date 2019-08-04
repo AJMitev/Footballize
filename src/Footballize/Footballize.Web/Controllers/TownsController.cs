@@ -4,7 +4,7 @@
     using AutoMapper;
     using Footballize.Models;
     using Microsoft.AspNetCore.Mvc;
-    using Models.Towns;
+    using ViewModels.Towns;
     using Services.Data;
 
     public class TownsController : Controller
