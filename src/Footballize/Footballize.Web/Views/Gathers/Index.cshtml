@@ -25,9 +25,9 @@
         <thead>
             <tr>
                 <th scope="col">Starting Time</th>
-                <th scope="col">Playfiled</th>
+                <th scope="col">Field</th>
                 <th scope="col">City</th>
-                <th scope="col">Description</th>
+                <th scope="col">Name</th>
                 <th scope="col">Players</th>
                 <th scope="col">Creator</th>
                 <th scope="col">Created On</th>
@@ -38,13 +38,13 @@
             @foreach (var match in Model)
             {
                 <tr>
-                    <th scope="row"><span class="align-middle">@match.StartingAt</span></th>
+                    <th scope="row"><span class="align-middle">@match.StartingAt.ToString("hh:mm @ dd.MM.yyyy")</span></th>
                     <td>@match.Pitch.Name</td>
                     <td>@match.Pitch.TownName</td>
-                    <td>@match.Description</td>
-                    <td>@match.PlayersEnrolled/12</td>
+                    <td>@match.Name</td>
+                    <td>@match.PlayersEnrolled/@match.MaximumPlayersAllowed</td>
                     <td><a href="#">@match.Creator.UserName</a></td>
-                    <td>@match.CreatedOn</td>
+                    <td>@match.CreatedOn.ToString("dd-MM-yyyy")</td>
                     <td>
                         <button class="btn btn-primary btn-fab btn-round">
                             <i class="material-icons">toc</i>

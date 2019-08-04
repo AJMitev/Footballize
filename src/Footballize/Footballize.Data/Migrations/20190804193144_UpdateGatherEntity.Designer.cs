@@ -4,14 +4,16 @@ using Footballize.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Footballize.Data.Migrations
 {
     [DbContext(typeof(FootballizeDbContext))]
-    partial class FootballizeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190804193144_UpdateGatherEntity")]
+    partial class UpdateGatherEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
