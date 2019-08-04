@@ -4,24 +4,24 @@
     using AutoMapper;
     using Footballize.Models;
     using Microsoft.AspNetCore.Mvc;
-    using ViewModels.Playfields;
     using Services.Data;
+    using Footballize.Web.ViewModels.Pitches;
 
-    public class PlayfieldsController : Controller
+    public class PitchesController : Controller
     {
-        private readonly IPlayfieldService playfieldService;
+        private readonly IPitchService _pitchService;
         private readonly IAddressService addressService;
 
-        public PlayfieldsController(IPlayfieldService playfieldService, IAddressService addressService)
+        public PitchesController(IPitchService pitchService, IAddressService addressService)
         {
-            this.playfieldService = playfieldService;
+            this._pitchService = pitchService;
             this.addressService = addressService;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            var fields = this.playfieldService.GetPlayfileds<PlayfieldIndexViewModel>();
+            var fields = this._pitchService.GetPitches<PitchIndexViewModel>();
 
             return this.View(fields);
         }
@@ -33,7 +33,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(PlayfiledAddInputModel model)
+        public async Task<IActionResult> Add(PitchAddInputModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -42,10 +42,10 @@
 
             var newAddress = Mapper.Map<Address>(model);
             var addressId = await this.addressService.CreateOrGetAddress(newAddress);
-            var playfield = Mapper.Map<Playfield>(model);
+            var playfield = Mapper.Map<Pitch>(model);
             playfield.AddressId = addressId;
 
-            await this.playfieldService.AddPlayfiledAsync(playfield);
+            await this._pitchService.AddPitchAsync(playfield);
 
             return this.RedirectToAction("Index");
         }
@@ -53,7 +53,7 @@
         [HttpGet]
         public IActionResult Edit(string id)
         {
-            var model = this.playfieldService.GetPlayfiled<PlayfieldEditViewModel>(id);
+            var model = this._pitchService.GetPitch<PitchEditViewModel>(id);
 
             if (model == null)
             {
@@ -64,7 +64,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(PlayfieldEditInputModel model)
+        public async Task<IActionResult> Edit(PitchEditInputModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -72,7 +72,7 @@
                 return this.View();
             }
             
-            await this.playfieldService.UpdatePlayfieldAsync(Mapper.Map<Playfield>(model));
+            await this._pitchService.UpdatePitchAsync(Mapper.Map<Pitch>(model));
 
             return this.RedirectToAction("Index");
         }
@@ -81,14 +81,14 @@
         public async Task<IActionResult> Delete(string id)
         {
 
-            var field = await this.playfieldService.GetPlayfiledAsync(id);
+            var field = await this._pitchService.GetPitchAsync(id);
 
             if (field == null)
             {
                 return this.NotFound();
             }
 
-            await this.playfieldService.RemovePlayfieldAsync(field);
+            await this._pitchService.RemovePitchAsync(field);
 
             return this.RedirectToAction("Index");
         }

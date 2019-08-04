@@ -81,12 +81,14 @@ namespace Footballize.Data.Migrations
                     b.ToTable("Countries");
                 });
 
-            modelBuilder.Entity("Footballize.Models.Event", b =>
+            modelBuilder.Entity("Footballize.Models.Gather", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("CreatedOn");
+
+                    b.Property<string>("CreatorId");
 
                     b.Property<DateTime?>("DeletedOn");
 
@@ -117,18 +119,20 @@ namespace Footballize.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatorId");
+
                     b.HasIndex("IsDeleted");
 
                     b.HasIndex("PitchId");
 
-                    b.ToTable("Events");
+                    b.ToTable("Gathers");
                 });
 
-            modelBuilder.Entity("Footballize.Models.EventUser", b =>
+            modelBuilder.Entity("Footballize.Models.GatherUser", b =>
                 {
                     b.Property<string>("UserId");
 
-                    b.Property<string>("EventId");
+                    b.Property<string>("GatherId");
 
                     b.Property<DateTime>("CreatedOn");
 
@@ -138,21 +142,19 @@ namespace Footballize.Data.Migrations
 
                     b.Property<DateTime?>("ModifiedOn");
 
-                    b.HasKey("UserId", "EventId");
+                    b.HasKey("UserId", "GatherId");
 
-                    b.HasIndex("EventId");
+                    b.HasIndex("GatherId");
 
                     b.HasIndex("IsDeleted");
 
-                    b.ToTable("EventUsers");
+                    b.ToTable("GatherUsers");
                 });
 
             modelBuilder.Entity("Footballize.Models.Pitch", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("AddresId");
 
                     b.Property<string>("AddressId");
 
@@ -177,36 +179,6 @@ namespace Footballize.Data.Migrations
                     b.HasIndex("IsDeleted");
 
                     b.ToTable("Pitches");
-                });
-
-            modelBuilder.Entity("Footballize.Models.Playfield", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("AddressId");
-
-                    b.Property<DateTime>("CreatedOn");
-
-                    b.Property<DateTime?>("DeletedOn");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<DateTime?>("ModifiedOn");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("NVARCHAR(50)")
-                        .HasMaxLength(50)
-                        .IsUnicode(true);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AddressId");
-
-                    b.HasIndex("IsDeleted");
-
-                    b.ToTable("Playfields");
                 });
 
             modelBuilder.Entity("Footballize.Models.Province", b =>
@@ -465,18 +437,22 @@ namespace Footballize.Data.Migrations
                         .HasForeignKey("TownId");
                 });
 
-            modelBuilder.Entity("Footballize.Models.Event", b =>
+            modelBuilder.Entity("Footballize.Models.Gather", b =>
                 {
+                    b.HasOne("Footballize.Models.User", "Creator")
+                        .WithMany("GamesCreated")
+                        .HasForeignKey("CreatorId");
+
                     b.HasOne("Footballize.Models.Pitch", "Pitch")
                         .WithMany()
                         .HasForeignKey("PitchId");
                 });
 
-            modelBuilder.Entity("Footballize.Models.EventUser", b =>
+            modelBuilder.Entity("Footballize.Models.GatherUser", b =>
                 {
-                    b.HasOne("Footballize.Models.Event", "Event")
+                    b.HasOne("Footballize.Models.Gather", "Gather")
                         .WithMany("Players")
-                        .HasForeignKey("EventId")
+                        .HasForeignKey("GatherId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Footballize.Models.User", "User")
@@ -486,13 +462,6 @@ namespace Footballize.Data.Migrations
                 });
 
             modelBuilder.Entity("Footballize.Models.Pitch", b =>
-                {
-                    b.HasOne("Footballize.Models.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId");
-                });
-
-            modelBuilder.Entity("Footballize.Models.Playfield", b =>
                 {
                     b.HasOne("Footballize.Models.Address", "Address")
                         .WithMany()

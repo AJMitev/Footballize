@@ -1,20 +1,14 @@
-﻿namespace Footballize.Web.ViewModels.Playfields
+﻿namespace Footballize.Web.ViewModels.Pitches
 {
     using System.ComponentModel.DataAnnotations;
+    using Footballize.Models;
+    using Services.Mapping;
 
-    public class PlayfieldAddViewModel
+    public class PitchAddInputModel : IMapTo<Pitch>, IMapTo<Address>
     {
         [Required]
         [MinLength(5)]
         public string Name { get; set; }
-
-        [Required(ErrorMessage = "Select Country")]
-        [Display(Name = "Country")]
-        public string CountryId { get; set; }
-
-        [Display(Name = "Province")]
-        [Required(ErrorMessage = "Select Province")]
-        public string ProvinceId { get; set; }
 
         [Display(Name = "Town")]
         [Required(ErrorMessage = "Select Town")]
@@ -26,7 +20,7 @@
         public string Street { get; set; }
 
         [Required]
-        [MaxLength(3)]
+        [Range(typeof(int), "1", "999")]
         public int Number { get; set; }
     }
 }

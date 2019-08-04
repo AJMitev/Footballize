@@ -25,11 +25,10 @@
 
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Country> Countries { get; set; }
-        public DbSet<Event> Events { get; set; }
-        public DbSet<EventUser> EventUsers { get; set; }
-        public DbSet<Pitch> Pitches { get; set; }
+        public DbSet<Gather> Gathers { get; set; }
+        public DbSet<GatherUser> GatherUsers { get; set; }
         public DbSet<Province> Provinces { get; set; }
-        public DbSet<Playfield> Playfields { get; set; }
+        public DbSet<Pitch> Pitches { get; set; }
         public DbSet<Town> Towns { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -38,10 +37,9 @@
 
             modelBuilder.ApplyConfiguration(new AddressConfig());
             modelBuilder.ApplyConfiguration(new CountryConfig());
-            modelBuilder.ApplyConfiguration(new EventConfig());
-            modelBuilder.ApplyConfiguration(new EventUserConfig());
+            modelBuilder.ApplyConfiguration(new GatherConfig());
+            modelBuilder.ApplyConfiguration(new GatherUserConfig());
             modelBuilder.ApplyConfiguration(new PitchConfig());
-            modelBuilder.ApplyConfiguration(new PlayfieldConfig());
             modelBuilder.ApplyConfiguration(new ProvinceConfig());
             modelBuilder.ApplyConfiguration(new TownConfig());
             modelBuilder.ApplyConfiguration(new UserConfig());

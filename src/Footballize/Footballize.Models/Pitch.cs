@@ -6,6 +6,6 @@
     {
         public string Name { get; set; }
         public virtual Address Address { get; set; }
-        public string AddresId { get; set; }
+        public string AddressId { get; set; }
     }
 }

@@ -1,10 +1,10 @@
-﻿namespace Footballize.Web.ViewModels.Playfields
+﻿namespace Footballize.Web.ViewModels.Pitches
 {
     using System.ComponentModel.DataAnnotations;
     using Models;
     using Services.Mapping;
 
-    public class PlayfieldEditInputModel : IMapTo<Playfield>
+    public class PitchEditInputModel : IMapTo<Pitch>
     {
         [Required]
         public string Id { get; set; }

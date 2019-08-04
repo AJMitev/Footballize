@@ -86,8 +86,9 @@
             services.AddTransient<ICountryService, CountryService>();
             services.AddTransient<IProvinceServices, ProvinceService>();
             services.AddTransient<ITownService, TownService>();
-            services.AddTransient<IPlayfieldService, PlayfieldService>();
+            services.AddTransient<IPitchService, PitchService>();
             services.AddTransient<IAddressService, AddressService>();
+            services.AddTransient<IGatherServices, GatherService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

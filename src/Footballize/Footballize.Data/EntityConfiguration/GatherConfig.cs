@@ -4,9 +4,9 @@
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using Models;
 
-    public class EventConfig : IEntityTypeConfiguration<Event>
+    public class GatherConfig : IEntityTypeConfiguration<Gather>
     {
-        public void Configure(EntityTypeBuilder<Event> builder)
+        public void Configure(EntityTypeBuilder<Gather> builder)
         {
             builder.HasKey(x => x.Id);
 
@@ -20,6 +20,10 @@
                 .HasColumnType("NVARCHAR(300)")
                 .HasMaxLength(300)
                 .IsUnicode();
+
+            builder.HasOne(e => e.Creator)
+                .WithMany(x => x.GamesCreated)
+                .HasForeignKey(e => e.CreatorId);
         }
     }
 }

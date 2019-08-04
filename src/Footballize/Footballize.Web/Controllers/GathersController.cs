@@ -1,16 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Footballize.Web.Controllers
+﻿namespace Footballize.Web.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
+    using Services.Data;
+    using ViewModels.Gathers;
+
     public class GathersController : Controller
     {
+        private readonly IGatherServices gatherServices;
+
+        public GathersController(IGatherServices gatherServices)
+        {
+            this.gatherServices = gatherServices;
+        }
+
         public IActionResult Index()
         {
-            return View();
+            var gathers = this.gatherServices.GetGathers<GatherIndexViewModel>();
+
+            return View(gathers);
+        }
+
+        public IActionResult Create()
+        {
+            return this.View();
         }
     }
 }

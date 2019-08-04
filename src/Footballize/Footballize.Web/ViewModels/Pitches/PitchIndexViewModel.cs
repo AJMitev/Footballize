@@ -1,10 +1,10 @@
-﻿namespace Footballize.Web.ViewModels.Playfields
+﻿namespace Footballize.Web.ViewModels.Pitches
 {
     using AutoMapper;
     using Footballize.Models;
     using Services.Mapping;
 
-    public class PlayfieldIndexViewModel : IMapFrom<Playfield>, IHaveCustomMappings
+    public class PitchIndexViewModel : IMapFrom<Pitch>, IHaveCustomMappings
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -15,7 +15,7 @@
 
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {
-            configuration.CreateMap<Playfield, PlayfieldIndexViewModel>()
+            configuration.CreateMap<Pitch, PitchIndexViewModel>()
                 .ForMember(x => x.CountryName, opt => opt.MapFrom(y => y.Address.Town.Province.Country.Name))
                 .ForMember(x => x.TownName, opt => opt.MapFrom(y => y.Address.Town.Name));
         }
