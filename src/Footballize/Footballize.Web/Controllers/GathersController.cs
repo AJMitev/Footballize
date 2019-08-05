@@ -44,14 +44,7 @@
 
             var newGather = Mapper.Map<Gather>(model);
             newGather.Creator = await userManager.GetUserAsync(HttpContext.User);
-            this.SetMaxAllowedPlayers(newGather);
 
-            await this.gatherServices.AddGatherAsync(newGather);
-            return this.RedirectToAction("Index");
-        }
-
-        private void SetMaxAllowedPlayers(Gather newGather)
-        {
             switch (newGather.TeamFormat)
             {
                 case TeamFormat.FourPlusOne: newGather.MaximumPlayersAllowed = 10; break;
@@ -59,6 +52,15 @@
                 case TeamFormat.SixPlusOne: newGather.MaximumPlayersAllowed = 14; break;
                 case TeamFormat.ElevenPlayers: newGather.MaximumPlayersAllowed = 22; break;
             }
+
+            await this.gatherServices.AddGatherAsync(newGather);
+            return this.RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Details(string id)
+        {
+            return this.View();
         }
     }
 }
