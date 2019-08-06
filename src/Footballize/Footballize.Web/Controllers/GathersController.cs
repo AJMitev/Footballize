@@ -60,7 +60,14 @@
         [HttpGet]
         public IActionResult Details(string id)
         {
-            return this.View();
+            var gather = this.gatherServices.GetGather<GatherDetailsViewModel>(id);
+
+            if (gather == null)
+            {
+                return this.NotFound();
+            }
+
+            return this.View(gather);
         }
     }
 }

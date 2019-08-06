@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Footballize.Data", "Footbal
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Footballize.Web", "Footballize.Web\Footballize.Web.csproj", "{2AFB2843-1047-48CC-BB61-6151BFE67FEB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Footballize.Services", "Footballize.Services\Footballize.Services.csproj", "{369E407F-5188-4719-8B7D-9C76A97E2364}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Footballize.Services", "Footballize.Services\Footballize.Services.csproj", "{369E407F-5188-4719-8B7D-9C76A97E2364}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Footballize.Common", "Footballize.Common\Footballize.Common.csproj", "{6D491941-D64D-4F22-BB15-FE16A1F4EB58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{369E407F-5188-4719-8B7D-9C76A97E2364}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{369E407F-5188-4719-8B7D-9C76A97E2364}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{369E407F-5188-4719-8B7D-9C76A97E2364}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D491941-D64D-4F22-BB15-FE16A1F4EB58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D491941-D64D-4F22-BB15-FE16A1F4EB58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D491941-D64D-4F22-BB15-FE16A1F4EB58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D491941-D64D-4F22-BB15-FE16A1F4EB58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

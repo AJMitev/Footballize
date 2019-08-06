@@ -7,6 +7,7 @@
     public interface IGatherServices
     {
         ICollection<TViewModel> GetGathers<TViewModel>();
+        TViewModel GetGather<TViewModel>(string id);
         Task AddGatherAsync(Gather country);
     }
 }

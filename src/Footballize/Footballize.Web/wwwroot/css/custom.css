@@ -73,3 +73,20 @@ div#breadcrumb {
 .list-group.list-group-root > .list-group > .list-group > .list-group-item {
     padding-left: 45px;
 }
+
+
+hr {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+#map{
+    height: 415px;
+    margin: 0;
+}
+
+description {
+    height: 2rem;
+}

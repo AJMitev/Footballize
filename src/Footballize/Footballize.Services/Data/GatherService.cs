@@ -18,6 +18,15 @@
             this.gatherUserRepository = gatherUserRepository;
         }
 
+        public TViewModel GetGather<TViewModel>(string id)
+        {
+            return this.gatherRepository
+                .All()
+                .Where(x=>x.Id.Equals(id))
+                .To<TViewModel>()
+                .SingleOrDefault();
+        }
+
         public async Task AddGatherAsync(Gather gather)
         {
             var gatherUser = new GatherUser
