@@ -8,6 +8,8 @@
     {
         ICollection<TViewModel> GetGathers<TViewModel>();
         TViewModel GetGather<TViewModel>(string id);
-        Task AddGatherAsync(Gather country);
+        Task AddGatherAsync(Gather gather);
+        Task LeaveGatherAsync(string gatherId, string userId);
+        Task EnrollGatherAsync(string gatherId, string userId);
     }
 }

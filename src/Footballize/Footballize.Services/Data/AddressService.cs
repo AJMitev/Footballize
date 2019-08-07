@@ -9,9 +9,9 @@ namespace Footballize.Services.Data
 
     public class AddressService : IAddressService
     {
-        private readonly IRepository<Address> addressRepository;
+        private readonly IDeletableEntityRepository<Address> addressRepository;
 
-        public AddressService(IRepository<Address> addressRepository)
+        public AddressService(IDeletableEntityRepository<Address> addressRepository)
         {
             this.addressRepository = addressRepository;
         }

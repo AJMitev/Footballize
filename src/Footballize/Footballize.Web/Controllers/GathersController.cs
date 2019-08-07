@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
     using AutoMapper;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Models;
@@ -9,6 +10,7 @@
     using Services.Data;
     using ViewModels.Gathers;
 
+    [Authorize]
     public class GathersController : Controller
     {
         private readonly IGatherServices gatherServices;
@@ -20,6 +22,7 @@
             this.userManager = userManager;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Index()
         {
@@ -44,6 +47,7 @@
 
             var newGather = Mapper.Map<Gather>(model);
             newGather.Creator = await userManager.GetUserAsync(HttpContext.User);
+            newGather.Status = GameStatus.Registration;
 
             switch (newGather.TeamFormat)
             {
@@ -68,6 +72,39 @@
             }
 
             return this.View(gather);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Leave(string id)
+        {
+            var currentUser = await this.userManager.GetUserAsync(User);
+            await this.gatherServices.LeaveGatherAsync(id, currentUser.Id);
+
+            return this.RedirectToAction("Details", new { id = id });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Enroll(string id)
+        {
+            var currentUser = await this.userManager.GetUserAsync(User);
+            await this.gatherServices.EnrollGatherAsync(id, currentUser.Id);
+
+            return this.RedirectToAction("Details", new {id = id});
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Kick(string gatherId, string playerId)
+        {
+            var gather = this.gatherServices.GetGather<GatherDetailsViewModel>(gatherId);
+            var currentUser = await this.userManager.GetUserAsync(User);
+
+            if (gather.Creator != currentUser)
+            {
+                return this.Forbid();
+            }
+
+            await this.gatherServices.LeaveGatherAsync(gatherId, playerId);
+            return this.RedirectToAction("Details", new {id = gatherId});
         }
     }
 }

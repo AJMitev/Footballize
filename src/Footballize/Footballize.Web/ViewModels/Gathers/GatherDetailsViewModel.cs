@@ -6,9 +6,11 @@
     using Models.Enums;
     using Pitches;
     using Services.Mapping;
+    using Users;
 
     public class GatherDetailsViewModel : IMapFrom<Gather>
     {
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime StartingAt { get; set; }
@@ -19,7 +21,6 @@
         public GameStatus Status { get; set; }
         public  User Creator { get; set; }
         public int MaximumPlayersAllowed { get; set; }
-        //TODO: Change it with ViewModel.
-        public ICollection<GatherUser> Players { get; set; }
+        public ICollection<UserGatherDetailsViewModel> Players { get; set; }
     }
 }

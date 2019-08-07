@@ -9,6 +9,7 @@
     {
         public Gather()
         {
+            this.Status = GameStatus.Registration;
             this.Players = new HashSet<GatherUser>();
         }
 

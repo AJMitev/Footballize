@@ -30,6 +30,8 @@ namespace Footballize.Data.Migrations
 
                     b.Property<bool>("IsDeleted");
 
+                    b.Property<string>("LocationId");
+
                     b.Property<DateTime?>("ModifiedOn");
 
                     b.Property<int>("Number")
@@ -44,6 +46,8 @@ namespace Footballize.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("IsDeleted");
+
+                    b.HasIndex("LocationId");
 
                     b.HasIndex("TownId");
 
@@ -151,6 +155,30 @@ namespace Footballize.Data.Migrations
                     b.HasIndex("IsDeleted");
 
                     b.ToTable("GatherUsers");
+                });
+
+            modelBuilder.Entity("Footballize.Models.Location", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<DateTime?>("DeletedOn");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<double>("Latitude");
+
+                    b.Property<double>("Longitude");
+
+                    b.Property<DateTime?>("ModifiedOn");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.ToTable("Location");
                 });
 
             modelBuilder.Entity("Footballize.Models.Pitch", b =>
@@ -434,6 +462,10 @@ namespace Footballize.Data.Migrations
 
             modelBuilder.Entity("Footballize.Models.Address", b =>
                 {
+                    b.HasOne("Footballize.Models.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationId");
+
                     b.HasOne("Footballize.Models.Town", "Town")
                         .WithMany("Addresses")
                         .HasForeignKey("TownId");

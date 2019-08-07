@@ -9,9 +9,9 @@
 
     public class PitchService : IPitchService
     {
-        private readonly IRepository<Pitch> _pitchRepository;
+        private readonly IDeletableEntityRepository<Pitch> _pitchRepository;
 
-        public PitchService(IRepository<Pitch> pitchRepository)
+        public PitchService(IDeletableEntityRepository<Pitch> pitchRepository)
         {
             this._pitchRepository = pitchRepository;
         }

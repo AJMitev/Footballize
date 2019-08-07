@@ -9,9 +9,9 @@
 
     public class ProvinceService : IProvinceServices
     {
-        private readonly IRepository<Province> provincesRepository;
+        private readonly IDeletableEntityRepository<Province> provincesRepository;
 
-        public ProvinceService(IRepository<Province> provincesRepository)
+        public ProvinceService(IDeletableEntityRepository<Province> provincesRepository)
         {
             this.provincesRepository = provincesRepository;
         }

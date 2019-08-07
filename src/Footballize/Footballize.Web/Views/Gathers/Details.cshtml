@@ -1,6 +1,10 @@
 ﻿@using Footballize.Common
+@using Footballize.Models
 @using Footballize.Models.Enums
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Identity
 @model Footballize.Web.ViewModels.Gathers.GatherDetailsViewModel
+@inject UserManager<User> UserManager
 @{
     ViewData["Title"] = "Gather Details";
 }
@@ -14,62 +18,22 @@
         </ol>
     </nav>
 </div>
-
-@*<div class="row">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header card-header-text card-header-primary">
-                <div class="card-text">
-                    <h4 class="card-title">@Model.Name</h4>
-                </div>
-            </div>
-            <div class="card-body">
-                <div>
-                    <p class="h5 font-italic description">Description</p>
-                    <span class="h3">@Model.Description</span>
-                </div>
-                <div>
-                    <p class="h5 font-italic">When?</p>
-                    <span class="h3">@Model.StartingAt.ToString("dddd, dd.MM.yyy, HH:mm")</span>
-                </div>
-                <hr />
-                <div>
-                    <p class="h5 font-italic">Where?</p>
-                    <span class="h3">@Model.Pitch.Name</span>
-                </div>
-                <hr />
-                <div>
-                    <p class="h5 font-italic">Arena Address</p>
-                    <span class="h3">@Model.Pitch.AddressStreet, @Model.Pitch.AddressNumber, @Model.Pitch.TownName, @Model.Pitch.CountryName</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header card-header-text card-header-primary">
-                <div class="card-text">
-                    <h4 class="card-title">Map</h4>
-                </div>
-            </div>
-            <div class="card-body">
-                <div id="map"></div>
-            </div>
-        </div>
-    </div>
-</div>*@
-
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-header card-header-text card-header-primary">
                 <div class="card-text">
-                    <h4 class="card-title">@Model.Name</h4>
+                    <h4 class="card-title">@Model.Name </h4>
                 </div>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class=" col-6">
+                        <div>
+                            <p class="h5 font-italic description">Status</p>
+                            <span class="h4">@Model.Status</span>
+                        </div>
+                        <hr />
                         <div>
                             <p class="h5 font-italic description">Description</p>
                             <span class="h4">@Model.Description</span>
@@ -81,43 +45,38 @@
                         </div>
                         <hr />
                         <div>
-                            <p class="h5 font-italic">When?</p>
+                            <p class="h5 font-italic description">When?</p>
                             <span class="h4">@Model.StartingAt.ToString("dddd, dd.MM.yyy, HH:mm")</span>
                         </div>
                         <hr />
                         <div>
-                            <p class="h5 font-italic">Where?</p>
-                            <span class="h4">@Model.Pitch.Name</span>
-                        </div>
-                        <hr />
-                        <div>
-                            <p class="h5 font-italic">Arena Address</p>
-                            <span class="h4">@Model.Pitch.AddressStreet, @Model.Pitch.AddressNumber, @Model.Pitch.TownName, @Model.Pitch.CountryName</span>
+                            <p class="h5 font-italic description">Where?</p>
+                            <span class="h4">@Model.Pitch.Name, @Model.Pitch.AddressStreet, @Model.Pitch.AddressNumber, @Model.Pitch.TownName, @Model.Pitch.CountryName</span>
                         </div>
                     </div>
                     <div class=" col-6">
-                            <div id="map"></div>
+                        <div id="map"></div>
                     </div>
                 </div>
-                
+
             </div>
         </div>
     </div>
 </div>
 <div class="row">
     <div class="col-2 offset-5">
-        @if (true)
+        @if (@Model.Players.Any(x => x.Username == User.Identity.Name))
         {
-            <button class="btn btn-danger btn-round">
+            <a asp-controller="Gathers" asp-action="Leave" asp-route-id="@Model.Id" class="btn btn-danger btn-round">
                 <i class="material-icons">clear</i> Leave Gather
-            </button>
-            
+            </a>
+
         }
         else
         {
-            <button class="btn btn-primary btn-round">
+            <a asp-controller="Gathers" asp-action="Enroll" asp-route-id="@Model.Id" class="btn btn-primary btn-round">
                 <i class="material-icons">add</i> Enroll Gather
-            </button>
+            </a>
         }
     </div>
 </div>
@@ -127,9 +86,9 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Firstname</th>
-                        <th>Lastname</th>
-                        <th>Email</th>
+                        <th>#</th>
+                        <th>Player Name</th>
+                        <th>Games Played</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -137,12 +96,17 @@
                     @foreach (var player in @Model.Players)
                     {
                         <tr>
-                            <td>@player.User.FirstName</td>
-                            <td>@player.User.LastName</td>
-                            <td>@player.User.Email</td>
-                            <td><button class="btn btn-danger btn-fab btn-fab-mini btn-round">
-                                <i class="material-icons">clear</i>
-                            </button></td>
+                            <td>1</td>
+                            <td>@player.FullName</td>
+                            <td>@player.GamesCompleted</td>
+                            @if (@Model.Creator.UserName.Equals(User.Identity.Name))
+                            {
+                                <td>
+                                    <a asp-controller="Gathers" asp-action="Kick" asp-route-gatherId="@Model.Id" asp-route-playerId="@player.Id" class="btn btn-danger btn-fab btn-fab-mini btn-round">
+                                        <i class="material-icons">clear</i>
+                                    </a>
+                                </td>
+                            }
                         </tr>
                     }
                 </tbody>
@@ -155,12 +119,15 @@
 @section Scripts
 {
     <script>
+        console.log( '@Html.Raw(Model.Pitch.AddressLocationLatitude).ToString().Replace(',','.')');
+        console.log( '@Html.Raw(Model.Pitch.AddressLocationLongitude).ToString().Replace(',','.')');
+
         function initMap() {
             var location =
             {
-                //TODO: Add Pitch cordinates
-                lat: -25.344,
-                lng: 131.036
+
+                lat: parseFloat('@Html.Raw(Model.Pitch.AddressLocationLatitude).ToString().Replace(',','.')'),
+                lng: parseFloat('@Html.Raw(Model.Pitch.AddressLocationLongitude).ToString().Replace(',','.')')
             };
 
             var map = new google.maps.Map(

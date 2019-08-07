@@ -12,6 +12,8 @@
         public string TownName { get; set; }
         public string AddressStreet { get; set; }
         public string AddressNumber { get; set; }
+        public double AddressLocationLatitude { get; set; }
+        public double AddressLocationLongitude { get; set; }
 
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {

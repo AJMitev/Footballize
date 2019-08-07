@@ -10,9 +10,9 @@
 
     public class TownService : ITownService
     {
-        private readonly IRepository<Town> townRepository;
+        private readonly IDeletableEntityRepository<Town> townRepository;
 
-        public TownService(IRepository<Town> townRepository)
+        public TownService(IDeletableEntityRepository<Town> townRepository)
         {
             this.townRepository = townRepository;
         }

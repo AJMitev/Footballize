@@ -21,7 +21,12 @@
                     {
                         TownId = plovdivId,
                         Street = "Carigradko Shose blvd.",
-                        Number = 54
+                        Number = 54,
+                        Location = new Location
+                        {
+                            Latitude = 42.150069,
+                            Longitude = 24.799438
+                        }
                     }
 
                 },
@@ -32,7 +37,12 @@
                     {
                         TownId = plovdivId,
                         Street = "Asenovgradsko Shose blvd.",
-                        Number = 116
+                        Number = 116,
+                        Location = new Location
+                        {
+                            Latitude = 42.125237,
+                            Longitude = 24.772354
+                        }
                     }
                 }
             };

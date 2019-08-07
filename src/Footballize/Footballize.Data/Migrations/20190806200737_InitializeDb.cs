@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Footballize.Data.Migrations
 {
-    public partial class InitialzieDb : Migration
+    public partial class InitializeDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -76,6 +76,23 @@ namespace Footballize.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Countries", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Location",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeletedOn = table.Column<DateTime>(nullable: true),
+                    Latitude = table.Column<double>(nullable: false),
+                    Longitude = table.Column<double>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Location", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -241,11 +258,18 @@ namespace Footballize.Data.Migrations
                     DeletedOn = table.Column<DateTime>(nullable: true),
                     Street = table.Column<string>(maxLength: 300, nullable: false),
                     Number = table.Column<int>(maxLength: 3, nullable: false),
-                    TownId = table.Column<string>(nullable: true)
+                    TownId = table.Column<string>(nullable: true),
+                    LocationId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Addresses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Addresses_Location_LocationId",
+                        column: x => x.LocationId,
+                        principalTable: "Location",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Addresses_Towns_TownId",
                         column: x => x.TownId,
@@ -293,7 +317,8 @@ namespace Footballize.Data.Migrations
                     PitchId = table.Column<string>(nullable: true),
                     TeamFormat = table.Column<int>(nullable: false),
                     Status = table.Column<int>(nullable: false),
-                    CreatorId = table.Column<string>(nullable: true)
+                    CreatorId = table.Column<string>(nullable: true),
+                    MaximumPlayersAllowed = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -344,6 +369,11 @@ namespace Footballize.Data.Migrations
                 name: "IX_Addresses_IsDeleted",
                 table: "Addresses",
                 column: "IsDeleted");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Addresses_LocationId",
+                table: "Addresses",
+                column: "LocationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_TownId",
@@ -430,6 +460,11 @@ namespace Footballize.Data.Migrations
                 column: "IsDeleted");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Location_IsDeleted",
+                table: "Location",
+                column: "IsDeleted");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Pitches_AddressId",
                 table: "Pitches",
                 column: "AddressId");
@@ -494,6 +529,9 @@ namespace Footballize.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Addresses");
+
+            migrationBuilder.DropTable(
+                name: "Location");
 
             migrationBuilder.DropTable(
                 name: "Towns");
