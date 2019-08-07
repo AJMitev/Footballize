@@ -25,7 +25,7 @@
         public bool IsDeleted { get; set; }
         public DateTime? DeletedOn { get; set; }
 
-        public  virtual ICollection<Gather> GamesCreated { get; set; }
+        public virtual ICollection<Gather> GamesCreated { get; set; }
 
         public virtual ICollection<GatherUser> GamesPlayed { get; set; }
 

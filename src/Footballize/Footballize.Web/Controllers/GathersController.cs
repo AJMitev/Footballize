@@ -106,5 +106,20 @@
             await this.gatherServices.LeaveGatherAsync(gatherId, playerId);
             return this.RedirectToAction("Details", new {id = gatherId});
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Start(string id)
+        {
+            await this.gatherServices.StartGather(id);
+
+            return this.RedirectToAction("Details", new {id = id});
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Complete(string id)
+        {
+
+            return this.RedirectToAction("Details", new {id = id});
+        }
     }
 }

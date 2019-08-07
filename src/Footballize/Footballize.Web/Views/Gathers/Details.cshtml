@@ -1,7 +1,6 @@
 ﻿@using Footballize.Common
 @using Footballize.Models
 @using Footballize.Models.Enums
-@using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Identity
 @model Footballize.Web.ViewModels.Gathers.GatherDetailsViewModel
 @inject UserManager<User> UserManager
@@ -51,7 +50,9 @@
                         <hr />
                         <div>
                             <p class="h5 font-italic description">Where?</p>
-                            <span class="h4">@Model.Pitch.Name, @Model.Pitch.AddressStreet, @Model.Pitch.AddressNumber, @Model.Pitch.TownName, @Model.Pitch.CountryName</span>
+                            <a target="_blank" href="https://www.google.com/maps?q=@(Model.Pitch.AddressLocationLatitude.ToString().Replace(',', '.')),@(Model.Pitch.AddressLocationLongitude.ToString().Replace(',', '.'))">
+                                <span class="h4">@Model.Pitch.Name, @Model.Pitch.AddressStreet, @Model.Pitch.AddressNumber, @Model.Pitch.TownName, @Model.Pitch.CountryName</span>
+                            </a>
                         </div>
                     </div>
                     <div class=" col-6">
@@ -64,21 +65,52 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-2 offset-5">
-        @if (@Model.Players.Any(x => x.Username == User.Identity.Name))
-        {
-            <a asp-controller="Gathers" asp-action="Leave" asp-route-id="@Model.Id" class="btn btn-danger btn-round">
-                <i class="material-icons">clear</i> Leave Gather
-            </a>
+    @if (@Model.Creator.UserName.Equals(User.Identity.Name))
+    {
+        <div class="col-2 offset-5">
+            @if (@Model.Players.Count.Equals(@Model.MaximumPlayersAllowed))
+            {
+                @switch (Model.Status)
+                {
+                    case GameStatus.Registration:
+                        <a asp-controller="Gathers" asp-action="Start" asp-route-id="@Model.Id" class="btn btn-primary btn-round">
+                            <i class="material-icons">play_arrow</i> Start Gather
+                        </a>
+                        break;
+                    case GameStatus.Started:
+                        <a asp-controller="Gathers" asp-action="Complete" asp-route-id="@Model.Id" class="btn btn-warning btn-round">
+                            <i class="material-icons">play_arrow</i> Complete Gather
+                        </a>
+                        break;
+                }
 
-        }
-        else
-        {
-            <a asp-controller="Gathers" asp-action="Enroll" asp-route-id="@Model.Id" class="btn btn-primary btn-round">
-                <i class="material-icons">add</i> Enroll Gather
-            </a>
-        }
-    </div>
+            }
+            else
+            {
+                <a class="btn btn-primary btn-round disabled">
+                    <i class="material-icons">play_arrow</i> Start Gather
+                </a>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="col-2 offset-5">
+            @if (@Model.Players.Any(x => x.Username == User.Identity.Name))
+            {
+                <a asp-controller="Gathers" asp-action="Leave" asp-route-id="@Model.Id" class="btn btn-danger btn-round">
+                    <i class="material-icons">clear</i> Leave Gather
+                </a>
+
+            }
+            else
+            {
+                <a asp-controller="Gathers" asp-action="Enroll" asp-route-id="@Model.Id" class="btn btn-primary btn-round">
+                    <i class="material-icons">add</i> Enroll Gather
+                </a>
+            }
+        </div>
+    }
 </div>
 <div class="row">
     <div class="card">
@@ -99,14 +131,17 @@
                             <td>1</td>
                             <td>@player.FullName</td>
                             <td>@player.GamesCompleted</td>
-                            @if (@Model.Creator.UserName.Equals(User.Identity.Name))
-                            {
-                                <td>
+                            <td>
+                                <a href="#" class="btn btn-primary btn-fab btn-fab-mini btn-round">
+                                    <i class="material-icons">person</i>
+                                </a>
+                                @if (@Model.Creator.UserName.Equals(User.Identity.Name) && @player.Username != User.Identity.Name)
+                                {
                                     <a asp-controller="Gathers" asp-action="Kick" asp-route-gatherId="@Model.Id" asp-route-playerId="@player.Id" class="btn btn-danger btn-fab btn-fab-mini btn-round">
-                                        <i class="material-icons">clear</i>
+                                        <i class="material-icons">block</i>
                                     </a>
-                                </td>
-                            }
+                                }
+                            </td>
                         </tr>
                     }
                 </tbody>

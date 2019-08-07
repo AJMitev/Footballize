@@ -107,5 +107,20 @@
                 .To<TViewModel>()
                 .ToList();
         }
+
+        public async Task StartGather(string id)
+        {
+            var gather = await this.gatherRepository.GetByIdAsync(id);
+
+            if (gather == null)
+            {
+                return;
+            }
+
+            gather.Status = GameStatus.Started;
+
+            this.gatherRepository.Update(gather);
+            await this.gatherRepository.SaveChangesAsync();
+        }
     }
 }
