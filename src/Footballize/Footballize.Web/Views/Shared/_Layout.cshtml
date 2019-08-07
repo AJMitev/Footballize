@@ -1,4 +1,7 @@
-﻿<!doctype html>
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+<!doctype html>
 <html lang="en">
 
 <head>
@@ -132,7 +135,7 @@
     <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
     <script src="~/js/plugins/nouislider.min.js" type="text/javascript"></script>
     <!--  Google Maps Plugin    -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDF9PZcttAgDYOKzBH9YNUP0yxU08FoXQs&callback=initMap"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=@(Configuration.GetSection("ApiKeys")["Maps"])&callback=initMap"></script>
     <!-- Control Center for Material Kit: parallax effects, scripts for the example pages etc -->
     <script src="~/js/material-kit.js?v=2.0.5" type="text/javascript"></script>
     <script src="~/js/site.js" type="text/javascript"></script>
@@ -146,7 +149,7 @@
 
             $('.datetimepicker').datetimepicker({
                 locale: 'ru',
-                format : 'DD/MM/YYYY HH:mm',
+                format: 'DD/MM/YYYY HH:mm',
                 icons: {
                     time: "fa fa-clock-o",
                     date: "fa fa-calendar",
