@@ -122,5 +122,20 @@
             this.gatherRepository.Update(gather);
             await this.gatherRepository.SaveChangesAsync();
         }
+
+        public async Task CompleteGather(string id)
+        {
+            var gather = await this.gatherRepository.GetByIdAsync(id);
+
+            if (gather == null)
+            {
+                return;
+            }
+
+            gather.Status = GameStatus.Finished;
+
+            this.gatherRepository.Update(gather);
+            await this.gatherRepository.SaveChangesAsync();
+        }
     }
 }

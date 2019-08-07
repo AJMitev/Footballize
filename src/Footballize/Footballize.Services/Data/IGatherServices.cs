@@ -12,5 +12,6 @@
         Task LeaveGatherAsync(string gatherId, string userId);
         Task EnrollGatherAsync(string gatherId, string userId);
         Task StartGather(string id);
+        Task CompleteGather(string id);
     }
 }

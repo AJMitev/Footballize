@@ -118,7 +118,7 @@
         [HttpGet]
         public async Task<IActionResult> Complete(string id)
         {
-
+            await this.gatherServices.CompleteGather(id);
             return this.RedirectToAction("Details", new {id = id});
         }
     }
