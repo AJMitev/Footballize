@@ -53,7 +53,7 @@
                 .Include(x => x.Players)
                 .SingleOrDefault(x => x.Id == gatherId);
 
-            if (gather == null || gather.Status != GameStatus.Registration || gather.Players.Count >= gather.MaximumPlayers)
+            if (gather == null || gather.Status != GameStatus.Registration)
                 return;
 
             var gatherUser = gather?.Players.SingleOrDefault(user => user.UserId.Equals(userId));
@@ -78,7 +78,7 @@
                 .Include(x => x.Players)
                 .SingleOrDefault(x => x.Id == gatherId);
 
-            if (gather == null || gather.Status != GameStatus.Registration)
+            if (gather == null || gather.Status != GameStatus.Registration || gather.Players.Count >= gather.MaximumPlayers)
                 return;
 
             var user = await this.userRepository.GetByIdAsync(userId);
