@@ -1,8 +1,8 @@
-﻿@using Footballize.Models.Enums
-@model Footballize.Web.ViewModels.Gathers.GatherAddViewModel
+﻿@model Footballize.Web.ViewModels.Recruitments.RecruitmentsAddViewModel
 @{
     ViewData["Title"] = "Create";
 }
+
 
 <div id="breadcrumb">
     <nav aria-label="breadcrumb" role="navigation">
@@ -14,7 +14,7 @@
     </nav>
 </div>
 
-<h1 class="title text-center">Create new Gather</h1>
+<h1 class="title text-center">Recruit new players</h1>
 <hr />
 <div class="row">
     <div class="col-12">
@@ -28,21 +28,14 @@
                         <span asp-validation-for="Title" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Description" class="control-label"></label>
-                        <textarea asp-for="Description" class="form-control"></textarea>
-                        <span asp-validation-for="Description" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
                         <label asp-for="StartingAt" class="control-label"></label>
-                        <input type="text" asp-for="StartingAt" class="form-control datetimepicker" data-date-format="DD/MM/YYYY HH:mm"/>
+                        <input type="text" asp-for="StartingAt" class="form-control datetimepicker" data-date-format="DD/MM/YYYY HH:mm" />
                         <span asp-validation-for="StartingAt" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="TeamFormat" class="control-label"></label>
-                        <select asp-for="TeamFormat" asp-items="Html.GetEnumSelectList<TeamFormat>()" class="form-control">
-                            <option value="-1">Select an option</option>
-                        </select>
-                        <span asp-validation-for="TeamFormat" class="text-danger"></span>
+                        <label asp-for="MaximumPlayers" class="control-label"></label>
+                        <input asp-for="MaximumPlayers" class="form-control" />
+                        <span asp-validation-for="MaximumPlayers" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-6">
@@ -78,11 +71,11 @@
     </div>
 </div>
 
+<partial name="_ValidationScriptsPartial"/>
+
 
 @section Scripts
 {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-
     <script>
         $(document).ready(function () {
 
@@ -103,7 +96,7 @@
                     alert("Something went wrong call the police");
                 }
             });
-            
+
 
             $('#country').on("change",
                 function () {

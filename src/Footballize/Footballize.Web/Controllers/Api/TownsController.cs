@@ -18,9 +18,9 @@
 
         // GET: api/Towns/5
         [HttpGet("{id}")]
-        public IEnumerable<TownNameAndIdViewModel> Get(string id)
+        public IEnumerable<TownWithProvinceViewModel> Get(string id)
         {
-            return this.townService.GetTownsByProvince<TownNameAndIdViewModel>(id);
+            return this.townService.GetTownsByCountry<TownWithProvinceViewModel>(id);
         }
     }
 }

@@ -13,5 +13,6 @@
         Task EnrollGatherAsync(string gatherId, string userId);
         Task StartGather(string id);
         Task CompleteGather(string id);
+        Task DeleteGather(string id);
     }
 }

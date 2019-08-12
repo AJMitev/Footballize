@@ -35,7 +35,7 @@
             var countriesAvailable = this.countryService.GetCountries<CountryNameAndIdViewModel>();
             var model = new ProvinceAddViewModel
             {
-                Countries = new SelectList(countriesAvailable, "Id", "Name")
+                Countries = new SelectList(countriesAvailable, "Id", "Title")
             };
 
 
@@ -48,7 +48,7 @@
             if (!ModelState.IsValid)
                 return this.View();
 
-            await this.provinceServices.CreateProvince(Mapper.Map<Province>(model));
+            await this.provinceServices.CreateProvinceAsync(Mapper.Map<Province>(model));
 
             return this.RedirectToAction("Details", "Countries", new { id = model.CountryId});
         }
@@ -59,7 +59,7 @@
         {
             var province = provinceServices.GetProvince<ProvinceEditViewModel>(id);
             var countriesAvailable = this.countryService.GetCountries<CountryNameAndIdViewModel>();
-            province.Countries = new SelectList(countriesAvailable, "Id", "Name");
+            province.Countries = new SelectList(countriesAvailable, "Id", "Title");
 
             return this.View(province);
         }
@@ -74,10 +74,10 @@
 
             //var province = this.provinceServices.GetProvince<Province>(model.Id);
 
-            //province.Name = model.Name;
+            //province.Title = model.Title;
             //province.CountryId = model.CountryId;
 
-            await this.provinceServices.UpdateProvince(Mapper.Map<Province>(model));
+            await this.provinceServices.UpdateProvinceAsync(Mapper.Map<Province>(model));
 
             return this.RedirectToAction("Index");
         }
@@ -86,7 +86,7 @@
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
-            await this.provinceServices.RemoveProvince(id);
+            await this.provinceServices.RemoveProvinceAsync(id);
 
             return this.RedirectToAction("Index");
         }

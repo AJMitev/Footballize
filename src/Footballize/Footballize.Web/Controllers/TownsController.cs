@@ -38,7 +38,7 @@
             }
 
             var newTown = Mapper.Map<Town>(model);
-            this.townService.AddTown(newTown);
+            this.townService.AddTownAsync(newTown);
 
             return this.RedirectToAction("Details", "Provinces", new { id = model.ProvinceId });
         }
@@ -60,7 +60,7 @@
             }
 
 
-            await this.townService.UpdateTown(Mapper.Map<Town>(model));
+            await this.townService.UpdateTownAsync(Mapper.Map<Town>(model));
             return this.RedirectToAction("Details", "Provinces", new { id = model.ProvinceId });
         }
 
@@ -68,7 +68,7 @@
         public async Task<IActionResult> Delete(string id)
         {
             var provinceId = this.townService.GetTown<TownEditViewModel>(id).ProvinceId;
-            await this.townService.DeleteTown(id);
+            await this.townService.DeleteTownAsync(id);
 
             return this.RedirectToAction("Details", "Provinces", new { id = provinceId });
         }

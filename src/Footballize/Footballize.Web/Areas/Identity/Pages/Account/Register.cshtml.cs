@@ -44,12 +44,12 @@ namespace Footballize.Web.Areas.Identity.Pages.Account
         {
             [Required]
             [StringLength(30, ErrorMessage = StringLengthErrorMessage, MinimumLength = 3)]
-            [Display(Name = "First Name")]
+            [Display(Name = "First Title")]
             public string FirstName { get; set; }
 
             [Required]
             [StringLength(30, ErrorMessage = StringLengthErrorMessage, MinimumLength = 3)]
-            [Display(Name = "Last Name")]
+            [Display(Name = "Last Title")]
             public string LastName { get; set; }
 
             [Required]

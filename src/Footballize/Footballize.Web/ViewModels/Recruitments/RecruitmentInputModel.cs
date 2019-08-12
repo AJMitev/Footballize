@@ -1,28 +1,22 @@
-﻿namespace Footballize.Web.ViewModels.Gathers
+﻿namespace Footballize.Web.ViewModels.Recruitments
 {
     using System;
     using System.ComponentModel.DataAnnotations;
     using Models;
-    using Models.Enums;
     using Services.Mapping;
 
-    public class GatherAddInputModel : IMapTo<Gather>
+    public class RecruitmentInputModel : IMapTo<Recruitment>
     {
         [Required]
         public string Title { get; set; }
-
-        [Required]
-        [MinLength(10)]
-        [MaxLength(300)]
-        public string Description { get; set; }
 
         [Required]
         [Display(Name = "Starting Time")]
         public DateTime StartingAt { get; set; }
 
         [Required]
-        [Display(Name = "Team Format")]
-        public TeamFormat TeamFormat { get; set; }
+        [Display(Name = "Players")]
+        public int MaximumPlayers { get; set; }
 
 
         [Required]

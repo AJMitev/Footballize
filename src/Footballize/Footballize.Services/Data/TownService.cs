@@ -17,7 +17,7 @@
             this.townRepository = townRepository;
         }
 
-        public async Task AddTown(Town town)
+        public async Task AddTownAsync(Town town)
         {
             if (town == null)
             {
@@ -28,7 +28,7 @@
             await this.townRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteTown(string id)
+        public async Task DeleteTownAsync(string id)
         {
             var townToDelete = await this.townRepository.GetByIdAsync(id);
             this.townRepository.Delete(townToDelete);
@@ -44,16 +44,16 @@
                 .SingleOrDefault();
         }
 
-        public IEnumerable<TViewModel> GetTownsByProvince<TViewModel>(string countryId)
+        public IEnumerable<TViewModel> GetTownsByCountry<TViewModel>(string countryId)
         {
             return this.townRepository
                 .All()
-                .Where(p => p.ProvinceId.Equals(countryId))
+                .Where(p => p.Province.CountryId.Equals(countryId))
                 .OrderBy(p => p.Name)
                 .To<TViewModel>();
         }
 
-        public async Task UpdateTown(Town town)
+        public async Task UpdateTownAsync(Town town)
         {
             this.townRepository.Update(town);
             await this.townRepository.SaveChangesAsync();

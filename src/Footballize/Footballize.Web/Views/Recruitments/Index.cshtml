@@ -1,0 +1,68 @@
+﻿@model ICollection<Footballize.Web.ViewModels.Recruitments.RecruitmentIndexViewModel>
+    @{
+    ViewData["Title"] = "Index";
+    }
+
+    <div id="breadcrumb">
+        <nav aria-label="breadcrumb" role="navigation">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Recruitments</li>
+            </ol>
+        </nav>
+    </div>
+    <h2 class="title text-center">Searching for a game?</h2>
+
+    <div class="text-right">
+        <a asp-action="Create" class="btn btn-primary btn-round">
+            <i class="material-icons">add</i> Start new recruitment
+            <div class="ripple-container"></div>
+        </a>
+    </div>
+    <div>
+        <table class="table">
+            <thead>
+                <tr class="text-center">
+                    <th scope="col">Title</th>
+                    <th scope="col">City</th>
+                    <th scope="col">Field</th>
+                    <th scope="col">Game Time</th>
+                    <th scope="col">Players</th>
+                    <th scope="col">Creator</th>
+                    <th scope="col">Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var match in Model.OrderBy(x => x.StartingAt))
+            {
+                <tr class="text-center">
+                    <th scope="row" class="text-left">@match.Title</th>
+                    <td>@match.Pitch.TownName, @match.Pitch.CountryName</td>
+                    <td>@match.Pitch.Name</td>
+
+
+                    @if (match.StartingAt.Day == DateTime.Today.Day)
+                    {
+                    <td> @string.Concat("Today, at ", match.StartingAt.ToString("HH:mm"))</td>
+                    }
+                    else if (match.StartingAt.Day == DateTime.Today.AddDays(1).Day)
+                    {
+                    <td> @string.Concat("Tomorrow, at ", match.StartingAt.ToString("HH:mm"))</td>
+                    }
+                    else
+                    {
+
+                    <td>@match.StartingAt.ToString("dd/MM/yyyy HH:ss")</td>
+                    }
+                    <td>@match.PlayersEnrolled/@match.MaximumPlayers</td>
+                    <td><a href="#">@match.Creator.UserName</a></td>
+                    <td>
+                        <a asp-controller="" asp-action="" asp-route-id="@match.Id" class="btn btn-primary btn-fab btn-round">
+                            <i class="material-icons">toc</i>
+                        </a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div> 

@@ -10,7 +10,7 @@
         {
             builder.HasKey(x => x.Id);
 
-            builder.Property(e => e.Name)
+            builder.Property(e => e.Title)
                 .HasColumnType("NVARCHAR(30)")
                 .HasMaxLength(30)
                 .IsRequired()
@@ -22,7 +22,7 @@
                 .IsUnicode();
 
             builder.HasOne(e => e.Creator)
-                .WithMany(x => x.GamesCreated)
+                .WithMany(x => x.GathersCreated)
                 .HasForeignKey(e => e.CreatorId);
         }
     }

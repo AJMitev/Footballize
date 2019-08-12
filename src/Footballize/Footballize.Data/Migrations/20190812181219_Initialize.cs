@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Footballize.Data.Migrations
 {
-    public partial class InitializeDb : Migration
+    public partial class Initialize : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -310,15 +310,14 @@ namespace Footballize.Data.Migrations
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
                     DeletedOn = table.Column<DateTime>(nullable: true),
-                    Name = table.Column<string>(type: "NVARCHAR(30)", maxLength: 30, nullable: false),
-                    Description = table.Column<string>(type: "NVARCHAR(300)", maxLength: 300, nullable: true),
+                    Title = table.Column<string>(type: "NVARCHAR(30)", maxLength: 30, nullable: false),
                     StartingAt = table.Column<DateTime>(nullable: false),
-                    Duration = table.Column<TimeSpan>(nullable: false),
                     PitchId = table.Column<string>(nullable: true),
-                    TeamFormat = table.Column<int>(nullable: false),
-                    Status = table.Column<int>(nullable: false),
                     CreatorId = table.Column<string>(nullable: true),
-                    MaximumPlayersAllowed = table.Column<int>(nullable: false)
+                    MaximumPlayers = table.Column<int>(nullable: false),
+                    Description = table.Column<string>(type: "NVARCHAR(300)", maxLength: 300, nullable: true),
+                    TeamFormat = table.Column<int>(nullable: false),
+                    Status = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -331,6 +330,38 @@ namespace Footballize.Data.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Gathers_Pitches_PitchId",
+                        column: x => x.PitchId,
+                        principalTable: "Pitches",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Recruitments",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeletedOn = table.Column<DateTime>(nullable: true),
+                    Title = table.Column<string>(nullable: true),
+                    StartingAt = table.Column<DateTime>(nullable: false),
+                    PitchId = table.Column<string>(nullable: true),
+                    CreatorId = table.Column<string>(nullable: true),
+                    MaximumPlayers = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Recruitments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Recruitments_AspNetUsers_CreatorId",
+                        column: x => x.CreatorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Recruitments_Pitches_PitchId",
                         column: x => x.PitchId,
                         principalTable: "Pitches",
                         principalColumn: "Id",
@@ -359,6 +390,34 @@ namespace Footballize.Data.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_GatherUsers_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RecruitmentUsers",
+                columns: table => new
+                {
+                    RecruitmentId = table.Column<string>(nullable: false),
+                    UserId = table.Column<string>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeletedOn = table.Column<DateTime>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RecruitmentUsers", x => new { x.UserId, x.RecruitmentId });
+                    table.ForeignKey(
+                        name: "FK_RecruitmentUsers_Recruitments_RecruitmentId",
+                        column: x => x.RecruitmentId,
+                        principalTable: "Recruitments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_RecruitmentUsers_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -485,6 +544,31 @@ namespace Footballize.Data.Migrations
                 column: "IsDeleted");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Recruitments_CreatorId",
+                table: "Recruitments",
+                column: "CreatorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Recruitments_IsDeleted",
+                table: "Recruitments",
+                column: "IsDeleted");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Recruitments_PitchId",
+                table: "Recruitments",
+                column: "PitchId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecruitmentUsers_IsDeleted",
+                table: "RecruitmentUsers",
+                column: "IsDeleted");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecruitmentUsers_RecruitmentId",
+                table: "RecruitmentUsers",
+                column: "RecruitmentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Towns_IsDeleted",
                 table: "Towns",
                 column: "IsDeleted");
@@ -516,10 +600,16 @@ namespace Footballize.Data.Migrations
                 name: "GatherUsers");
 
             migrationBuilder.DropTable(
+                name: "RecruitmentUsers");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Gathers");
+
+            migrationBuilder.DropTable(
+                name: "Recruitments");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

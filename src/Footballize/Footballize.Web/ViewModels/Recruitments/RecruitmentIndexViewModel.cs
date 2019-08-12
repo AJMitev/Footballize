@@ -1,4 +1,4 @@
-﻿namespace Footballize.Web.ViewModels.Gathers
+﻿namespace Footballize.Web.ViewModels.Recruitments
 {
     using System;
     using AutoMapper;
@@ -7,8 +7,9 @@
     using Services.Mapping;
     using Users;
 
-    public class GatherIndexViewModel : IMapFrom<Gather>, IHaveCustomMappings
+    public class RecruitmentIndexViewModel : IMapFrom<Recruitment>, IHaveCustomMappings
     {
+
         public string Id { get; set; }
 
         public string Title { get; set; }
@@ -25,12 +26,10 @@
 
         public UserSimpleViewModel Creator { get; set; }
 
-        public DateTime CreatedOn { get; set; }
-
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {
-            configuration.CreateMap<Gather, GatherIndexViewModel>()
-                .ForMember(x => x.PlayersEnrolled, opt => opt.MapFrom(y => y.Players.Count));
+            configuration.CreateMap<Recruitment, RecruitmentIndexViewModel>()
+                .ForMember(x => x.PlayersEnrolled, opt => opt.MapFrom(y => y.RecruitedUsers.Count));
         }
     }
 }

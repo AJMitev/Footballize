@@ -6,10 +6,10 @@
 
     public interface ITownService
     {
-        Task AddTown(Town town);
+        Task AddTownAsync(Town town);
         TViewModel GetTown<TViewModel>(string id);
-        IEnumerable<TViewModel> GetTownsByProvince<TViewModel>(string countryId);
-        Task DeleteTown(string id);
-        Task UpdateTown(Town town);
+        IEnumerable<TViewModel> GetTownsByCountry<TViewModel>(string countryId);
+        Task DeleteTownAsync(string id);
+        Task UpdateTownAsync(Town town);
     }
 }

@@ -53,7 +53,7 @@
                 .Include(x => x.Players)
                 .SingleOrDefault(x => x.Id == gatherId);
 
-            if (gather == null || gather.Status != GameStatus.Registration)
+            if (gather == null || gather.Status != GameStatus.Registration || gather.Players.Count >= gather.MaximumPlayers)
                 return;
 
             var gatherUser = gather?.Players.SingleOrDefault(user => user.UserId.Equals(userId));
@@ -94,7 +94,7 @@
             };
 
             await this.gatherUserRepository.AddAsync(gatherUser);
-            
+
             gather.Players.Add(gatherUser);
             this.gatherRepository.Update(gather);
             await this.gatherRepository.SaveChangesAsync();
@@ -135,6 +135,19 @@
             gather.Status = GameStatus.Finished;
 
             this.gatherRepository.Update(gather);
+            await this.gatherRepository.SaveChangesAsync();
+        }
+
+        public async Task DeleteGather(string id)
+        {
+            var gatherToDelete = await this.gatherRepository.GetByIdAsync(id);
+
+            if (gatherToDelete == null)
+            {
+                return;
+            }
+
+            this.gatherRepository.Delete(gatherToDelete);
             await this.gatherRepository.SaveChangesAsync();
         }
     }

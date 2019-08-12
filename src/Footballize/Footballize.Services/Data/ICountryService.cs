@@ -6,11 +6,11 @@
 
     public interface ICountryService
     {
-        Task<int> AddCountry(Country country);
-        Task RemoveCountry(string countryId);
+        Task<int> AddCountryAsync(Country country);
+        Task RemoveCountryAsync(string countryId);
         TViewModel GetCountry<TViewModel>(string id);
-        Task<Country> GetCountryById(string id);
+        Task<Country> GetCountryByIdAsync(string id);
         IEnumerable<TViewModel> GetCountries<TViewModel>();
-        Task UpdateCountry(Country country);
+        Task UpdateCountryAsync(Country country);
     }
 }

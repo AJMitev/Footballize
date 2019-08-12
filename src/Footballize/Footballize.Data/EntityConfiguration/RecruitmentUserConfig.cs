@@ -4,14 +4,14 @@
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using Models;
 
-    public class GatherUserConfig : IEntityTypeConfiguration<GatherUser>
+    public class RecruitmentUserConfig : IEntityTypeConfiguration<RecruitmentUser>
     {
-        public void Configure(EntityTypeBuilder<GatherUser> builder)
+        public void Configure(EntityTypeBuilder<RecruitmentUser> builder)
         {
-            builder.HasKey(e => new {e.UserId, EventId = e.GatherId});
+            builder.HasKey(e => new {e.UserId, EventId = e.RecruitmentId});
 
             builder.HasOne(e => e.User)
-                .WithMany(e => e.GathersPlayed)
+                .WithMany(e => e.GamesRecruited)
                 .HasForeignKey(e => e.UserId);
         }
     }

@@ -1,13 +1,15 @@
-﻿namespace Footballize.Web.ViewModels.Gathers
+﻿namespace Footballize.Web.ViewModels.Recruitments
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using Models;
     using Models.Enums;
     using Services.Mapping;
 
-    public class GatherAddViewModel: IMapFrom<GatherAddInputModel>
+    public class RecruitmentsAddViewModel : IMapFrom<Recruitment>
     {
         [Required]
+        [Display(Name = "Title")]
         public string Title { get; set; }
 
         [Required]
@@ -20,9 +22,9 @@
         public DateTime StartingAt { get; set; }
 
         [Required]
-        [Range(typeof(int), "1", "4")]
-        [Display(Name = "Team Format")]
-        public TeamFormat TeamFormat { get; set; }
+        [Range(typeof(int), "1", "22")]
+        [Display(Name = "How many players do you need?")]
+        public int MaximumPlayers { get; set; }
 
         [Required]
         [RegularExpression(@"[({]?[a-fA-F0-9]{8}[-]?([a-fA-F0-9]{4}[-]?){3}[a-fA-F0-9]{12}[})]?",ErrorMessage = "Select Country")]

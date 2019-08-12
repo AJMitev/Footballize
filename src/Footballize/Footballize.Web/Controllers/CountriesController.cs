@@ -36,7 +36,7 @@
             if (!ModelState.IsValid)
                 return this.View(model);
 
-            await this.countryService.AddCountry(Mapper.Map<Country>(model));
+            await this.countryService.AddCountryAsync(Mapper.Map<Country>(model));
 
             return this.RedirectToAction("Index");
         }
@@ -59,12 +59,12 @@
             if (!ModelState.IsValid)
                 return this.View(model);
 
-            var country = await this.countryService.GetCountryById(model.Id);
+            var country = await this.countryService.GetCountryByIdAsync(model.Id);
             country.Name = model.Name;
             country.IsoCode = model.IsoCode;
 
 
-            await this.countryService.UpdateCountry(country);
+            await this.countryService.UpdateCountryAsync(country);
 
            return this.RedirectToAction("Index");
         }
@@ -72,7 +72,7 @@
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
-            await this.countryService.RemoveCountry(id);
+            await this.countryService.RemoveCountryAsync(id);
 
             return this.RedirectToAction("Index");
         }

@@ -34,13 +34,13 @@
                 .To<TViewModel>();
         }
 
-        public async Task CreateProvince(Province province)
+        public async Task CreateProvinceAsync(Province province)
         {
             await this.provincesRepository.AddAsync(province);
             await this.provincesRepository.SaveChangesAsync();
         }
 
-        public async Task RemoveProvince(string id)
+        public async Task RemoveProvinceAsync(string id)
         {
             var provinceToRemove = await this.provincesRepository.GetByIdAsync(id);
             this.provincesRepository.Delete(provinceToRemove);
@@ -56,7 +56,7 @@
                 .SingleOrDefault();
         }
 
-        public async Task UpdateProvince(Province province)
+        public async Task UpdateProvinceAsync(Province province)
         {
             this.provincesRepository.Update(province);
             await this.provincesRepository.SaveChangesAsync();

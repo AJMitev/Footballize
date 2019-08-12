@@ -51,10 +51,10 @@
 
             switch (newGather.TeamFormat)
             {
-                case TeamFormat.FourPlusOne: newGather.MaximumPlayersAllowed = 10; break;
-                case TeamFormat.FivePlusOne: newGather.MaximumPlayersAllowed = 12; break;
-                case TeamFormat.SixPlusOne: newGather.MaximumPlayersAllowed = 14; break;
-                case TeamFormat.ElevenPlayers: newGather.MaximumPlayersAllowed = 22; break;
+                case TeamFormat.FourPlusOne: newGather.MaximumPlayers = 10; break;
+                case TeamFormat.FivePlusOne: newGather.MaximumPlayers = 12; break;
+                case TeamFormat.SixPlusOne: newGather.MaximumPlayers = 14; break;
+                case TeamFormat.ElevenPlayers: newGather.MaximumPlayers = 22; break;
             }
 
             await this.gatherServices.AddGatherAsync(newGather);
@@ -120,6 +120,14 @@
         {
             await this.gatherServices.CompleteGather(id);
             return this.RedirectToAction("Details", new {id = id});
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(string id)
+        {
+            await this.gatherServices.DeleteGather(id);
+
+            return this.RedirectToAction("Index");
         }
     }
 }

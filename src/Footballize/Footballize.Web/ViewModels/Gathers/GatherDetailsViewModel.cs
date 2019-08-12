@@ -11,7 +11,7 @@
     public class GatherDetailsViewModel : IMapFrom<Gather>
     {
         public string Id { get; set; }
-        public string Name { get; set; }
+        public string Title { get; set; }
         public string Description { get; set; }
         public DateTime StartingAt { get; set; }
         public TimeSpan Duration { get; set; }
@@ -20,7 +20,7 @@
         public TeamFormat TeamFormat { get; set; }
         public GameStatus Status { get; set; }
         public  User Creator { get; set; }
-        public int MaximumPlayersAllowed { get; set; }
+        public int MaximumPlayers { get; set; }
         public ICollection<UserGatherDetailsViewModel> Players { get; set; }
     }
 }

@@ -22,7 +22,7 @@
         <div class="card">
             <div class="card-header card-header-text card-header-primary">
                 <div class="card-text">
-                    <h4 class="card-title">@Model.Name </h4>
+                    <h4 class="card-title">@Model.Title </h4>
                 </div>
             </div>
             <div class="card-body">
@@ -68,7 +68,7 @@
     @if (@Model.Creator.UserName.Equals(User.Identity.Name))
     {
         <div class="col-2 offset-5">
-            @if (@Model.Players.Count.Equals(@Model.MaximumPlayersAllowed))
+            @if (@Model.Players.Count.Equals(@Model.MaximumPlayers))
             {
                 @switch (Model.Status)
                 {
@@ -103,7 +103,7 @@
                 </a>
 
             }
-            else
+            else if(@Model.Players.Count < @Model.MaximumPlayers)
             {
                 <a asp-controller="Gathers" asp-action="Enroll" asp-route-id="@Model.Id" class="btn btn-primary btn-round">
                     <i class="material-icons">add</i> Enroll Gather
@@ -119,7 +119,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Player Name</th>
+                        <th>Player Title</th>
                         <th>Games Played</th>
                         <th></th>
                     </tr>
@@ -148,8 +148,12 @@
             </table>
         </div>
     </div>
-
-</div>
+    @if (@Model.Creator.UserName.Equals(User.Identity.Name))
+    {
+        
+        <a asp-controller="Gathers" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-primary btn-link">Delete Gather</a>
+    }
+    </div>
 
 @section Scripts
 {

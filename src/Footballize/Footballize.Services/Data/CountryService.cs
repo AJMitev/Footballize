@@ -19,13 +19,13 @@
             this.countriesRepository = countriesRepository;
         }
 
-        public Task<int> AddCountry(Country country)
+        public Task<int> AddCountryAsync(Country country)
         {
             this.countriesRepository.AddAsync(country);
             return this.countriesRepository.SaveChangesAsync();
         }
 
-        public Task<Country> GetCountryById(string id)
+        public Task<Country> GetCountryByIdAsync(string id)
         {
             return this.countriesRepository.GetByIdAsync(id);
         }
@@ -40,7 +40,7 @@
                 .ToList();
         }
 
-        public async Task UpdateCountry(Country country)
+        public async Task UpdateCountryAsync(Country country)
         {
             this.countriesRepository.Update(country);
             await this.countriesRepository.SaveChangesAsync();
@@ -55,7 +55,7 @@
                 .FirstOrDefault();
         }
 
-        public async Task RemoveCountry(string countryId)
+        public async Task RemoveCountryAsync(string countryId)
         {
             var countryToRemove = await this.countriesRepository.GetByIdAsync(countryId);
             this.countriesRepository.Delete(countryToRemove);

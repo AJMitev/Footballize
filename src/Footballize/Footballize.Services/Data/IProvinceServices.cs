@@ -8,9 +8,9 @@
     {
         IEnumerable<TViewModel> GetProvinces<TViewModel>();
         IEnumerable<TViewModel> GetProvincesByCountry<TViewModel>(string countryId);
-        Task CreateProvince(Province province);
-        Task RemoveProvince(string id);
+        Task CreateProvinceAsync(Province province);
+        Task RemoveProvinceAsync(string id);
         TViewModel GetProvince<TViewModel>(string id);
-        Task UpdateProvince(Province province);
+        Task UpdateProvinceAsync(Province province);
     }
 }
