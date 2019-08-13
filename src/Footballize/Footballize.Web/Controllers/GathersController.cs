@@ -78,6 +78,12 @@
         public async Task<IActionResult> Leave(string id)
         {
             var currentUser = await this.userManager.GetUserAsync(User);
+
+            if (currentUser == null)
+            {
+                return this.NotFound();
+            }
+
             await this.gatherServices.LeaveGatherAsync(id, currentUser.Id);
 
             return this.RedirectToAction("Details", new { id = id });
@@ -87,6 +93,12 @@
         public async Task<IActionResult> Enroll(string id)
         {
             var currentUser = await this.userManager.GetUserAsync(User);
+
+            if (currentUser == null)
+            {
+                return this.NotFound();
+            }
+
             await this.gatherServices.EnrollGatherAsync(id, currentUser.Id);
 
             return this.RedirectToAction("Details", new {id = id});
@@ -97,6 +109,11 @@
         {
             var gather = this.gatherServices.GetGather<GatherDetailsViewModel>(gatherId);
             var currentUser = await this.userManager.GetUserAsync(User);
+
+            if (currentUser == null)
+            {
+                return this.NotFound();
+            }
 
             if (gather.Creator != currentUser)
             {
@@ -110,6 +127,19 @@
         [HttpGet]
         public async Task<IActionResult> Start(string id)
         {
+            var game = this.gatherServices.GetGather<GatherDetailsViewModel>(id);
+            var currentUser = await this.userManager.GetUserAsync(User);
+
+            if (game == null || currentUser == null)
+            {
+                return this.NotFound();
+            }
+
+            if (game.Creator != currentUser)
+            {
+                return this.Unauthorized();
+            }
+
             await this.gatherServices.StartGather(id);
 
             return this.RedirectToAction("Details", new {id = id});
@@ -118,6 +148,19 @@
         [HttpGet]
         public async Task<IActionResult> Complete(string id)
         {
+            var game = this.gatherServices.GetGather<GatherDetailsViewModel>(id);
+            var currentUser = await this.userManager.GetUserAsync(User);
+
+            if (game == null || currentUser == null)
+            {
+                return this.NotFound();
+            }
+
+            if (game.Creator != currentUser)
+            {
+                return this.Unauthorized();
+            }
+
             await this.gatherServices.CompleteGather(id);
             return this.RedirectToAction("Details", new {id = id});
         }
@@ -125,6 +168,19 @@
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
+            var game = this.gatherServices.GetGather<GatherDetailsViewModel>(id);
+            var currentUser = await this.userManager.GetUserAsync(User);
+
+            if (game == null || currentUser == null)
+            {
+                return this.NotFound();
+            }
+
+            if (game.Creator != currentUser)
+            {
+                return this.Unauthorized();
+            }
+            
             await this.gatherServices.DeleteGather(id);
 
             return this.RedirectToAction("Index");

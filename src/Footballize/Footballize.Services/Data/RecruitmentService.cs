@@ -42,13 +42,6 @@
 
         public async Task AddRecruitmentAsync(Recruitment recruitment)
         {
-            var recruitingUser = new RecruitmentUser
-            {
-                User = recruitment.Creator,
-                Recruitment = recruitment
-            };
-
-            await this.recruiterUserRepository.AddAsync(recruitingUser);
             await this.recruitmentRepository.AddAsync(recruitment);
             await this.recruitmentRepository.SaveChangesAsync();
         }
@@ -97,7 +90,7 @@
 
         }
 
-        public async Task StartRecruitment(string id)
+        public async Task StartRecruitmentAsync(string id)
         {
             var gameToStart = await this.recruitmentRepository.GetByIdAsync(id);
             gameToStart.Status = GameStatus.Started;
@@ -106,7 +99,7 @@
             await this.recruitmentRepository.SaveChangesAsync();
         }
 
-        public async Task CompleteRecruitment(string id)
+        public async Task CompleteRecruitmentAsync(string id)
         {
             var gameToStart = await this.recruitmentRepository.GetByIdAsync(id);
             gameToStart.Status = GameStatus.Finished;
@@ -115,7 +108,7 @@
             await this.recruitmentRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteRecruitment(string id)
+        public async Task DeleteRecruitmentAsync(string id)
         {
             var game = await this.recruitmentRepository.GetByIdAsync(id);
             this.recruitmentRepository.Delete(game);

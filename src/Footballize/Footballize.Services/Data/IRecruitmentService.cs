@@ -11,8 +11,8 @@
         Task AddRecruitmentAsync(Recruitment recruitment);
         Task LeaveRecruitmentAsync(string recruitmentId, string userId);
         Task EnrollRecruitmentAsync(string recruitmentId, string userId);
-        Task StartRecruitment(string id);
-        Task CompleteRecruitment(string id);
-        Task DeleteRecruitment(string id);
+        Task StartRecruitmentAsync(string id);
+        Task CompleteRecruitmentAsync(string id);
+        Task DeleteRecruitmentAsync(string id);
     }
 }

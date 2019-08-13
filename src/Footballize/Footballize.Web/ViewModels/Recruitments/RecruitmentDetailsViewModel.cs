@@ -1,4 +1,4 @@
-﻿namespace Footballize.Web.ViewModels.Gathers
+﻿namespace Footballize.Web.ViewModels.Recruitments
 {
     using System;
     using System.Collections.Generic;
@@ -8,18 +8,16 @@
     using Services.Mapping;
     using Users;
 
-    public class GatherDetailsViewModel : IMapFrom<Gather>
+    public class RecruitmentDetailsViewModel : IMapFrom<Recruitment>
     {
         public string Id { get; set; }
         public string Title { get; set; }
-        public string Description { get; set; }
         public DateTime StartingAt { get; set; }
         public PitchIndexViewModel Pitch { get; set; }
         public string PitchId { get; set; }
-        public TeamFormat TeamFormat { get; set; }
         public GameStatus Status { get; set; }
-        public  User Creator { get; set; }
+        public User Creator { get; set; }
         public int MaximumPlayers { get; set; }
-        public ICollection<UserGameDetailsViewModel> Players { get; set; }
+        public ICollection<UserGameDetailsViewModel> RecruitedUsers { get; set; }
     }
 }

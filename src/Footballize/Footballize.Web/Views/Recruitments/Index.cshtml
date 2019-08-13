@@ -24,10 +24,10 @@
             <thead>
                 <tr class="text-center">
                     <th scope="col">Title</th>
-                    <th scope="col">City</th>
+                    <th scope="col">Location</th>
                     <th scope="col">Field</th>
-                    <th scope="col">Game Time</th>
-                    <th scope="col">Players</th>
+                    <th scope="col">Starting Time</th>
+                    <th scope="col">Player Spots</th>
                     <th scope="col">Creator</th>
                     <th scope="col">Details</th>
                 </tr>
@@ -57,7 +57,7 @@
                     <td>@match.PlayersEnrolled/@match.MaximumPlayers</td>
                     <td><a href="#">@match.Creator.UserName</a></td>
                     <td>
-                        <a asp-controller="" asp-action="" asp-route-id="@match.Id" class="btn btn-primary btn-fab btn-round">
+                        <a asp-controller="Recruitments" asp-action="Details" asp-route-id="@match.Id" class="btn btn-primary btn-fab btn-round">
                             <i class="material-icons">toc</i>
                         </a>
                     </td>
