@@ -4,14 +4,16 @@ using Footballize.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Footballize.Data.Migrations
 {
     [DbContext(typeof(FootballizeDbContext))]
-    partial class FootballizeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190820055352_AddedTeams")]
+    partial class AddedTeams
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -327,13 +329,9 @@ namespace Footballize.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("CountryId");
-
                     b.Property<DateTime>("CreatedOn");
 
                     b.Property<DateTime?>("DeletedOn");
-
-                    b.Property<bool>("IsBanned");
 
                     b.Property<bool>("IsDeleted");
 
@@ -341,15 +339,11 @@ namespace Footballize.Data.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<string>("OwnerId");
+                    b.Property<int>("TeamFormat");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CountryId");
-
                     b.HasIndex("IsDeleted");
-
-                    b.HasIndex("OwnerId");
 
                     b.ToTable("Teams");
                 });
@@ -643,17 +637,6 @@ namespace Footballize.Data.Migrations
                         .WithMany("GamesRecruited")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("Footballize.Models.Team", b =>
-                {
-                    b.HasOne("Footballize.Models.Country", "Nationality")
-                        .WithMany()
-                        .HasForeignKey("CountryId");
-
-                    b.HasOne("Footballize.Models.User", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId");
                 });
 
             modelBuilder.Entity("Footballize.Models.TeamUser", b =>

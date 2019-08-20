@@ -84,6 +84,7 @@
             // Application services
             services.AddTransient<ICountryService, CountryService>();
             services.AddTransient<IProvinceServices, ProvinceService>();
+            services.AddTransient<ITeamService, TeamService>();
             services.AddTransient<ITownService, TownService>();
             services.AddTransient<IPitchService, PitchService>();
             services.AddTransient<IAddressService, AddressService>();

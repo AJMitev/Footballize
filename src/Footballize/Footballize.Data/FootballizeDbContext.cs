@@ -30,6 +30,8 @@
         public DbSet<Province> Provinces { get; set; }
         public DbSet<Pitch> Pitches { get; set; }
         public DbSet<Town> Towns { get; set; }
+        public DbSet<Team> Teams { get; set; }
+        public DbSet<TeamUser> TeamUsers { get; set; }
         public DbSet<Recruitment> Recruitments { get; set; }
         public DbSet<RecruitmentUser> RecruitmentUsers { get; set; }
 
@@ -44,6 +46,7 @@
             modelBuilder.ApplyConfiguration(new RecruitmentUserConfig());
             modelBuilder.ApplyConfiguration(new PitchConfig());
             modelBuilder.ApplyConfiguration(new ProvinceConfig());
+            modelBuilder.ApplyConfiguration(new TeamUserConfig());
             modelBuilder.ApplyConfiguration(new TownConfig());
             modelBuilder.ApplyConfiguration(new UserConfig());
 

@@ -4,14 +4,16 @@ using Footballize.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Footballize.Data.Migrations
 {
     [DbContext(typeof(FootballizeDbContext))]
-    partial class FootballizeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190820060646_AddingNationalityToTeam")]
+    partial class AddingNationalityToTeam
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -333,23 +335,17 @@ namespace Footballize.Data.Migrations
 
                     b.Property<DateTime?>("DeletedOn");
 
-                    b.Property<bool>("IsBanned");
-
                     b.Property<bool>("IsDeleted");
 
                     b.Property<DateTime?>("ModifiedOn");
 
                     b.Property<string>("Name");
 
-                    b.Property<string>("OwnerId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CountryId");
 
                     b.HasIndex("IsDeleted");
-
-                    b.HasIndex("OwnerId");
 
                     b.ToTable("Teams");
                 });
@@ -650,10 +646,6 @@ namespace Footballize.Data.Migrations
                     b.HasOne("Footballize.Models.Country", "Nationality")
                         .WithMany()
                         .HasForeignKey("CountryId");
-
-                    b.HasOne("Footballize.Models.User", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId");
                 });
 
             modelBuilder.Entity("Footballize.Models.TeamUser", b =>

@@ -3,6 +3,7 @@
     using System;
     using AutoMapper;
     using Models;
+    using Models.Enums;
     using Pitches;
     using Services.Mapping;
     using Users;
@@ -17,6 +18,7 @@
         public DateTime StartingAt { get; set; }
 
         public PitchIndexViewModel Pitch { get; set; }
+        public GameStatus Status { get; set; }
 
         public string Description { get; set; }
 

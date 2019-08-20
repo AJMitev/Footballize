@@ -27,13 +27,14 @@
                     <th scope="col">Location</th>
                     <th scope="col">Field</th>
                     <th scope="col">Starting Time</th>
+                    <th scope="col">Game Status</th>
                     <th scope="col">Player Spots</th>
                     <th scope="col">Creator</th>
                     <th scope="col">Details</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var match in Model.OrderBy(x => x.StartingAt))
+                @foreach (var match in Model.OrderBy(x=>x.Status).ThenBy(x => x.StartingAt))
             {
                 <tr class="text-center">
                     <th scope="row" class="text-left">@match.Title</th>
@@ -54,6 +55,7 @@
 
                     <td>@match.StartingAt.ToString("dd/MM/yyyy HH:ss")</td>
                     }
+                    <td>@match.Status</td>
                     <td>@match.PlayersEnrolled/@match.MaximumPlayers</td>
                     <td><a href="#">@match.Creator.UserName</a></td>
                     <td>

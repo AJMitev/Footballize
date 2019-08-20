@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Footballize.Web.ViewModels.Teams.TeamIndexViewModel>
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<div id="breadcrumb">
+    <nav aria-label="breadcrumb" role="navigation">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Teams</li>
+        </ol>
+    </nav>
+</div>
+<h2 class="title text-center">Teams</h2>
+
+<div class="text-right">
+    <a asp-action="Create" class="btn btn-primary btn-round">
+        <i class="material-icons">add</i> Create new Team
+        <div class="ripple-container"></div>
+    </a>
+</div>
+<div>
+    <table class="table">
+        <thead>
+            <tr class="text-center">
+
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Nationality</th>
+                <th scope="col">Number of Players</th>
+                <th scope="col">Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < @Model.ToList().Count; i++)
+            {
+
+                var team = Model.ToList()[i];
+                var number = i + 1;
+
+                <tr class="text-center">
+                    <th scope="row" class="text-left">@number</th>
+                    <td>@team.Name</td>
+                    <td><img width="24" src="img/flags/@(team.Nationality.ToLower()).png"> @team.Nationality</td>
+                    <td>@team.NumberOfPlayers</td>
+                    <td>
+                        <a asp-controller="Teams" asp-action="Details" asp-route-id="@team.Id" class="btn btn-primary btn-fab btn-round">
+                            <i class="material-icons">toc</i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -14,7 +14,8 @@
             this.Logins = new HashSet<IdentityUserLogin<string>>();
             this.GathersPlayed = new HashSet<GatherUser>();
             this.GathersCreated = new HashSet<Gather>();
-            this.GamesRecruited = new List<RecruitmentUser>();
+            this.GamesRecruited = new HashSet<RecruitmentUser>();
+            this.Teams = new HashSet<TeamUser>();
         }
 
         public string FirstName { get; set; }
@@ -28,6 +29,7 @@
         public DateTime? DeletedOn { get; set; }
 
         public virtual ICollection<Gather> GathersCreated { get; set; }
+        public virtual ICollection<TeamUser> Teams { get; set; }
 
         public virtual ICollection<GatherUser> GathersPlayed { get; set; }
         public virtual ICollection<RecruitmentUser> GamesRecruited { get; set; }

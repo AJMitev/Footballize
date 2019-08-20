@@ -130,7 +130,9 @@
                                 <a href="#" class="btn btn-primary btn-fab btn-fab-mini btn-round">
                                     <i class="material-icons">person</i>
                                 </a>
-                                @if (@Model.Creator.UserName.Equals(User.Identity.Name) && @player.Username != User.Identity.Name)
+                                @if (@Model.Creator.UserName.Equals(User.Identity.Name)
+                                     && @player.Username != User.Identity.Name
+                                     && @Model.Status.Equals(GameStatus.Registration))
                                 {
                                     <a asp-controller="Recruitments" asp-action="Kick" asp-route-gameId="@Model.Id" asp-route-playerId="@player.Id" class="btn btn-danger btn-fab btn-fab-mini btn-round">
                                         <i class="material-icons">block</i>
