@@ -25,7 +25,9 @@
             {
                 new RolesSeeder(),
                 new CountriesAndCitiesSeeder(),
-                new FieldsSeeder()
+                new FieldsSeeder(),
+                new UsersSeeder(),
+                new GamesSeeder()
             };
 
             foreach (var seeder in seeders)
