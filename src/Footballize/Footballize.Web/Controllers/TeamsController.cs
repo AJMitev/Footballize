@@ -2,12 +2,14 @@
 {
     using System.Threading.Tasks;
     using AutoMapper;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Services.Data;
     using ViewModels.Teams;
 
+    [Authorize]
     public class TeamsController : Controller
     {
         private readonly ITeamService teamService;

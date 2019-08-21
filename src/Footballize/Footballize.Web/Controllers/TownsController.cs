@@ -3,10 +3,12 @@
     using System.Threading.Tasks;
     using AutoMapper;
     using Footballize.Models;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using ViewModels.Towns;
     using Services.Data;
 
+    [Authorize]
     public class TownsController : Controller
     {
         private readonly ITownService townService;

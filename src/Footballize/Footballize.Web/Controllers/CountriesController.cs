@@ -3,10 +3,12 @@
     using System.Threading.Tasks;
     using AutoMapper;
     using Footballize.Models;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Services.Data;
     using ViewModels.Countries;
 
+    [Authorize]
     public class CountriesController : Controller
     {
         private readonly ICountryService countryService;

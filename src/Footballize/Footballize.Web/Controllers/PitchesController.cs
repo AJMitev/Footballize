@@ -6,7 +6,9 @@
     using Microsoft.AspNetCore.Mvc;
     using Services.Data;
     using Footballize.Web.ViewModels.Pitches;
+    using Microsoft.AspNetCore.Authorization;
 
+    [Authorize]
     public class PitchesController : Controller
     {
         private readonly IPitchService _pitchService;
