@@ -4,14 +4,16 @@ using Footballize.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Footballize.Data.Migrations
 {
     [DbContext(typeof(FootballizeDbContext))]
-    partial class FootballizeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190822062137_AddPasswordForTeamJoin")]
+    partial class AddPasswordForTeamJoin
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -339,17 +341,11 @@ namespace Footballize.Data.Migrations
 
                     b.Property<DateTime?>("ModifiedOn");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .IsUnicode(true);
+                    b.Property<string>("Name");
 
                     b.Property<string>("OwnerId");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .IsUnicode(true);
+                    b.Property<string>("Password");
 
                     b.HasKey("Id");
 

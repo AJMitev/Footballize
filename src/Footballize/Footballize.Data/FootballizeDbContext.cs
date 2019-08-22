@@ -46,6 +46,7 @@
             modelBuilder.ApplyConfiguration(new RecruitmentUserConfig());
             modelBuilder.ApplyConfiguration(new PitchConfig());
             modelBuilder.ApplyConfiguration(new ProvinceConfig());
+            modelBuilder.ApplyConfiguration(new TeamConfig());
             modelBuilder.ApplyConfiguration(new TeamUserConfig());
             modelBuilder.ApplyConfiguration(new TownConfig());
             modelBuilder.ApplyConfiguration(new UserConfig());

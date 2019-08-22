@@ -38,7 +38,10 @@
 
             foreach (var game in games)
             {
-                dbContext.Recruitments.Add(game);
+                if (!dbContext.Recruitments.Any(x => x.Title == game.Title))
+                {
+                    dbContext.Recruitments.Add(game);
+                }
             }
         }
 
@@ -75,7 +78,7 @@
 
             foreach (Gather gather in gathers)
             {
-                if (!dbContext.Countries.Any(x => x.Name == gather.Title))
+                if (!dbContext.Gathers.Any(x => x.Title == gather.Title))
                 {
                     dbContext.Gathers.Add(gather);
 
