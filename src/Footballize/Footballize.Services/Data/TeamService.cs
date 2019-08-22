@@ -110,6 +110,29 @@
             await this.teamRepository.SaveChangesAsync();
         }
 
+        public async  Task UpdateTeamPassword(Team team, string newPassword)
+        {
+            if (team == null || string.IsNullOrEmpty(newPassword) || string.IsNullOrWhiteSpace(newPassword))
+            {
+                return;
+            }
+
+            team.Password = this.HashPassword(newPassword);
+            this.teamRepository.Update(team);
+            await this.teamRepository.SaveChangesAsync();
+        }
+
+        public async Task UpdateTeam(Team team)
+        {
+            if (team == null)
+            {
+                return;
+            }
+
+            this.teamRepository.Update(team);
+            await this.teamRepository.SaveChangesAsync();
+        }
+
         private string HashPassword(string password)
         {
             using (SHA256 sha256Hash = SHA256.Create())
