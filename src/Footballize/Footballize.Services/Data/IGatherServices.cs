@@ -8,11 +8,12 @@
     {
         ICollection<TViewModel> GetGathers<TViewModel>();
         TViewModel GetGather<TViewModel>(string id);
+        Task<Gather> GetGatherAsync(string id);
         Task AddGatherAsync(Gather gather);
-        Task LeaveGatherAsync(string gatherId, string userId);
-        Task EnrollGatherAsync(string gatherId, string userId);
+        Task LeaveGatherAsync(Gather gather, string userId);
+        Task EnrollGatherAsync(Gather gather, User user);
         Task StartGather(string id);
         Task CompleteGather(string id);
-        Task DeleteGather(string id);
+        Task DeleteGatherAsync(string id);
     }
 }

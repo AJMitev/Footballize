@@ -46,17 +46,13 @@
             await this.gatherRepository.SaveChangesAsync();
         }
 
-        public async Task LeaveGatherAsync(string gatherId, string userId)
+        public async Task LeaveGatherAsync(Gather gather, string userId)
         {
-            var gather = this.gatherRepository
-                .All()
-                .Include(x => x.Players)
-                .SingleOrDefault(x => x.Id == gatherId);
 
             if (gather == null || gather.Status != GameStatus.Registration)
                 return;
 
-            var gatherUser = gather?.Players.SingleOrDefault(user => user.UserId.Equals(userId));
+            var gatherUser = gather?.Players.SingleOrDefault(u => u.UserId.Equals(userId));
 
             if (gatherUser == null)
             {
@@ -71,21 +67,10 @@
             await this.gatherRepository.SaveChangesAsync();
         }
 
-        public async Task EnrollGatherAsync(string gatherId, string userId)
+        public async Task EnrollGatherAsync(Gather gather, User user)
         {
-            var gather = this.gatherRepository
-                .All()
-                .Include(x => x.Players)
-                .SingleOrDefault(x => x.Id == gatherId);
-
-            if (gather == null || gather.Status != GameStatus.Registration || gather.Players.Count >= gather.MaximumPlayers)
+            if (user == null || gather == null || gather.Status != GameStatus.Registration || gather.Players.Count >= gather.MaximumPlayers)
                 return;
-
-            var user = await this.userRepository.GetByIdAsync(userId);
-
-            if (user == null)
-                return;
-
 
             var gatherUser = new GatherUser
             {
@@ -138,7 +123,7 @@
             await this.gatherRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteGather(string id)
+        public async Task DeleteGatherAsync(string id)
         {
             var gatherToDelete = await this.gatherRepository.GetByIdAsync(id);
 
@@ -149,6 +134,11 @@
 
             this.gatherRepository.Delete(gatherToDelete);
             await this.gatherRepository.SaveChangesAsync();
+        }
+
+        public async Task<Gather> GetGatherAsync(string id)
+        {
+            return await this.gatherRepository.GetByIdAsync(id);
         }
     }
 }

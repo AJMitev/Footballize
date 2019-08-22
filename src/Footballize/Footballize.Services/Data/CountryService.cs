@@ -34,7 +34,6 @@
         {
             return this.countriesRepository
                 .All()
-                .Where(x => !x.IsDeleted)
                 .OrderBy(x => x.Name)
                 .To<TViewModel>()
                 .ToList();
