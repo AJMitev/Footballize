@@ -17,6 +17,8 @@
         public string OwnerId { get; set; }
         public virtual User Owner { get; set; }
         public bool IsBanned { get; set; }
-        public ICollection<TeamUser> Players { get; set; }
+        public string Password { get; set; }
+        public virtual ICollection<TeamUser> Players { get; set; }
+        //TODO: Add Matches
     }
 }
