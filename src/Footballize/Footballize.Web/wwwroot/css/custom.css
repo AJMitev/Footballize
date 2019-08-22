@@ -90,3 +90,25 @@ hr {
 description {
     height: 2rem;
 }
+
+
+.banned {
+    margin: 1rem;
+}
+
+
+.form-group input[type=file] {
+    opacity: 1;
+    position: inherit;
+    z-index: auto;
+}
+
+
+#joinTeamBtn {
+    margin-left: 1rem;
+}
+
+.modal-backdrop {
+    /* bug fix - no overlay */
+    display: none;
+}

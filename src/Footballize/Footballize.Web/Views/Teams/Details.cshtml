@@ -1,0 +1,135 @@
+﻿@model Footballize.Web.ViewModels.Teams.TeamDetailsViewModel
+@{
+    ViewData["Title"] = "Team Details";
+}
+
+<div id="breadcrumb">
+    <nav aria-label="breadcrumb" role="navigation">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Teams" asp-action="Index">Teams</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Team Details</li>
+        </ol>
+    </nav>
+</div>
+<div class="row">
+    <div class=" col-8 offset-2">
+        @if (@Model.IsBanned)
+        {
+            <div class="alert alert-danger banned">
+                <div class="container">
+                    <div class="alert-icon">
+                        <i class="material-icons">error_outline</i>
+                    </div>
+                    <b>Banned:</b> Damn man! This team is unable to participate in games.
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header card-header-text card-header-primary">
+                <div class="card-text">
+                    <h4 class="card-title">@Model.Name </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class=" col-6">
+                        <div>
+                            <p class="h5 font-italic description">Nationality</p>
+                            <span class="h4">@Model.Nationality.Name</span>
+                        </div>
+                        <hr />
+                        <div>
+                            <p class="h5 font-italic description">Owner</p>
+                            <span class="h4">@Model.Owner.UserName</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-center">
+                            <img id="Logo" src="https://via.placeholder.com/250x250" class="img-thumbnail">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    @if (!Model.Owner.UserName.Equals(User.Identity.Name))
+    {
+        <div class="col-4 offset-4 text-center">
+            @if (@Model.Players.Any(x => x.Username == User.Identity.Name))
+            {
+                <a asp-controller="Teams" asp-action="Leave" asp-route-id="@Model.Id" class="btn btn-danger btn-round">
+                    <i class="material-icons">clear</i> Leave Team
+                </a>
+
+            }
+            else
+            {
+                <form class="form-inline" asp-action="Join">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="material-icons">fingerprint</i>
+                            </span>
+                        </div>
+                        <input type="password" class="form-control" name="password" placeholder="Enter Password to Join">
+                        <input type="hidden" class="form-control" name="id" value="@Model.Id">
+                        <button id="joinTeamBtn" type="submit" class="btn btn-primary mb-2">Join Team</button>
+                    </div>
+                </form>
+            }
+        </div>
+    }
+</div>
+<div class="row">
+    <div class="card">
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Player Name</th>
+                        <th>Player Username</th>
+                        <th>Games Played</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var player in @Model.Players)
+                    {
+                        <tr>
+                            <td>1</td>
+                            <td>@player.FullName</td>
+                            <td>@player.Username</td>
+                            <td>@player.GamesCompleted</td>
+                            <td>
+                                <a href="#" class="btn btn-primary btn-fab btn-fab-mini btn-round">
+                                    <i class="material-icons">person</i>
+                                </a>
+                                @if (@Model.Owner.UserName.Equals(User.Identity.Name) && @player.Username != User.Identity.Name)
+                                {
+                                    <a asp-controller="Teams" asp-action="Kick" asp-route-gatherId="@Model.Id" asp-route-playerId="@player.Id" class="btn btn-danger btn-fab btn-fab-mini btn-round">
+                                        <i class="material-icons">block</i>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @if (@Model.Owner.UserName.Equals(User.Identity.Name))
+    {
+        <a asp-controller="Teams" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-primary btn-link">Delete Team</a>
+        
+    }
+</div>

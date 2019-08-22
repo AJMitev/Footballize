@@ -81,10 +81,18 @@
 
             if (currentUser == null)
             {
+                return this.Forbid();
+            }
+
+            var gather = await this.gatherServices.GetGatherAsync(id);
+
+            if (gather == null)
+            {
                 return this.NotFound();
             }
 
-            await this.gatherServices.LeaveGatherAsync(id, currentUser.Id);
+
+            await this.gatherServices.LeaveGatherAsync(gather, currentUser.Id);
 
             return this.RedirectToAction("Details", new { id = id });
         }
@@ -92,14 +100,15 @@
         [HttpGet]
         public async Task<IActionResult> Enroll(string id)
         {
+            var gather = await this.gatherServices.GetGatherAsync(id);
             var currentUser = await this.userManager.GetUserAsync(User);
 
-            if (currentUser == null)
+            if (currentUser == null || gather == null)
             {
                 return this.NotFound();
             }
 
-            await this.gatherServices.EnrollGatherAsync(id, currentUser.Id);
+            await this.gatherServices.EnrollGatherAsync(gather, currentUser);
 
             return this.RedirectToAction("Details", new {id = id});
         }
@@ -107,7 +116,7 @@
         [HttpGet]
         public async Task<IActionResult> Kick(string gatherId, string playerId)
         {
-            var gather = this.gatherServices.GetGather<GatherDetailsViewModel>(gatherId);
+            var gather = await this.gatherServices.GetGatherAsync(gatherId);
             var currentUser = await this.userManager.GetUserAsync(User);
 
             if (currentUser == null)
@@ -115,12 +124,12 @@
                 return this.NotFound();
             }
 
-            if (gather.Creator != currentUser)
+            if (gather.Creator != currentUser || gather.Status != GameStatus.Registration)
             {
                 return this.Forbid();
             }
 
-            await this.gatherServices.LeaveGatherAsync(gatherId, playerId);
+            await this.gatherServices.LeaveGatherAsync(gather, playerId);
             return this.RedirectToAction("Details", new {id = gatherId});
         }
 
@@ -181,7 +190,7 @@
                 return this.Unauthorized();
             }
             
-            await this.gatherServices.DeleteGather(id);
+            await this.gatherServices.DeleteGatherAsync(id);
 
             return this.RedirectToAction("Index");
         }

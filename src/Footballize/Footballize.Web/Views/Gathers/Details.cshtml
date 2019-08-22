@@ -158,9 +158,6 @@
 @section Scripts
 {
     <script>
-        console.log( '@Html.Raw(Model.Pitch.AddressLocationLatitude).ToString().Replace(',','.')');
-        console.log( '@Html.Raw(Model.Pitch.AddressLocationLongitude).ToString().Replace(',','.')');
-
         function initMap() {
             var location =
             {
@@ -182,5 +179,9 @@
                     map: map
                 });
         }
+
+        
+
+        initMap();
     </script>
 }

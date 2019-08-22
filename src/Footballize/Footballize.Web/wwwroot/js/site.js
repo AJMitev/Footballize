@@ -2,3 +2,17 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
+function initMap(location) {
+    var map = new google.maps.Map(
+        document.getElementById('map'),
+        {
+            zoom: 14,
+            center: location
+        });
+
+    var marker = new google.maps.Marker(
+        {
+            position: location,
+            map: map
+        });
+};
