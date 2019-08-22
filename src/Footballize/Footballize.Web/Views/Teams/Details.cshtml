@@ -56,6 +56,11 @@
                 </div>
 
             </div>
+            @if (@Model.Owner.UserName.Equals(User.Identity.Name))
+            {
+                <a asp-controller="Teams" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-link">Edit Team</a>
+        
+            }
         </div>
     </div>
 </div>

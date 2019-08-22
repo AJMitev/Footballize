@@ -1,5 +1,7 @@
 ﻿namespace Footballize.Web
 {
+    using System.Collections.Generic;
+    using System.Globalization;
     using System.Reflection;
     using AutoMapper;
     using Microsoft.AspNetCore.Builder;
@@ -15,6 +17,7 @@
     using Data.Repositories;
     using Data.Seeding;
     using Footballize.Models;
+    using Microsoft.AspNetCore.Localization;
     using ViewModels;
     using Services;
     using Services.Data;
@@ -39,6 +42,12 @@
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("en-NZ");
+                options.SupportedCultures = new List<CultureInfo> { new CultureInfo("en-US"), new CultureInfo("en-NZ") };
+            });
+
             services.AddDbContext<FootballizeDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
@@ -58,21 +67,13 @@
                 ApplicationDbContextSeeder.Seed(dbContext, serviceScope.ServiceProvider);
             }
 
-            // Auto Mapper Configurations
-            //var mappingConfig = new MapperConfiguration(mc =>
-            //{
-            //    mc.AddProfile(new CountryMappingProfile());
-            //});
-
-            //IMapper mapper = mappingConfig.CreateMapper();
-            //services.AddSingleton(mapper);
             AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
-
+            
 
             services.AddMvc(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()))
                 .AddViewOptions(options => options.HtmlHelperOptions.ClientValidationEnabled = true)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
+            
             // Identity stores
             services.AddTransient<IUserStore<User>, FootballizeUserStore>();
             services.AddTransient<IRoleStore<Role>, FootballizeRoleStore>();

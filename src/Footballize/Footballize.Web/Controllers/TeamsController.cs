@@ -52,6 +52,42 @@
         }
 
         [HttpGet]
+        public IActionResult Edit(string id)
+        {
+            var teamToEdit = this.teamService.GetTeam<TeamEditInputModel>(id);
+
+            if (teamToEdit == null)
+            {
+                return this.NotFound();
+            }
+
+            return this.View(teamToEdit);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(TeamEditInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return this.View(model);
+            }
+
+            var teamToEdit = await this.teamService.GetTeamAsync(model.Id);
+
+            Mapper.Map<TeamEditInputModel, Team>(model,teamToEdit);
+
+            if (!string.IsNullOrEmpty(model.ChangePassword) && !string.IsNullOrWhiteSpace(model.ChangePassword))
+            {
+                await this.teamService.UpdateTeamPassword(teamToEdit, model.ChangePassword);
+            }
+
+            await this.teamService.UpdateTeam(teamToEdit);
+
+            return this.RedirectToAction("Details", new {id = model.Id});
+        }
+
+        [HttpGet]
         public IActionResult Details(string id)
         {
             var team = this.teamService.GetTeam<TeamDetailsViewModel>(id);
@@ -70,7 +106,6 @@
             //TODO: Implement me.
             return this.RedirectToAction("Index");
         }
-
 
         [HttpGet]
         public async Task<IActionResult> Delete(string id)

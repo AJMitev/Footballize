@@ -9,6 +9,8 @@
     public class RecruitmentsAddViewModel : IMapFrom<Recruitment>
     {
         [Required]
+        [MaxLength(23)]
+        [MinLength(5)]
         [Display(Name = "Title")]
         public string Title { get; set; }
 

@@ -8,6 +8,7 @@
     public class RecruitmentInputModel : IMapTo<Recruitment>
     {
         [Required]
+        [MaxLength(23)]
         public string Title { get; set; }
 
         [Required]
