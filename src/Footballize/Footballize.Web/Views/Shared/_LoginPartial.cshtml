@@ -1,3 +1,4 @@
+@using Footballize.Common
 @using Footballize.Models
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<User> SignInManager
@@ -10,23 +11,26 @@
         <li class="nav-item">
             <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
         </li>
-        <li class="dropdown nav-item">
-            <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
-                <i class="material-icons">apps</i> Entities
-            </a>
-            <div class="dropdown-menu">
-                <h6 class="dropdown-header">Localization Entities</h6>
-                <a class="dropdown-item" asp-controller="Countries" asp-action="Index">Countries</a>
-                <a asp-controller="Provinces" asp-action="Index" class="dropdown-item">Provinces</a>
-                <a asp-controller="Pitches" asp-action="Index" class="dropdown-item">Playfileds</a>
-                <div class="dropdown-divider"></div>
-                <a href="#pablo" class="dropdown-item">Players</a>
-                <div class="dropdown-divider"></div>
-                <a href="#pablo" class="dropdown-item">Gather Matches</a>
-                <a href="#pablo" class="dropdown-item">Versus Matches</a>
-                <a href="#pablo" class="dropdown-item">Recruiting a Players</a>
-            </div>
-        </li>
+        @if (User.IsInRole(@GlobalConstants.CanSeeAdminAreaRoleName))
+         {
+             <li class="dropdown nav-item">
+                 <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
+                     <i class="material-icons">apps</i> Entities
+                 </a>
+                 <div class="dropdown-menu">
+                     <h6 class="dropdown-header">Localization Entities</h6>
+                     <a class="dropdown-item" asp-controller="Countries" asp-action="Index">Countries</a>
+                     <a asp-controller="Provinces" asp-action="Index" class="dropdown-item">Provinces</a>
+                     <a asp-controller="Pitches" asp-action="Index" class="dropdown-item">Playfileds</a>
+                     <div class="dropdown-divider"></div>
+                     <a href="#pablo" class="dropdown-item">Players</a>
+                     <div class="dropdown-divider"></div>
+                     <a href="#pablo" class="dropdown-item">Gather Matches</a>
+                     <a href="#pablo" class="dropdown-item">Versus Matches</a>
+                     <a href="#pablo" class="dropdown-item">Recruiting a Players</a>
+                 </div>
+             </li>
+         }
         <li class="nav-item">
             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                 <button type="submit" class="nav-link btn btn-link"> <i class="material-icons">lock</i> Logout</button>

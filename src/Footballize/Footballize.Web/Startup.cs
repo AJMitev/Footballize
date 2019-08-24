@@ -85,7 +85,6 @@
             // Application services
             services.AddTransient<ICountryService, CountryService>();
             services.AddTransient<IProvinceServices, ProvinceService>();
-            services.AddTransient<ITeamService, TeamService>();
             services.AddTransient<ITownService, TownService>();
             services.AddTransient<IPitchService, PitchService>();
             services.AddTransient<IAddressService, AddressService>();
@@ -116,6 +115,11 @@
 
             app.UseMvc(routes =>
             {
+                routes.MapRoute(
+                    name: "areas",
+                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                );
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
