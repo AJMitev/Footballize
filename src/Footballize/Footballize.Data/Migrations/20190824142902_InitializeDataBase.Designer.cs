@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Footballize.Data.Migrations
 {
     [DbContext(typeof(FootballizeDbContext))]
-    [Migration("20190820060646_AddingNationalityToTeam")]
-    partial class AddingNationalityToTeam
+    [Migration("20190824142902_InitializeDataBase")]
+    partial class InitializeDataBase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -178,7 +178,7 @@ namespace Footballize.Data.Migrations
 
                     b.HasIndex("IsDeleted");
 
-                    b.ToTable("Location");
+                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("Footballize.Models.Pitch", b =>
@@ -308,6 +308,14 @@ namespace Footballize.Data.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<DateTime?>("DeletedOn");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("ModifiedOn");
+
                     b.Property<string>("Name")
                         .HasMaxLength(256);
 
@@ -315,6 +323,8 @@ namespace Footballize.Data.Migrations
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IsDeleted");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
@@ -335,17 +345,31 @@ namespace Footballize.Data.Migrations
 
                     b.Property<DateTime?>("DeletedOn");
 
+                    b.Property<bool>("IsBanned");
+
                     b.Property<bool>("IsDeleted");
 
                     b.Property<DateTime?>("ModifiedOn");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .IsUnicode(true);
+
+                    b.Property<string>("OwnerId");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .IsUnicode(true);
 
                     b.HasKey("Id");
 
                     b.HasIndex("CountryId");
 
                     b.HasIndex("IsDeleted");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Teams");
                 });
@@ -467,6 +491,10 @@ namespace Footballize.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
+
                     b.HasIndex("IsDeleted");
 
                     b.HasIndex("NormalizedEmail")
@@ -478,6 +506,10 @@ namespace Footballize.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UserName")
+                        .IsUnique()
+                        .HasFilter("[UserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -631,7 +663,7 @@ namespace Footballize.Data.Migrations
             modelBuilder.Entity("Footballize.Models.RecruitmentUser", b =>
                 {
                     b.HasOne("Footballize.Models.Recruitment", "Recruitment")
-                        .WithMany("RecruitedUsers")
+                        .WithMany("Players")
                         .HasForeignKey("RecruitmentId")
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -646,6 +678,10 @@ namespace Footballize.Data.Migrations
                     b.HasOne("Footballize.Models.Country", "Nationality")
                         .WithMany()
                         .HasForeignKey("CountryId");
+
+                    b.HasOne("Footballize.Models.User", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId");
                 });
 
             modelBuilder.Entity("Footballize.Models.TeamUser", b =>

@@ -176,7 +176,7 @@ namespace Footballize.Data.Migrations
 
                     b.HasIndex("IsDeleted");
 
-                    b.ToTable("Location");
+                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("Footballize.Models.Pitch", b =>
@@ -306,6 +306,14 @@ namespace Footballize.Data.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<DateTime?>("DeletedOn");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("ModifiedOn");
+
                     b.Property<string>("Name")
                         .HasMaxLength(256);
 
@@ -313,6 +321,8 @@ namespace Footballize.Data.Migrations
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IsDeleted");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
@@ -479,6 +489,10 @@ namespace Footballize.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
+
                     b.HasIndex("IsDeleted");
 
                     b.HasIndex("NormalizedEmail")
@@ -491,47 +505,11 @@ namespace Footballize.Data.Migrations
 
                     b.HasIndex("UserId");
 
+                    b.HasIndex("UserName")
+                        .IsUnique()
+                        .HasFilter("[UserName] IS NOT NULL");
+
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("Footballize.Models.Versus", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("AwayTeamId");
-
-                    b.Property<DateTime>("CreatedOn");
-
-                    b.Property<string>("CreatorId");
-
-                    b.Property<DateTime?>("DeletedOn");
-
-                    b.Property<string>("HomeTeamId");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<DateTime?>("ModifiedOn");
-
-                    b.Property<string>("PitchId");
-
-                    b.Property<DateTime>("StartingAt");
-
-                    b.Property<string>("Title");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AwayTeamId");
-
-                    b.HasIndex("CreatorId");
-
-                    b.HasIndex("HomeTeamId");
-
-                    b.HasIndex("IsDeleted");
-
-                    b.HasIndex("PitchId");
-
-                    b.ToTable("Versuses");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -729,25 +707,6 @@ namespace Footballize.Data.Migrations
                     b.HasOne("Footballize.Models.User")
                         .WithMany("Playpals")
                         .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("Footballize.Models.Versus", b =>
-                {
-                    b.HasOne("Footballize.Models.Team", "AwayTeam")
-                        .WithMany("AwayMatches")
-                        .HasForeignKey("AwayTeamId");
-
-                    b.HasOne("Footballize.Models.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatorId");
-
-                    b.HasOne("Footballize.Models.Team", "HomeTeam")
-                        .WithMany("HomeMatches")
-                        .HasForeignKey("HomeTeamId");
-
-                    b.HasOne("Footballize.Models.Pitch", "Pitch")
-                        .WithMany()
-                        .HasForeignKey("PitchId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
