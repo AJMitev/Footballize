@@ -46,7 +46,7 @@
         {
             return this.recruitmentRepository
                 .All()
-                .Include(x => x.RecruitedUsers)
+                .Include(x => x.Players)
                 .SingleOrDefault(x => x.Id == id);
         }
 
@@ -73,7 +73,7 @@
                 throw new ServiceException(ServiceException.KickPlayerOnlyInRegistrationMode);
             }
 
-            var gameUser = recruitment?.RecruitedUsers.SingleOrDefault(u => u.UserId.Equals(userId));
+            var gameUser = recruitment?.Players.SingleOrDefault(u => u.UserId.Equals(userId));
 
             if (gameUser == null)
             {
@@ -82,7 +82,7 @@
 
             this.recruiterUserRepository.Delete(gameUser);
 
-            recruitment.RecruitedUsers.Remove(gameUser);
+            recruitment.Players.Remove(gameUser);
             this.recruitmentRepository.Update(recruitment);
             await this.recruitmentRepository.SaveChangesAsync();
             await this.recruiterUserRepository.SaveChangesAsync();
@@ -94,12 +94,12 @@
             if (user == null || recruitment == null)
                 throw new ServiceException(ServiceException.InvalidRequestParameters);
 
-            if (recruitment.Status != GameStatus.Registration || recruitment.RecruitedUsers.Count >= recruitment.MaximumPlayers)
+            if (recruitment.Status != GameStatus.Registration || recruitment.Players.Count >= recruitment.MaximumPlayers)
             {
                 throw new ServiceException(ServiceException.NotInRegistrationOrNoFreeSlot);
             }
 
-            if (recruitment.RecruitedUsers.Any(x => x.UserId == user.Id))
+            if (recruitment.Players.Any(x => x.UserId == user.Id))
             {
                 throw new ServiceException(ServiceException.AlreadyJoined);
             }
@@ -110,7 +110,7 @@
                 Recruitment = recruitment
             };
 
-            recruitment.RecruitedUsers.Add(enrolledGame);
+            recruitment.Players.Add(enrolledGame);
 
             await this.recruiterUserRepository.AddAsync(enrolledGame);
             await this.recruiterUserRepository.SaveChangesAsync();
@@ -126,7 +126,7 @@
                 throw new ServiceException(ServiceException.InvalidRequestParameters);
             }
 
-            if (gameToStart.RecruitedUsers.Count != gameToStart.MaximumPlayers)
+            if (gameToStart.Players.Count != gameToStart.MaximumPlayers)
             {
                 throw new ServiceException(ServiceException.RequiredNumberOfPlayersNotReached);
             }

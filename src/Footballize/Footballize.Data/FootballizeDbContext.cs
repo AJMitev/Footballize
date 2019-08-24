@@ -34,6 +34,7 @@
         public DbSet<TeamUser> TeamUsers { get; set; }
         public DbSet<Recruitment> Recruitments { get; set; }
         public DbSet<RecruitmentUser> RecruitmentUsers { get; set; }
+        public DbSet<Versus> Versuses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -50,6 +51,7 @@
             modelBuilder.ApplyConfiguration(new TeamUserConfig());
             modelBuilder.ApplyConfiguration(new TownConfig());
             modelBuilder.ApplyConfiguration(new UserConfig());
+            modelBuilder.ApplyConfiguration(new VersusConfig());
 
             EntityIndexesConfiguration.Configure(modelBuilder);
             var entityTypes = modelBuilder.Model.GetEntityTypes().ToList();

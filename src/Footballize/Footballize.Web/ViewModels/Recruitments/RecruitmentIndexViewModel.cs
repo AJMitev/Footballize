@@ -31,7 +31,7 @@
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<Recruitment, RecruitmentIndexViewModel>()
-                .ForMember(x => x.PlayersEnrolled, opt => opt.MapFrom(y => y.RecruitedUsers.Count));
+                .ForMember(x => x.PlayersEnrolled, opt => opt.MapFrom(y => y.Players.Count));
         }
     }
 }

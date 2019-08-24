@@ -2,16 +2,20 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using Attributes;
     using Models;
     using Services.Mapping;
 
     public class RecruitmentInputModel : IMapTo<Recruitment>
     {
+        private const string StartingTimeErrorMessage = "Starting time should be in future.";
+
         [Required]
         [MaxLength(23)]
         public string Title { get; set; }
 
         [Required]
+        [DateTimeInFutureOnly(StartingTimeErrorMessage)]
         [Display(Name = "Starting Time")]
         public DateTime StartingAt { get; set; }
 

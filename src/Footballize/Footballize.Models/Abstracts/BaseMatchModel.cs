@@ -11,6 +11,5 @@
         public string PitchId { get; set; }
         public string CreatorId { get; set; }
         public virtual User Creator { get; set; }
-        public int MaximumPlayers { get; set; }
     }
 }

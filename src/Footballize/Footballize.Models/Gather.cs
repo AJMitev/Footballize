@@ -14,7 +14,7 @@
         }
 
         public string Description { get; set; }
-
+        public int MaximumPlayers { get; set; }
         public TeamFormat TeamFormat { get; set; }
         public GameStatus Status { get; set; }
         public ICollection<GatherUser> Players { get; set; }

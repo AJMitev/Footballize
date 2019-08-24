@@ -8,11 +8,12 @@
     {
         public Recruitment()
         {
-            this.RecruitedUsers = new List<RecruitmentUser>();
+            this.Players = new List<RecruitmentUser>();
             this.Status = GameStatus.Registration;
         }
 
+        public int MaximumPlayers { get; set; }
         public GameStatus Status { get; set; }
-        public ICollection<RecruitmentUser> RecruitedUsers { get; set; }
+        public ICollection<RecruitmentUser> Players { get; set; }
     }
 }

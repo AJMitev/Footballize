@@ -2,12 +2,15 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using Attributes;
     using Models;
     using Models.Enums;
     using Services.Mapping;
 
     public class RecruitmentsAddViewModel : IMapFrom<Recruitment>
     {
+        private const string StartingTimeErrorMessage = "Starting time should be in future.";
+
         [Required]
         [MaxLength(23)]
         [MinLength(5)]
@@ -20,6 +23,7 @@
         public string Description { get; set; }
 
         [Required]
+        [DateTimeInFutureOnly(StartingTimeErrorMessage)]
         [Display(Name = "Starting Time")]
         public DateTime StartingAt { get; set; }
 

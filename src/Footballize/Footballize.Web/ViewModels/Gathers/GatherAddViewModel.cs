@@ -2,11 +2,14 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using Attributes;
     using Models.Enums;
     using Services.Mapping;
 
     public class GatherAddViewModel: IMapFrom<GatherAddInputModel>
     {
+        private const string StartingTimeErrorMessage = "Starting time should be in future.";
+
         [Required]
         public string Title { get; set; }
 
@@ -16,6 +19,7 @@
         public string Description { get; set; }
 
         [Required]
+        [DateTimeInFutureOnly(StartingTimeErrorMessage)]
         [Display(Name = "Starting Time")]
         public DateTime StartingAt { get; set; }
 
