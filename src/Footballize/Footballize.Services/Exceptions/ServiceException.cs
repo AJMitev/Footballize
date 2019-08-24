@@ -12,6 +12,7 @@
         public const string PlayerIsNotPartOfTheGame = "This player is not participating on this game.";
         public const string NotInRegistrationOrNoFreeSlot = "The game is not in Registration mode or there is no free slot available.";
         public const string InvalidRequestParameters = "Your request parameters are invalid!";
+        public const string PlayerIsBannerd = "Banned players cannot participate games!";
 
         public ServiceException(string message) : base(message)
         {

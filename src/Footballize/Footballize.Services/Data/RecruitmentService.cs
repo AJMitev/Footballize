@@ -99,6 +99,11 @@
                 throw new ServiceException(ServiceException.NotInRegistrationOrNoFreeSlot);
             }
 
+            if (user.IsBanned)
+            {
+                throw new ServiceException(ServiceException.PlayerIsBannerd);
+            }
+
             if (recruitment.Players.Any(x => x.UserId == user.Id))
             {
                 throw new ServiceException(ServiceException.AlreadyJoined);
