@@ -11,7 +11,7 @@
     using Microsoft.EntityFrameworkCore;
     using Models.Interfaces;
 
-    public class FootballizeDbContext : IdentityDbContext<User,Role,string>
+    public class FootballizeDbContext : IdentityDbContext<User, Role, string>
     {
         private static readonly MethodInfo SetIsDeletedQueryFilterMethod =
             typeof(FootballizeDbContext).GetMethod(
@@ -29,9 +29,8 @@
         public DbSet<GatherUser> GatherUsers { get; set; }
         public DbSet<Province> Provinces { get; set; }
         public DbSet<Pitch> Pitches { get; set; }
+        public DbSet<Location> Locations { get; set; }
         public DbSet<Town> Towns { get; set; }
-        public DbSet<Team> Teams { get; set; }
-        public DbSet<TeamUser> TeamUsers { get; set; }
         public DbSet<Recruitment> Recruitments { get; set; }
         public DbSet<RecruitmentUser> RecruitmentUsers { get; set; }
 
@@ -43,11 +42,11 @@
             modelBuilder.ApplyConfiguration(new CountryConfig());
             modelBuilder.ApplyConfiguration(new GatherConfig());
             modelBuilder.ApplyConfiguration(new GatherUserConfig());
+            modelBuilder.ApplyConfiguration(new RecruitmentConfig());
             modelBuilder.ApplyConfiguration(new RecruitmentUserConfig());
             modelBuilder.ApplyConfiguration(new PitchConfig());
             modelBuilder.ApplyConfiguration(new ProvinceConfig());
-            modelBuilder.ApplyConfiguration(new TeamConfig());
-            modelBuilder.ApplyConfiguration(new TeamUserConfig());
+            modelBuilder.ApplyConfiguration(new LocationConfig());
             modelBuilder.ApplyConfiguration(new TownConfig());
             modelBuilder.ApplyConfiguration(new UserConfig());
 

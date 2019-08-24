@@ -24,9 +24,9 @@
             var seeders = new List<ISeeder>
             {
                 new RolesSeeder(),
+                new UsersSeeder(),
                 new CountriesAndCitiesSeeder(),
                 new FieldsSeeder(),
-                new UsersSeeder(),
                 new GamesSeeder()
             };
 

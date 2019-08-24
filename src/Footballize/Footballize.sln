@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Footballize.Web", "Football
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Footballize.Services", "Footballize.Services\Footballize.Services.csproj", "{369E407F-5188-4719-8B7D-9C76A97E2364}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Footballize.Common", "Footballize.Common\Footballize.Common.csproj", "{6D491941-D64D-4F22-BB15-FE16A1F4EB58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Footballize.Common", "Footballize.Common\Footballize.Common.csproj", "{6D491941-D64D-4F22-BB15-FE16A1F4EB58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
