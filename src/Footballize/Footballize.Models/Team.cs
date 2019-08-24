@@ -9,8 +9,6 @@
         public Team()
         {
             this.Players = new HashSet<TeamUser>();
-            this.HomeMatches = new HashSet<Versus>();
-            this.AwayMatches = new HashSet<Versus>();
         }
 
         public string Name { get; set; }
@@ -21,7 +19,5 @@
         public bool IsBanned { get; set; }
         public string Password { get; set; }
         public ICollection<TeamUser> Players { get; set; }
-        public ICollection<Versus> HomeMatches { get; set; }
-        public ICollection<Versus> AwayMatches { get; set; }
     }
 }
