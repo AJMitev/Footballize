@@ -8,9 +8,11 @@
     {
         ICollection<TViewModel> GetRecruitments<TViewModel>();
         TViewModel GetRecruitment<TViewModel>(string id);
+        Recruitment GetRecruitmentWithPlayers(string id);
+        Task<Recruitment> GetRecruitmentAsync(string id);
         Task AddRecruitmentAsync(Recruitment recruitment);
-        Task LeaveRecruitmentAsync(string recruitmentId, string userId);
-        Task EnrollRecruitmentAsync(string recruitmentId, string userId);
+        Task LeaveRecruitmentAsync(Recruitment recruitment, string userId);
+        Task EnrollRecruitmentAsync(Recruitment recruitment, User user);
         Task StartRecruitmentAsync(string id);
         Task CompleteRecruitmentAsync(string id);
         Task DeleteRecruitmentAsync(string id);

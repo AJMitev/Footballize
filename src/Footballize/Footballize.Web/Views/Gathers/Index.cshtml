@@ -13,7 +13,12 @@
     </nav>
 </div>
 <h2 class="title text-center">Games Available</h2>
-
+@if (TempData.ContainsKey("Error"))
+{
+    <div class="text-center">
+        <div class="alert text-danger"><strong>Error!</strong> @TempData["Error"]</div>
+    </div>
+}
 <div class="text-right">
     <a asp-action="Create" class="btn btn-primary btn-round">
             <i class="material-icons">add</i> Create new Gather

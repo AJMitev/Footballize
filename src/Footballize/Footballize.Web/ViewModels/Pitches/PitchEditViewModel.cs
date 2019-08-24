@@ -5,7 +5,7 @@
     using Models;
     using Services.Mapping;
 
-    public class PitchEditViewModel : IMapFrom<Pitch>, IHaveCustomMappings
+    public class PitchEditViewModel : IMapFrom<Pitch>, IMapFrom<PitchEditInputModel>, IHaveCustomMappings
     {
         public string Id { get; set; }
         public string Name { get; set; }

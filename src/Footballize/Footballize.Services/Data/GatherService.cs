@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Exceptions;
     using Footballize.Data.Repositories;
     using Mapping;
     using Microsoft.EntityFrameworkCore;
@@ -33,6 +34,11 @@
 
         public async Task AddGatherAsync(Gather gather)
         {
+            if (gather == null)
+            {
+                throw new ServiceException(ServiceException.InvalidRequestParameters);
+            }
+
             var gatherUser = new GatherUser
             {
                 Gather = gather,
@@ -48,29 +54,46 @@
 
         public async Task LeaveGatherAsync(Gather gather, string userId)
         {
+            if (gather == null)
+            {
+                throw new ServiceException(ServiceException.InvalidRequestParameters);
+            }
 
-            if (gather == null || gather.Status != GameStatus.Registration)
-                return;
+            if (gather.Status != GameStatus.Registration)
+            {
+                throw new ServiceException(ServiceException.KickPlayerOnlyInRegistrationMode);
+            }
 
             var gatherUser = gather?.Players.SingleOrDefault(u => u.UserId.Equals(userId));
 
             if (gatherUser == null)
             {
-                return;
+                throw new ServiceException(ServiceException.InvalidRequestParameters);
             }
-
 
             this.gatherUserRepository.Delete(gatherUser);
 
             gather.Players.Remove(gatherUser);
             this.gatherRepository.Update(gather);
+
+            await this.gatherUserRepository.SaveChangesAsync();
             await this.gatherRepository.SaveChangesAsync();
         }
 
         public async Task EnrollGatherAsync(Gather gather, User user)
         {
-            if (user == null || gather == null || gather.Status != GameStatus.Registration || gather.Players.Count >= gather.MaximumPlayers)
-                return;
+            if (user == null || gather == null)
+                throw new ServiceException(ServiceException.InvalidRequestParameters);
+
+            if (gather.Status != GameStatus.Registration || gather.Players.Count >= gather.MaximumPlayers)
+            {
+                throw new ServiceException(ServiceException.NotInRegistrationOrNoFreeSlot);
+            }
+
+            if (gather.Players.Any(x => x.UserId == user.Id))
+            {
+                throw new ServiceException(ServiceException.AlreadyJoined);
+            }
 
             var gatherUser = new GatherUser
             {
@@ -93,13 +116,23 @@
                 .ToList();
         }
 
-        public async Task StartGather(string id)
+        public async Task StartGatherAsync(string id)
         {
             var gather = await this.gatherRepository.GetByIdAsync(id);
 
             if (gather == null)
             {
-                return;
+                throw new ServiceException(ServiceException.InvalidRequestParameters);
+            }
+
+            if (gather.Players.Count != gather.MaximumPlayers)
+            {
+                throw new ServiceException(ServiceException.RequiredNumberOfPlayersNotReached);
+            }
+
+            if (gather.Status != GameStatus.Registration)
+            {
+                throw new ServiceException(ServiceException.ThisGameIsAlreadyStarted);
             }
 
             gather.Status = GameStatus.Started;
@@ -108,18 +141,23 @@
             await this.gatherRepository.SaveChangesAsync();
         }
 
-        public async Task CompleteGather(string id)
+        public async Task CompleteGatherAsync(string id)
         {
-            var gather = await this.gatherRepository.GetByIdAsync(id);
+            var game = await this.gatherRepository.GetByIdAsync(id);
 
-            if (gather == null)
+            if (game == null)
             {
-                return;
+                throw new ServiceException(ServiceException.InvalidRequestParameters);
             }
 
-            gather.Status = GameStatus.Finished;
+            if (game.Status != GameStatus.Started)
+            {
+                throw new ServiceException(ServiceException.ThisGameIsNotStartedYet);
+            }
 
-            this.gatherRepository.Update(gather);
+            game.Status = GameStatus.Finished;
+
+            this.gatherRepository.Update(game);
             await this.gatherRepository.SaveChangesAsync();
         }
 
@@ -129,7 +167,7 @@
 
             if (gatherToDelete == null)
             {
-                return;
+                throw new ServiceException(ServiceException.InvalidRequestParameters);
             }
 
             this.gatherRepository.Delete(gatherToDelete);
@@ -139,6 +177,11 @@
         public async Task<Gather> GetGatherAsync(string id)
         {
             return await this.gatherRepository.GetByIdAsync(id);
+        }
+
+        public Gather GetGatherWithPlayers(string id)
+        {
+            return this.gatherRepository.All().Include(x => x.Players).SingleOrDefault(x => x.Id == id);
         }
     }
 }

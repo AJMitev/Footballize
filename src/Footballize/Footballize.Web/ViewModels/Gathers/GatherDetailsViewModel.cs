@@ -6,6 +6,7 @@
     using Models.Enums;
     using Pitches;
     using Services.Mapping;
+    using Shared;
     using Users;
 
     public class GatherDetailsViewModel : IMapFrom<Gather>

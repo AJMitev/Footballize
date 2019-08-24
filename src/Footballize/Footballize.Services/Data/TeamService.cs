@@ -6,6 +6,7 @@
     using System.Security.Cryptography;
     using System.Text;
     using System.Threading.Tasks;
+    using Exceptions;
     using Footballize.Data.Repositories;
     using Mapping;
     using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,8 @@
 
     public class TeamService : ITeamService
     {
+        private const string InvalidJoinPasswordMessage = "Cannot join this team beaucase password is invalid";
+
         private readonly IDeletableEntityRepository<Team> teamRepository;
         private readonly IRepository<TeamUser> teamUserRepository;
 
@@ -31,6 +34,11 @@
 
         public async Task CreateTeamAsync(Team team)
         {
+            if (team == null)
+            {
+                throw new ServiceException(ServiceException.InvalidRequestParameters);
+            }
+
             var gatherUser = new TeamUser
             {
                 Team = team,
@@ -57,6 +65,11 @@
 
         public async Task DeleteTeamAsync(Team team)
         {
+            if (team == null)
+            {
+                throw new ServiceException(ServiceException.InvalidRequestParameters);
+            }
+
             this.teamRepository.Delete(team);
             await this.teamRepository.SaveChangesAsync();
         }
@@ -65,9 +78,14 @@
         {
             var isPasswordValid = this.TryValidatePassword(joinPassword, team.Password);
 
-            if (!isPasswordValid || user == null)
+            if (user == null)
             {
-                return;
+                throw new ServiceException(ServiceException.InvalidRequestParameters);
+            }
+
+            if (!isPasswordValid)
+            {
+                throw  new ServiceException(InvalidJoinPasswordMessage);
             }
 
             var teamRooster = new TeamUser
@@ -95,18 +113,25 @@
                 .SingleOrDefault(x => x.Id == id);
         }
 
-        public async Task LeaveTeamAsync(Team team, User player)
+        public async Task LeaveTeamAsync(Team team, string playerId)
         {
-            var rooster = team.Players.SingleOrDefault(x => x.UserId == player.Id);
+            if (team == null)
+            {
+                throw  new ServiceException(ServiceException.InvalidRequestParameters);
+            }
+
+            var rooster = team.Players.SingleOrDefault(x => x.UserId == playerId);
 
             if (rooster == null)
             {
-                return;
+               throw new ServiceException(ServiceException.PlayerIsNotPartOfTheGame);
             }
 
             this.teamUserRepository.Delete(rooster);
             team.Players.Remove(rooster);
             this.teamRepository.Update(team);
+
+            await this.teamUserRepository.SaveChangesAsync();
             await this.teamRepository.SaveChangesAsync();
         }
 
@@ -114,7 +139,7 @@
         {
             if (team == null || string.IsNullOrEmpty(newPassword) || string.IsNullOrWhiteSpace(newPassword))
             {
-                return;
+               throw new ServiceException(ServiceException.InvalidRequestParameters);
             }
 
             team.Password = this.HashPassword(newPassword);
@@ -126,7 +151,7 @@
         {
             if (team == null)
             {
-                return;
+               throw new ServiceException(ServiceException.InvalidRequestParameters);
             }
 
             this.teamRepository.Update(team);

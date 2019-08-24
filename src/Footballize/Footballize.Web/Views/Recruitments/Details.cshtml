@@ -1,6 +1,7 @@
 ﻿@using Footballize.Common
 @using Footballize.Models
 @using Footballize.Models.Enums
+@using Footballize.Web.ViewModels.Shared
 @using Microsoft.AspNetCore.Identity
 @model Footballize.Web.ViewModels.Recruitments.RecruitmentDetailsViewModel
 @inject UserManager<User> UserManager
@@ -17,6 +18,12 @@
         </ol>
     </nav>
 </div>
+@if (TempData.ContainsKey("Error"))
+{
+    <div class="text-center">
+        <div class="alert text-danger"><strong>Error!</strong> @TempData["Error"]</div>
+    </div>
+}
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -131,8 +138,8 @@
                                     <i class="material-icons">person</i>
                                 </a>
                                 @if (@Model.Creator.UserName.Equals(User.Identity.Name)
-                                     && @player.Username != User.Identity.Name
-                                     && @Model.Status.Equals(GameStatus.Registration))
+                                    && @player.Username != User.Identity.Name
+                                    && @Model.Status.Equals(GameStatus.Registration))
                                 {
                                     <a asp-controller="Recruitments" asp-action="Kick" asp-route-gameId="@Model.Id" asp-route-playerId="@player.Id" class="btn btn-danger btn-fab btn-fab-mini btn-round">
                                         <i class="material-icons">block</i>
@@ -147,8 +154,7 @@
     </div>
     @if (@Model.Creator.UserName.Equals(User.Identity.Name))
     {
-
-        <a asp-controller="Recruitments" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-primary btn-link">Delete Gather</a>
+        <partial name="_DeleteModalPartial" model="@(new DeleteModalPartialViewModel{Id = Model.Id, Title = Model.Title})" />
     }
 </div>
 

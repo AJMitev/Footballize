@@ -14,7 +14,7 @@
         Task CreateTeamAsync(Team team);
         Task DeleteTeamAsync(Team team);
         Task JoinTeamAsync(Team team, string joinPassword, User user);
-        Task LeaveTeamAsync(Team team, User player);
+        Task LeaveTeamAsync(Team team, string playerId);
         Task UpdateTeamPassword(Team team, string newPassword);
         Task UpdateTeam(Team team);
     }

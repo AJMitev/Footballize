@@ -1,7 +1,9 @@
 ﻿namespace Footballize.Web.Controllers
 {
+    using System;
     using System.Threading.Tasks;
     using AutoMapper;
+    using Footballize.Services.Exceptions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -45,10 +47,17 @@
 
             var newTeam = Mapper.Map<Team>(model);
             newTeam.Owner = await userManager.GetUserAsync(HttpContext.User);
-            
-            await this.teamService.CreateTeamAsync(newTeam);
 
-            return this.RedirectToAction("Index");
+            try
+            {
+                await this.teamService.CreateTeamAsync(newTeam);
+                return this.RedirectToAction("Index");
+            }
+            catch (ServiceException e)
+            {
+                this.TempData["Error"] = e.Message;
+                return this.RedirectToAction("Index");
+            }
         }
 
         [HttpGet]
@@ -73,18 +82,26 @@
                 return this.View(model);
             }
 
-            var teamToEdit = await this.teamService.GetTeamAsync(model.Id);
-
-            Mapper.Map<TeamEditInputModel, Team>(model,teamToEdit);
-
-            if (!string.IsNullOrEmpty(model.ChangePassword) && !string.IsNullOrWhiteSpace(model.ChangePassword))
+            try
             {
-                await this.teamService.UpdateTeamPassword(teamToEdit, model.ChangePassword);
+                var teamToEdit = await this.teamService.GetTeamAsync(model.Id);
+
+                Mapper.Map<TeamEditInputModel, Team>(model,teamToEdit);
+
+                if (!string.IsNullOrEmpty(model.ChangePassword) && !string.IsNullOrWhiteSpace(model.ChangePassword))
+                {
+                    await this.teamService.UpdateTeamPassword(teamToEdit, model.ChangePassword);
+                }
+
+                await this.teamService.UpdateTeam(teamToEdit);
+
+                return this.RedirectToAction("Details", new {id = model.Id});
             }
-
-            await this.teamService.UpdateTeam(teamToEdit);
-
-            return this.RedirectToAction("Details", new {id = model.Id});
+            catch (ServiceException e)
+            {
+                this.TempData["Error"] = e.Message;
+                return this.RedirectToAction("Details", new { id = model.Id });
+            }
         }
 
         [HttpGet]
@@ -101,13 +118,34 @@
         }
 
         [HttpGet]
-        public IActionResult Kick(string id)
+        public async Task<IActionResult> Kick(string teamId, string playerId)
         {
-            //TODO: Implement me.
-            return this.RedirectToAction("Index");
+            try
+            {
+                var team = await this.teamService.GetTeamAsync(teamId);
+                var currentUser = await this.userManager.GetUserAsync(User);
+
+                if (currentUser == null)
+                {
+                    return this.NotFound();
+                }
+
+                if (team.Owner != currentUser)
+                {
+                    return this.Forbid();
+                }
+
+                await this.teamService.LeaveTeamAsync(team, playerId);
+                return this.RedirectToAction("Details", new { id = teamId });
+            }
+            catch (ServiceException e)
+            {
+                this.TempData["Error"] = e.Message;
+                return this.RedirectToAction("Details", new { id = teamId });
+            }
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
             var team =  await this.teamService.GetTeamAsync(id);
@@ -117,29 +155,45 @@
                 return this.NotFound();
             }
 
-            await this.teamService.DeleteTeamAsync(team);
+            try
+            {
+                await this.teamService.DeleteTeamAsync(team);
 
-            return this.RedirectToAction("Index");
+                return this.RedirectToAction("Index");
+            }
+            catch (ServiceException e)
+            {
+                this.TempData["Error"] = e.Message;
+                return this.RedirectToAction("Details", new { id = id });
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Join(TeamJoinInputModel model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var team =  this.teamService.GetTeamWithPlayers(model.Id);
-                var user = await userManager.GetUserAsync(HttpContext.User);
-
-                if (team == null || user == null)
+                if (ModelState.IsValid)
                 {
-                    return this.NotFound();
+                    var team =  this.teamService.GetTeamWithPlayers(model.Id);
+                    var user = await userManager.GetUserAsync(HttpContext.User);
+
+                    if (team == null || user == null)
+                    {
+                        return this.NotFound();
+                    }
+
+                    await teamService.JoinTeamAsync(team, model.Password, user);
                 }
 
-                await teamService.JoinTeamAsync(team, model.Password, user);
+
+                return this.RedirectToAction("Details", new { id = model.Id });
             }
-
-
-            return this.RedirectToAction("Details", new { id = model.Id });
+            catch (ServiceException e)
+            {
+                this.TempData["Error"] = e.Message;
+                return this.RedirectToAction("Details", new { id = model.Id });
+            }
         }
 
         [HttpGet]
@@ -153,9 +207,17 @@
                 return this.NotFound();
             }
 
-            await this.teamService.LeaveTeamAsync(teamToLeave, leavingUser);
+            try
+            {
+                await this.teamService.LeaveTeamAsync(teamToLeave, leavingUser.Id);
 
-            return this.RedirectToAction("Details", new { id = id });
+                return this.RedirectToAction("Details", new { id = id });
+            }
+            catch (ServiceException e)
+            {
+                this.TempData["Error"] = e.Message;
+                return this.RedirectToAction("Details", new { id = id });
+            }
         }
     }
 }

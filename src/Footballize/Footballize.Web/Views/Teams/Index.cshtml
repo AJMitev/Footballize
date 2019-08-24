@@ -20,6 +20,12 @@
         <div class="ripple-container"></div>
     </a>
 </div>
+@if (TempData.ContainsKey("Error"))
+{
+    <div class="text-center">
+        <div class="alert text-danger"><strong>Error!</strong> @TempData["Error"]</div>
+    </div>
+}
 <div>
     <table class="table">
         <thead>

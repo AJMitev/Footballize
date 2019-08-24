@@ -70,8 +70,7 @@
         {
             if (!ModelState.IsValid)
             {
-                //TODO Return model
-                return this.View();
+                return this.View(Mapper.Map<PitchEditViewModel>(model));
             }
             
             await this._pitchService.UpdatePitchAsync(Mapper.Map<Pitch>(model));
