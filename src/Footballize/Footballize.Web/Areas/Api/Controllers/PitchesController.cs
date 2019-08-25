@@ -5,9 +5,7 @@
     using Services.Data;
     using ViewModels.Pitches;
 
-    [Route("api/[controller]")]
-    [ApiController]
-    public class PitchesController : ControllerBase
+    public class PitchesController : ApiController
     {
         private readonly IPitchService pitchService;
 

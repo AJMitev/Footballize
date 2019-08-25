@@ -5,9 +5,7 @@
     using ViewModels.Towns;
     using Services.Data;
 
-    [Route("api/[controller]")]
-    [ApiController]
-    public class TownsController : ControllerBase
+   public class TownsController : ApiController
     {
         private readonly ITownService townService;
 

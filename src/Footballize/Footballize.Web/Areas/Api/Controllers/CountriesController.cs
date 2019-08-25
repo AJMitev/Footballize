@@ -5,9 +5,8 @@
     using Services.Data;
     using ViewModels.Countries;
 
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CountriesController : ControllerBase
+   
+    public class CountriesController : ApiController
     {
         private readonly ICountryService countryService;
 

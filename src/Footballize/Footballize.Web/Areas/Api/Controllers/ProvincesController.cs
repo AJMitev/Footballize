@@ -5,9 +5,7 @@
     using Services.Data;
     using ViewModels.Provinces;
 
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProvincesController : ControllerBase
+   public class ProvincesController : ApiController
     {
         private readonly IProvinceServices provinceServices;
 
