@@ -4,6 +4,7 @@
     using System.Drawing;
     using System.Linq;
     using System.Threading.Tasks;
+    using Common;
     using Exceptions;
     using Footballize.Data.Repositories;
     using Mapping;
@@ -54,7 +55,7 @@
         {
             if (recruitment == null)
             {
-                throw new ServiceException(ServiceException.InvalidRequestParameters);
+                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
             }
 
             await this.recruitmentRepository.AddAsync(recruitment);
@@ -65,19 +66,19 @@
         {
             if (recruitment == null)
             {
-                throw new ServiceException(ServiceException.InvalidRequestParameters);
+                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
             }
 
             if (recruitment.Status != GameStatus.Registration)
             {
-                throw new ServiceException(ServiceException.KickPlayerOnlyInRegistrationMode);
+                throw new ServiceException(Common.GlobalConstants.KickPlayerOnlyInRegistrationModeErrorMessage);
             }
 
             var gameUser = recruitment?.Players.SingleOrDefault(u => u.UserId.Equals(userId));
 
             if (gameUser == null)
             {
-                throw new ServiceException(ServiceException.InvalidRequestParameters);
+                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
             }
 
             this.recruiterUserRepository.Delete(gameUser);
@@ -92,21 +93,21 @@
         {
 
             if (user == null || recruitment == null)
-                throw new ServiceException(ServiceException.InvalidRequestParameters);
+                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
 
             if (recruitment.Status != GameStatus.Registration || recruitment.Players.Count >= recruitment.MaximumPlayers)
             {
-                throw new ServiceException(ServiceException.NotInRegistrationOrNoFreeSlot);
+                throw new ServiceException(Common.GlobalConstants.NotInRegistrationOrNoFreeSlotErrorMessage);
             }
 
             if (user.IsBanned)
             {
-                throw new ServiceException(ServiceException.PlayerIsBannerd);
+                throw new ServiceException(Common.GlobalConstants.PlayerIsBannedErrorMessage);
             }
 
             if (recruitment.Players.Any(x => x.UserId == user.Id))
             {
-                throw new ServiceException(ServiceException.AlreadyJoined);
+                throw new ServiceException(Common.GlobalConstants.AlreadyJoinedErrorMessage);
             }
 
             var enrolledGame = new RecruitmentUser
@@ -128,17 +129,17 @@
 
             if (gameToStart == null)
             {
-                throw new ServiceException(ServiceException.InvalidRequestParameters);
+                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
             }
 
             if (gameToStart.Players.Count != gameToStart.MaximumPlayers)
             {
-                throw new ServiceException(ServiceException.RequiredNumberOfPlayersNotReached);
+                throw new ServiceException(Common.GlobalConstants.RequiredNumberOfPlayersNotReachedErrorMessage);
             }
 
             if (gameToStart.Status != GameStatus.Registration)
             {
-                throw new ServiceException(ServiceException.ThisGameIsAlreadyStarted);
+                throw new ServiceException(Common.GlobalConstants.ThisGameIsAlreadyStartedErrorMessage);
             }
 
             gameToStart.Status = GameStatus.Started;
@@ -153,12 +154,12 @@
 
             if (game == null)
             {
-                throw new ServiceException(ServiceException.InvalidRequestParameters);
+                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
             }
 
             if (game.Status != GameStatus.Started)
             {
-                throw new ServiceException(ServiceException.ThisGameIsNotStartedYet);
+                throw new ServiceException(Common.GlobalConstants.ThisGameIsNotStartedYetErrorMessage);
             }
 
             game.Status = GameStatus.Finished;
@@ -173,7 +174,7 @@
 
             if (game == null)
             {
-                throw new ServiceException(ServiceException.InvalidRequestParameters);
+                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
             }
 
             this.recruitmentRepository.Delete(game);

@@ -3,12 +3,14 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Common;
     using Exceptions;
     using Footballize.Data.Repositories;
     using Mapping;
     using Microsoft.EntityFrameworkCore;
     using Models;
     using Models.Enums;
+    using GlobalConstants = Common.GlobalConstants;
 
     public class GatherService : IGatherServices
     {
@@ -36,7 +38,7 @@
         {
             if (gather == null)
             {
-                throw new ServiceException(ServiceException.InvalidRequestParameters);
+                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
             }
 
             var gatherUser = new GatherUser
@@ -56,19 +58,19 @@
         {
             if (gather == null)
             {
-                throw new ServiceException(ServiceException.InvalidRequestParameters);
+                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
             }
 
             if (gather.Status != GameStatus.Registration)
             {
-                throw new ServiceException(ServiceException.KickPlayerOnlyInRegistrationMode);
+                throw new ServiceException(Common.GlobalConstants.KickPlayerOnlyInRegistrationModeErrorMessage);
             }
 
             var gatherUser = gather?.Players.SingleOrDefault(u => u.UserId.Equals(userId));
 
             if (gatherUser == null)
             {
-                throw new ServiceException(ServiceException.InvalidRequestParameters);
+                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
             }
 
             this.gatherUserRepository.Delete(gatherUser);
@@ -83,21 +85,21 @@
         public async Task EnrollGatherAsync(Gather gather, User user)
         {
             if (user == null || gather == null)
-                throw new ServiceException(ServiceException.InvalidRequestParameters);
+                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
 
             if (gather.Status != GameStatus.Registration || gather.Players.Count >= gather.MaximumPlayers)
             {
-                throw new ServiceException(ServiceException.NotInRegistrationOrNoFreeSlot);
+                throw new ServiceException(Common.GlobalConstants.NotInRegistrationOrNoFreeSlotErrorMessage);
             }
 
             if (user.IsBanned)
             {
-                throw new ServiceException(ServiceException.PlayerIsBannerd);
+                throw new ServiceException(Common.GlobalConstants.PlayerIsBannedErrorMessage);
             }
 
             if (gather.Players.Any(x => x.UserId == user.Id))
             {
-                throw new ServiceException(ServiceException.AlreadyJoined);
+                throw new ServiceException(Common.GlobalConstants.AlreadyJoinedErrorMessage);
             }
 
             var gatherUser = new GatherUser
@@ -127,17 +129,17 @@
 
             if (gather == null)
             {
-                throw new ServiceException(ServiceException.InvalidRequestParameters);
+                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
             }
 
             if (gather.Players.Count != gather.MaximumPlayers)
             {
-                throw new ServiceException(ServiceException.RequiredNumberOfPlayersNotReached);
+                throw new ServiceException(Common.GlobalConstants.RequiredNumberOfPlayersNotReachedErrorMessage);
             }
 
             if (gather.Status != GameStatus.Registration)
             {
-                throw new ServiceException(ServiceException.ThisGameIsAlreadyStarted);
+                throw new ServiceException(Common.GlobalConstants.ThisGameIsAlreadyStartedErrorMessage);
             }
 
             gather.Status = GameStatus.Started;
@@ -152,12 +154,12 @@
 
             if (game == null)
             {
-                throw new ServiceException(ServiceException.InvalidRequestParameters);
+                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
             }
 
             if (game.Status != GameStatus.Started)
             {
-                throw new ServiceException(ServiceException.ThisGameIsNotStartedYet);
+                throw new ServiceException(Common.GlobalConstants.ThisGameIsNotStartedYetErrorMessage);
             }
 
             game.Status = GameStatus.Finished;
@@ -172,7 +174,7 @@
 
             if (gatherToDelete == null)
             {
-                throw new ServiceException(ServiceException.InvalidRequestParameters);
+                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
             }
 
             this.gatherRepository.Delete(gatherToDelete);
