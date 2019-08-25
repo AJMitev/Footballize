@@ -1,0 +1,42 @@
+﻿@model  ICollection<Footballize.Web.ViewModels.Users.UserGameDetailsViewModel>
+@{
+    ViewData["Title"] = "Index";
+}
+<div id="breadcrumb">
+    <nav aria-label="breadcrumb" role="navigation">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Users</li>
+        </ol>
+    </nav>
+</div>
+
+<div>
+    <table class="table">
+        <thead>
+            <tr class="text-center">
+                <th scope="col">Nationality</th>
+                <th scope="col">Name</th>
+                <th scope="col">Username</th>
+                <th scope="col">Games Played</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var player in Model.OrderBy(x => x.FullName).ThenBy(x => x.Username))
+            {
+                <tr class="text-center">
+                    <th scope="row"><img src="/img/flags/bulgaria.png" width="16"></th>
+                    <td>@player.FullName</td>
+                    <td>@player.Username</td>
+                    <td>@player.GamesCompleted</td>
+                    <td>
+                        <a asp-controller="Users" asp-action="Details" asp-route-id="@player.Id" class="btn btn-primary btn-fab btn-round">
+                            <i class="material-icons">toc</i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

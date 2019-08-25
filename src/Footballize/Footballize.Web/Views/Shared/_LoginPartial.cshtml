@@ -1,3 +1,4 @@
+@using System.Security.Claims
 @using Footballize.Common
 @using Footballize.Models
 @using Microsoft.AspNetCore.Identity
@@ -9,11 +10,11 @@
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
-            <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
+            <a class="nav-link" asp-controller="Users" asp-action="Details" asp-route-id="@User.FindFirstValue(ClaimTypes.NameIdentifier)" title="Manage">Hello @User.Identity.Name!</a>
         </li>
         @if (User.IsInRole(@GlobalConstants.CanSeeAdminAreaRoleName))
          {
-             <li class="dropdown nav-item">
+             @*<li class="dropdown nav-item">
                  <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
                      <i class="material-icons">apps</i> Entities
                  </a>
@@ -29,6 +30,11 @@
                      <a href="#pablo" class="dropdown-item">Versus Matches</a>
                      <a href="#pablo" class="dropdown-item">Recruiting a Players</a>
                  </div>
+             </li>*@
+             <li class="nav-item">
+                 <a asp-area="Administration" asp-controller="Dashboard" asp-action="Index" class="nav-link" >
+                     <i class="material-icons">security</i> Dashboard
+                 </a>
              </li>
          }
         <li class="nav-item">

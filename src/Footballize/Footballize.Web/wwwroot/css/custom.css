@@ -112,3 +112,7 @@ description {
     /* bug fix - no overlay */
     display: none;
 }
+
+.profile-tabs {
+    margin-top: 2rem;
+}

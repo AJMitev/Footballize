@@ -18,6 +18,6 @@
         public GameStatus Status { get; set; }
         public User Creator { get; set; }
         public int MaximumPlayers { get; set; }
-        public ICollection<UserGameDetailsViewModel> RecruitedUsers { get; set; }
+        public ICollection<UserGameDetailsViewModel> Players { get; set; }
     }
 }

@@ -20,10 +20,6 @@
                 .HasColumnType("NVARCHAR(300)")
                 .HasMaxLength(300)
                 .IsUnicode();
-
-            builder.HasOne(e => e.Creator)
-                .WithMany(x => x.GathersCreated)
-                .HasForeignKey(e => e.CreatorId);
         }
     }
 }

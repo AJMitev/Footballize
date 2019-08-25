@@ -1,0 +1,202 @@
+﻿@using Footballize.Common
+@model Footballize.Web.ViewModels.Users.UserDetailsViewModel
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div id="breadcrumb">
+    <nav aria-label="breadcrumb" role="navigation">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Users" asp-action="Index">Users</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Details for @Model.UserName</li>
+        </ol>
+    </nav>
+</div>
+@if (TempData.ContainsKey("Error"))
+{
+    <div class="text-center">
+        <div class="alert text-danger"><strong>Error!</strong> @TempData["Error"]</div>
+    </div>
+}
+<div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 ml-auto mr-auto">
+                <div class="profile text-center">
+                    <div class="avatar">
+                        <img src="https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Bearded_Man-17-512.png" width="150" alt="Circle Image" class="img-raised rounded-circle img-fluid">
+                    </div>
+                    <div class="name">
+                        <h3 class="title">
+                            <span><img src="/img/flags/bulgaria.png" width="24px" /></span> @Model.FirstName @Model.LastName
+                            @if (Model.IsSameUser)
+                            {
+                                <a asp-area="Identity" asp-page="/Account/Manage/Index" class="btn btn-danger btn-fab btn-fab-mini btn-round" data-toggle="tooltip" data-placement="top" title="Mange Profile">
+                                    <i class="material-icons">edit</i>
+                                </a>
+
+                            }
+                        </h3>
+                        @if (@Model.IsBanned)
+                        {
+                            <h6 class="text-danger">Banned</h6>
+                        }
+
+                        @if (!Model.IsSameUser)
+                        {
+                            if (@Model.Playpals.Any(x => x.UserName == User.Identity.Name))
+                            {
+                                <a asp-controller="Users" asp-action="RemovePlaypal" asp-route-id="@Model.Id" class="btn btn-danger btn-fab btn-fab-mini btn-round" data-toggle="tooltip" data-placement="top" title="Remove from Playpals">
+                                    <i class="material-icons">clear</i>
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Users" asp-action="AddPlaypal" asp-route-id="@Model.Id" class="btn btn-primary btn-fab btn-fab-mini btn-round" data-toggle="tooltip" data-placement="top" title="Add as Playpal">
+                                    <i class="material-icons">person_add</i>
+                                </a>
+                            }
+                            <a href="mailto://@Model.Email" class="btn btn-warning btn-fab btn-fab-mini btn-round" data-toggle="tooltip" data-placement="top" title="Send email">
+                                <i class="material-icons">mail</i>
+                            </a>
+                        }
+
+                        @if (User.IsInRole(GlobalConstants.CanBanPlayers))
+                        {
+                            <a class="btn btn-danger btn-fab btn-fab-mini btn-round" data-toggle="tooltip" data-placement="top" title="Ban Player">
+                                <i class="material-icons">gavel</i>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 ml-auto mr-auto">
+                <div class="profile-tabs">
+                    <ul class="nav nav-pills nav-pills-icons justify-content-center" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#gathers" role="tab" data-toggle="tab">
+                                <i class="material-icons">supervisor_account</i> Gathers Played
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#games" role="tab" data-toggle="tab">
+                                <i class="material-icons">group_add</i> Recruited in
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#playpals" role="tab" data-toggle="tab">
+                                <i class="material-icons">person_pin</i> Playpals
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="tab-content tab-space">
+            <div class="tab-pane active text-center gallery" id="gathers">
+                @if (@Model.GathersPlayed.Any())
+                {
+                    <div class="row">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Team Format</th>
+                                    <th>Status</th>
+                                    <th>Played On</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var gather in @Model.GathersPlayed)
+                                {
+                                    <tr>
+                                        <td>@gather.Gather.Title</td>
+                                        <td>@gather.Gather.TeamFormat</td>
+                                        <td>@gather.Gather.Status</td>
+                                        <td>@gather.Gather.StartingAt</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="h2 text-center">@Model.UserName still hasn't played any gathers.</p>
+                }
+            </div>
+            <div class="tab-pane text-center gallery" id="games">
+
+                @if (@Model.GamesRecruited.Any())
+                {
+                    <div class="row">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Players Searched</th>
+                                <th>Status</th>
+                                <th>Played On</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            @foreach (var game in @Model.GamesRecruited)
+                            {
+                                <tr>
+                                    <td>@game.Recruitment.Title</td>
+                                    <td>@game.Recruitment.MaximumPlayers</td>
+                                    <td>@game.Recruitment.Status</td>
+                                    <td>@game.Recruitment.StartingAt</td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="h2 text-center">@Model.UserName still hasn't played any games.</p>
+                }
+            </div>
+            <div class="tab-pane text-center gallery" id="playpals">
+
+                @if (@Model.Playpals.Any())
+                {
+                    <div class="row">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Full Name</th>
+                                <th>Recruited in</th>
+                                <th>Gathers Played</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            @foreach (var playpal in @Model.Playpals)
+                            {
+                                <tr>
+                                    <td>@playpal.UserName</td>
+                                    <td>@playpal.FirstName @playpal.LastName</td>
+                                    <td>@playpal.GamesRecruited.Count</td>
+                                    <td>@playpal.GathersPlayed.Count</td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="h2 text-center">@Model.UserName still hasn't any playpals.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -13,8 +13,8 @@
             this.Claims = new HashSet<IdentityUserClaim<string>>();
             this.Logins = new HashSet<IdentityUserLogin<string>>();
             this.GathersPlayed = new HashSet<GatherUser>();
-            this.GathersCreated = new HashSet<Gather>();
             this.GamesRecruited = new HashSet<RecruitmentUser>();
+            this.Playpals = new HashSet<User>();
         }
 
         public string FirstName { get; set; }
@@ -25,11 +25,9 @@
         public DateTime? ModifiedOn { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime? DeletedOn { get; set; }
-
-        public virtual ICollection<Gather> GathersCreated { get; set; }
-
-        public virtual ICollection<GatherUser> GathersPlayed { get; set; }
-        public virtual ICollection<RecruitmentUser> GamesRecruited { get; set; }
+        
+        public ICollection<GatherUser> GathersPlayed { get; set; }
+        public ICollection<RecruitmentUser> GamesRecruited { get; set; }
 
         public virtual ICollection<IdentityUserRole<string>> Roles { get; set; }
 
