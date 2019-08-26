@@ -22,6 +22,7 @@
             this.userManager = userManager;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Index()
         {

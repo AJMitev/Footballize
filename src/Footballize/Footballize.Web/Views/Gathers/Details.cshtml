@@ -110,7 +110,7 @@
                 </a>
 
             }
-            else if(@Model.Players.Count < @Model.MaximumPlayers)
+            else if (@Model.Players.Count < @Model.MaximumPlayers)
             {
                 <a asp-controller="Gathers" asp-action="Enroll" asp-route-id="@Model.Id" class="btn btn-primary btn-round">
                     <i class="material-icons">add</i> Enroll Gather
@@ -139,14 +139,20 @@
                             <td>@player.FullName</td>
                             <td>@player.GamesCompleted</td>
                             <td>
-                                <a href="#" class="btn btn-primary btn-fab btn-fab-mini btn-round">
+                                <a asp-controller="Users" asp-action="Details" asp-route-id="@player.Id" class="btn btn-primary btn-fab btn-fab-mini btn-round">
                                     <i class="material-icons">person</i>
                                 </a>
-                                @if (@Model.Creator.UserName.Equals(User.Identity.Name) && @player.Username != User.Identity.Name)
+                                @if (player.Username != User.Identity.Name)
                                 {
-                                    <a asp-controller="Gathers" asp-action="Kick" asp-route-gatherId="@Model.Id" asp-route-playerId="@player.Id" class="btn btn-danger btn-fab btn-fab-mini btn-round">
-                                        <i class="material-icons">block</i>
+                                    <a asp-controller="Users" asp-action="Report" asp-route-id="@player.Id" class="btn btn-warning btn-fab btn-fab-mini btn-round">
+                                        <i class="material-icons">report</i>
                                     </a>
+                                    @if (Model.Creator.UserName.Equals(User.Identity.Name))
+                                    {
+                                        <a asp-controller="Gathers" asp-action="Kick" asp-route-gatherId="@Model.Id" asp-route-playerId="@player.Id" class="btn btn-danger btn-fab btn-fab-mini btn-round">
+                                            <i class="material-icons">block</i>
+                                        </a>
+                                    }
                                 }
                             </td>
                         </tr>
@@ -157,7 +163,7 @@
     </div>
     @if (@Model.Creator.UserName.Equals(User.Identity.Name))
     {
-        <partial name="_DeleteModalPartial" model="@(new DeleteModalPartialViewModel{Id = Model.Id, Title = Model.Title})"/>
+        <partial name="_DeleteModalPartial" model="@(new DeleteModalPartialViewModel{Id = Model.Id, Title = Model.Title})" />
     }
 </div>
 
@@ -186,7 +192,7 @@
                 });
         }
 
-        
+
 
         initMap();
     </script>

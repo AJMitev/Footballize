@@ -134,16 +134,20 @@
                             <td>@player.FullName</td>
                             <td>@player.GamesCompleted</td>
                             <td>
-                                <a href="#" class="btn btn-primary btn-fab btn-fab-mini btn-round">
+                                <a asp-controller="Users" asp-action="Details" asp-route-id="@player.Id" class="btn btn-primary btn-fab btn-fab-mini btn-round">
                                     <i class="material-icons">person</i>
                                 </a>
-                                @if (@Model.Creator.UserName.Equals(User.Identity.Name)
-                                    && @player.Username != User.Identity.Name
-                                    && @Model.Status.Equals(GameStatus.Registration))
+                                @if (player.Username != User.Identity.Name)
                                 {
-                                    <a asp-controller="Recruitments" asp-action="Kick" asp-route-gameId="@Model.Id" asp-route-playerId="@player.Id" class="btn btn-danger btn-fab btn-fab-mini btn-round">
-                                        <i class="material-icons">block</i>
+                                    <a asp-controller="Users" asp-action="Report" asp-route-id="@player.Id" class="btn btn-warning btn-fab btn-fab-mini btn-round">
+                                        <i class="material-icons">report</i>
                                     </a>
+                                    @if (Model.Creator.UserName.Equals(User.Identity.Name) && Model.Status.Equals(GameStatus.Registration))
+                                     {
+                                         <a asp-controller="Recruitments" asp-action="Kick" asp-route-gatherId="@Model.Id" asp-route-playerId="@player.Id" class="btn btn-danger btn-fab btn-fab-mini btn-round">
+                                             <i class="material-icons">block</i>
+                                         </a>
+                                     }
                                 }
                             </td>
                         </tr>
