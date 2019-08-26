@@ -209,6 +209,29 @@ namespace Footballize.Data.Migrations
                     b.ToTable("Pitches");
                 });
 
+            modelBuilder.Entity("Footballize.Models.Playpal", b =>
+                {
+                    b.Property<string>("FromUserId");
+
+                    b.Property<string>("ToUserId");
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<DateTime?>("DeletedOn");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("ModifiedOn");
+
+                    b.HasKey("FromUserId", "ToUserId");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.HasIndex("ToUserId");
+
+                    b.ToTable("Playpals");
+                });
+
             modelBuilder.Entity("Footballize.Models.Province", b =>
                 {
                     b.Property<string>("Id")
@@ -332,69 +355,6 @@ namespace Footballize.Data.Migrations
                     b.ToTable("AspNetRoles");
                 });
 
-            modelBuilder.Entity("Footballize.Models.Team", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CountryId");
-
-                    b.Property<DateTime>("CreatedOn");
-
-                    b.Property<DateTime?>("DeletedOn");
-
-                    b.Property<bool>("IsBanned");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<DateTime?>("ModifiedOn");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .IsUnicode(true);
-
-                    b.Property<string>("OwnerId");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .IsUnicode(true);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CountryId");
-
-                    b.HasIndex("IsDeleted");
-
-                    b.HasIndex("OwnerId");
-
-                    b.ToTable("Teams");
-                });
-
-            modelBuilder.Entity("Footballize.Models.TeamUser", b =>
-                {
-                    b.Property<string>("UserId");
-
-                    b.Property<string>("TeamId");
-
-                    b.Property<DateTime>("CreatedOn");
-
-                    b.Property<DateTime?>("DeletedOn");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<DateTime?>("ModifiedOn");
-
-                    b.HasKey("UserId", "TeamId");
-
-                    b.HasIndex("IsDeleted");
-
-                    b.HasIndex("TeamId");
-
-                    b.ToTable("TeamUsers");
-                });
-
             modelBuilder.Entity("Footballize.Models.Town", b =>
                 {
                     b.Property<string>("Id")
@@ -431,6 +391,8 @@ namespace Footballize.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("AccessFailedCount");
+
+                    b.Property<DateTime?>("BanUntil");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
@@ -482,8 +444,6 @@ namespace Footballize.Data.Migrations
 
                     b.Property<bool>("TwoFactorEnabled");
 
-                    b.Property<string>("UserId");
-
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
 
@@ -503,13 +463,44 @@ namespace Footballize.Data.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("UserId");
-
                     b.HasIndex("UserName")
                         .IsUnique()
                         .HasFilter("[UserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("Footballize.Models.UserReport", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<DateTime?>("DeletedOn");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("ModifiedOn");
+
+                    b.Property<string>("ReportedUserId")
+                        .IsRequired();
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR(350)")
+                        .HasMaxLength(350)
+                        .IsUnicode(true);
+
+                    b.Property<int>("Type");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.HasIndex("ReportedUserId");
+
+                    b.ToTable("UserReports");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -612,7 +603,7 @@ namespace Footballize.Data.Migrations
             modelBuilder.Entity("Footballize.Models.Gather", b =>
                 {
                     b.HasOne("Footballize.Models.User", "Creator")
-                        .WithMany("GathersCreated")
+                        .WithMany()
                         .HasForeignKey("CreatorId");
 
                     b.HasOne("Footballize.Models.Pitch", "Pitch")
@@ -638,6 +629,19 @@ namespace Footballize.Data.Migrations
                     b.HasOne("Footballize.Models.Address", "Address")
                         .WithMany()
                         .HasForeignKey("AddressId");
+                });
+
+            modelBuilder.Entity("Footballize.Models.Playpal", b =>
+                {
+                    b.HasOne("Footballize.Models.User", "FromUser")
+                        .WithMany("PlaypalsAdded")
+                        .HasForeignKey("FromUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Footballize.Models.User", "ToUser")
+                        .WithMany("PlaypalsAddedMe")
+                        .HasForeignKey("ToUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Footballize.Models.Province", b =>
@@ -671,30 +675,6 @@ namespace Footballize.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("Footballize.Models.Team", b =>
-                {
-                    b.HasOne("Footballize.Models.Country", "Nationality")
-                        .WithMany()
-                        .HasForeignKey("CountryId");
-
-                    b.HasOne("Footballize.Models.User", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId");
-                });
-
-            modelBuilder.Entity("Footballize.Models.TeamUser", b =>
-                {
-                    b.HasOne("Footballize.Models.Team", "Team")
-                        .WithMany("Players")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Footballize.Models.User", "User")
-                        .WithMany("Teams")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
             modelBuilder.Entity("Footballize.Models.Town", b =>
                 {
                     b.HasOne("Footballize.Models.Province", "Province")
@@ -702,11 +682,12 @@ namespace Footballize.Data.Migrations
                         .HasForeignKey("ProvinceId");
                 });
 
-            modelBuilder.Entity("Footballize.Models.User", b =>
+            modelBuilder.Entity("Footballize.Models.UserReport", b =>
                 {
-                    b.HasOne("Footballize.Models.User")
-                        .WithMany("Playpals")
-                        .HasForeignKey("UserId");
+                    b.HasOne("Footballize.Models.User", "ReportedUser")
+                        .WithMany()
+                        .HasForeignKey("ReportedUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -39,6 +39,7 @@ namespace Footballize.Data.Migrations
                     PasswordHash = table.Column<string>(nullable: true),
                     SecurityStamp = table.Column<string>(nullable: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
                     PhoneNumberConfirmed = table.Column<bool>(nullable: false),
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
@@ -46,23 +47,16 @@ namespace Footballize.Data.Migrations
                     AccessFailedCount = table.Column<int>(nullable: false),
                     FirstName = table.Column<string>(type: "NVARCHAR(30)", maxLength: 30, nullable: false),
                     LastName = table.Column<string>(type: "NVARCHAR(30)", maxLength: 30, nullable: false),
-                    PhoneNumber = table.Column<string>(nullable: true),
                     IsBanned = table.Column<bool>(nullable: false),
+                    BanUntil = table.Column<DateTime>(nullable: true),
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
-                    DeletedOn = table.Column<DateTime>(nullable: true),
-                    UserId = table.Column<string>(nullable: true)
+                    DeletedOn = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -206,6 +200,58 @@ namespace Footballize.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Playpals",
+                columns: table => new
+                {
+                    FromUserId = table.Column<string>(nullable: false),
+                    ToUserId = table.Column<string>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeletedOn = table.Column<DateTime>(nullable: true),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Playpals", x => new { x.FromUserId, x.ToUserId });
+                    table.ForeignKey(
+                        name: "FK_Playpals_AspNetUsers_FromUserId",
+                        column: x => x.FromUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Playpals_AspNetUsers_ToUserId",
+                        column: x => x.ToUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserReports",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeletedOn = table.Column<DateTime>(nullable: true),
+                    Type = table.Column<int>(nullable: false),
+                    Text = table.Column<string>(type: "NVARCHAR(350)", maxLength: 350, nullable: false),
+                    ReportedUserId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserReports", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserReports_AspNetUsers_ReportedUserId",
+                        column: x => x.ReportedUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Provinces",
                 columns: table => new
                 {
@@ -229,38 +275,6 @@ namespace Footballize.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Teams",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    DeletedOn = table.Column<DateTime>(nullable: true),
-                    Name = table.Column<string>(maxLength: 30, nullable: false),
-                    CountryId = table.Column<string>(nullable: true),
-                    OwnerId = table.Column<string>(nullable: true),
-                    IsBanned = table.Column<bool>(nullable: false),
-                    Password = table.Column<string>(maxLength: 10, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Teams", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Teams_Countries_CountryId",
-                        column: x => x.CountryId,
-                        principalTable: "Countries",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Teams_AspNetUsers_OwnerId",
-                        column: x => x.OwnerId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Towns",
                 columns: table => new
                 {
@@ -279,34 +293,6 @@ namespace Footballize.Data.Migrations
                         name: "FK_Towns_Provinces_ProvinceId",
                         column: x => x.ProvinceId,
                         principalTable: "Provinces",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TeamUsers",
-                columns: table => new
-                {
-                    TeamId = table.Column<string>(nullable: false),
-                    UserId = table.Column<string>(nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    DeletedOn = table.Column<DateTime>(nullable: true),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TeamUsers", x => new { x.UserId, x.TeamId });
-                    table.ForeignKey(
-                        name: "FK_TeamUsers_Teams_TeamId",
-                        column: x => x.TeamId,
-                        principalTable: "Teams",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_TeamUsers_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -561,11 +547,6 @@ namespace Footballize.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_UserId",
-                table: "AspNetUsers",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_UserName",
                 table: "AspNetUsers",
                 column: "UserName",
@@ -618,6 +599,16 @@ namespace Footballize.Data.Migrations
                 column: "IsDeleted");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Playpals_IsDeleted",
+                table: "Playpals",
+                column: "IsDeleted");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Playpals_ToUserId",
+                table: "Playpals",
+                column: "ToUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Provinces_CountryId",
                 table: "Provinces",
                 column: "CountryId");
@@ -653,31 +644,6 @@ namespace Footballize.Data.Migrations
                 column: "RecruitmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Teams_CountryId",
-                table: "Teams",
-                column: "CountryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Teams_IsDeleted",
-                table: "Teams",
-                column: "IsDeleted");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Teams_OwnerId",
-                table: "Teams",
-                column: "OwnerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TeamUsers_IsDeleted",
-                table: "TeamUsers",
-                column: "IsDeleted");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TeamUsers_TeamId",
-                table: "TeamUsers",
-                column: "TeamId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Towns_IsDeleted",
                 table: "Towns",
                 column: "IsDeleted");
@@ -686,6 +652,16 @@ namespace Footballize.Data.Migrations
                 name: "IX_Towns_ProvinceId",
                 table: "Towns",
                 column: "ProvinceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserReports_IsDeleted",
+                table: "UserReports",
+                column: "IsDeleted");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserReports_ReportedUserId",
+                table: "UserReports",
+                column: "ReportedUserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -709,10 +685,13 @@ namespace Footballize.Data.Migrations
                 name: "GatherUsers");
 
             migrationBuilder.DropTable(
+                name: "Playpals");
+
+            migrationBuilder.DropTable(
                 name: "RecruitmentUsers");
 
             migrationBuilder.DropTable(
-                name: "TeamUsers");
+                name: "UserReports");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -724,13 +703,10 @@ namespace Footballize.Data.Migrations
                 name: "Recruitments");
 
             migrationBuilder.DropTable(
-                name: "Teams");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Pitches");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Addresses");
