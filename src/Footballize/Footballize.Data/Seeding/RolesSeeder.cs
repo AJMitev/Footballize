@@ -21,6 +21,7 @@
                 new Role(GlobalConstants.CanEditRecruitmentRoleName),
                 new Role(GlobalConstants.CanDeleteRecruitmentRoleName),
                 new Role(GlobalConstants.CanSeeAdminAreaRoleName),
+                new Role(GlobalConstants.CanBanPlayers),
             };
 
             var roleManager = serviceProvider.GetService<RoleManager<Role>>();

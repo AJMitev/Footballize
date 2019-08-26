@@ -78,6 +78,7 @@
                             userManager.AddToRoleAsync(user, GlobalConstants.CanEditRecruitmentRoleName).Wait();
                             userManager.AddToRoleAsync(user, GlobalConstants.CanDeleteRecruitmentRoleName).Wait();
                             userManager.AddToRoleAsync(user, GlobalConstants.CanSeeAdminAreaRoleName).Wait();
+                            userManager.AddToRoleAsync(user, GlobalConstants.CanBanPlayers).Wait();
                         }
                     }
                 }

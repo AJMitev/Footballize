@@ -33,6 +33,8 @@
         public DbSet<Town> Towns { get; set; }
         public DbSet<Recruitment> Recruitments { get; set; }
         public DbSet<RecruitmentUser> RecruitmentUsers { get; set; }
+        public DbSet<Playpal> Playpals { get; set; }
+        public DbSet<UserReport> UserReports { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -49,6 +51,8 @@
             modelBuilder.ApplyConfiguration(new LocationConfig());
             modelBuilder.ApplyConfiguration(new TownConfig());
             modelBuilder.ApplyConfiguration(new UserConfig());
+            modelBuilder.ApplyConfiguration(new PlaypalConfig());
+            modelBuilder.ApplyConfiguration(new UserReportConfig());
 
             EntityIndexesConfiguration.Configure(modelBuilder);
             var entityTypes = modelBuilder.Model.GetEntityTypes().ToList();
