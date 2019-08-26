@@ -14,13 +14,14 @@
             this.Logins = new HashSet<IdentityUserLogin<string>>();
             this.GathersPlayed = new HashSet<GatherUser>();
             this.GamesRecruited = new HashSet<RecruitmentUser>();
-            this.Playpals = new HashSet<User>();
+            this.PlaypalsAdded = new HashSet<Playpal>();
+            this.PlaypalsAddedMe = new HashSet<Playpal>();
         }
 
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public bool IsBanned { get; set; }
-        public ICollection<User> Playpals { get; set; }
+        public DateTime? BanUntil { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime? ModifiedOn { get; set; }
         public bool IsDeleted { get; set; }
@@ -28,6 +29,9 @@
         
         public ICollection<GatherUser> GathersPlayed { get; set; }
         public ICollection<RecruitmentUser> GamesRecruited { get; set; }
+        public ICollection<Playpal> PlaypalsAdded { get; set; }
+        public ICollection<Playpal> PlaypalsAddedMe { get; set; }
+
 
         public virtual ICollection<IdentityUserRole<string>> Roles { get; set; }
 
