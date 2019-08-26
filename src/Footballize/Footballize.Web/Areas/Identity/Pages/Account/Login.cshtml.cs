@@ -76,6 +76,20 @@ namespace Footballize.Web.Areas.Identity.Pages.Account
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var user = await _userManager.FindByNameAsync(Input.Username) ?? await _userManager.FindByEmailAsync(Input.Username);
+
+
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid login credentials.");
+                    return Page();
+                }
+
+                if (user.IsBanned)
+                {
+                    ModelState.AddModelError(string.Empty, $"Your account is currently suspended.");
+                    return Page();
+                }
+
                 var result = await _signInManager.PasswordSignInAsync(user, Input.Password, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
