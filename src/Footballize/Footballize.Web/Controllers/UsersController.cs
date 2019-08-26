@@ -1,14 +1,11 @@
 ﻿namespace Footballize.Web.Controllers
 {
-    using System;
-    using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
-    using Data.Repositories;
+    using Common;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
     using Models;
     using Services.Data;
     using Services.Exceptions;
@@ -73,7 +70,7 @@
 
             try
             {
-                await this.userService.RemovePlaypal(playpal, currentUser);
+                await this.userService.RemovePlaypal(playpal.Id, currentUser.Id);
             }
             catch (ServiceException e)
             {
@@ -98,6 +95,81 @@
             model.IsSameUser = id == currentUser.Id;
 
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Ban(string id)
+        {
+            var currentUser = await this.userManager.GetUserAsync(User);
+            var isInRole =  await this.userManager.IsInRoleAsync(currentUser,GlobalConstants.CanBanPlayers);
+
+            if (!isInRole)
+            {
+                return this.Unauthorized();
+            }
+
+            var player = await this.userService.GetUserAsync(id);
+
+            if (player == null)
+            {
+                return this.NotFound();
+            }
+
+
+            await this.userService.BanPlayer(player, 15);
+            return this.RedirectToAction("Details", new { id = id });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RemoveBan(string id)
+        {
+            var currentUser = await this.userManager.GetUserAsync(User);
+            var isInRole =  await this.userManager.IsInRoleAsync(currentUser,GlobalConstants.CanBanPlayers);
+
+            if (!isInRole)
+            {
+                return this.Unauthorized();
+            }
+
+            var player = await this.userService.GetUserAsync(id);
+
+            if (player == null)
+            {
+                return this.NotFound();
+            }
+
+
+            await this.userService.RemoveBan(player);
+            return this.RedirectToAction("Details", new { id = id });
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Report(string id)
+        {
+            var userToReport = await this.userService.GetUserAsync(id);
+
+            if (userToReport == null)
+            {
+                return this.NotFound();
+            }
+
+            return this.View(Mapper.Map<UsersReportInputModel>(userToReport));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Report(UsersReportInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return this.View(model);
+            }
+
+            var report = Mapper.Map<UserReport>(model);
+
+            await this.userService.CreateReport(report);
+
+            return this.RedirectToAction("Index");
         }
     }
 }

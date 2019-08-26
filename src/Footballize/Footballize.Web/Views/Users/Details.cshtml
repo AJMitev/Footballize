@@ -45,7 +45,7 @@
 
                         @if (!Model.IsSameUser)
                         {
-                            if (@Model.Playpals.Any(x => x.UserName == User.Identity.Name))
+                            if (Model.PlaypalsAdded.Any(x => x.ToUser.UserName == User.Identity.Name || x.FromUser.UserName == User.Identity.Name) || Model.PlaypalsAddedMe.Any(x => x.ToUser.UserName == User.Identity.Name || x.FromUser.UserName == User.Identity.Name))
                             {
                                 <a asp-controller="Users" asp-action="RemovePlaypal" asp-route-id="@Model.Id" class="btn btn-danger btn-fab btn-fab-mini btn-round" data-toggle="tooltip" data-placement="top" title="Remove from Playpals">
                                     <i class="material-icons">clear</i>
@@ -62,11 +62,20 @@
                             </a>
                         }
 
-                        @if (User.IsInRole(GlobalConstants.CanBanPlayers))
+                        @if (User.IsInRole(GlobalConstants.CanBanPlayers) && !Model.IsSameUser)
                         {
-                            <a class="btn btn-danger btn-fab btn-fab-mini btn-round" data-toggle="tooltip" data-placement="top" title="Ban Player">
-                                <i class="material-icons">gavel</i>
-                            </a>
+                            @if (Model.IsBanned)
+                             {
+                                 <a asp-controller="Users" asp-action="RemoveBan" asp-route-id="@Model.Id" class="btn btn-info btn-fab btn-fab-mini btn-round" data-toggle="tooltip" data-placement="top" title="Remove Ban">
+                                     <i class="material-icons">gavel</i>
+                                 </a>
+                             }
+                             else
+                             {
+                                 <a asp-controller="Users" asp-action="Ban" asp-route-id="@Model.Id" class="btn btn-danger btn-fab btn-fab-mini btn-round" data-toggle="tooltip" data-placement="top" title="Ban Player">
+                                     <i class="material-icons">gavel</i>
+                                 </a>
+                             }
                         }
                     </div>
                 </div>
@@ -136,24 +145,24 @@
                     <div class="row">
                         <table class="table table-striped">
                             <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Players Searched</th>
-                                <th>Status</th>
-                                <th>Played On</th>
-                            </tr>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Players Searched</th>
+                                    <th>Status</th>
+                                    <th>Played On</th>
+                                </tr>
                             </thead>
                             <tbody>
 
-                            @foreach (var game in @Model.GamesRecruited)
-                            {
-                                <tr>
-                                    <td>@game.Recruitment.Title</td>
-                                    <td>@game.Recruitment.MaximumPlayers</td>
-                                    <td>@game.Recruitment.Status</td>
-                                    <td>@game.Recruitment.StartingAt</td>
-                                </tr>
-                            }
+                                @foreach (var game in @Model.GamesRecruited)
+                                {
+                                    <tr>
+                                        <td>@game.Recruitment.Title</td>
+                                        <td>@game.Recruitment.MaximumPlayers</td>
+                                        <td>@game.Recruitment.Status</td>
+                                        <td>@game.Recruitment.StartingAt</td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
@@ -165,36 +174,50 @@
             </div>
             <div class="tab-pane text-center gallery" id="playpals">
 
-                @if (@Model.Playpals.Any())
+                @if (Model.PlaypalsAdded.Any() || Model.PlaypalsAddedMe.Any())
                 {
                     <div class="row">
                         <table class="table table-striped">
                             <thead>
-                            <tr>
-                                <th>Username</th>
-                                <th>Full Name</th>
-                                <th>Recruited in</th>
-                                <th>Gathers Played</th>
-                            </tr>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Full Name</th>
+                                    <th>Recruited in</th>
+                                    <th>Gathers Played</th>
+                                </tr>
                             </thead>
                             <tbody>
-
-                            @foreach (var playpal in @Model.Playpals)
-                            {
-                                <tr>
-                                    <td>@playpal.UserName</td>
-                                    <td>@playpal.FirstName @playpal.LastName</td>
-                                    <td>@playpal.GamesRecruited.Count</td>
-                                    <td>@playpal.GathersPlayed.Count</td>
-                                </tr>
-                            }
+                                @if (Model.PlaypalsAdded.Any())
+                                {
+                                    @foreach (var playpal in @Model.PlaypalsAdded)
+                                    {
+                                        <tr>
+                                            <td>@playpal.ToUser.UserName</td>
+                                            <td>@playpal.ToUser.FirstName @playpal.ToUser.LastName</td>
+                                            <td>@playpal.ToUser.GamesRecruited.Count</td>
+                                            <td>@playpal.ToUser.GathersPlayed.Count</td>
+                                        </tr>
+                                    }
+                                }
+                                @if (Model.PlaypalsAddedMe.Any())
+                                {
+                                    @foreach (var playpal in @Model.PlaypalsAddedMe)
+                                    {
+                                        <tr>
+                                            <td>@playpal.FromUser.UserName</td>
+                                            <td>@playpal.FromUser.FirstName @playpal.FromUser.LastName</td>
+                                            <td>@playpal.FromUser.GamesRecruited.Count</td>
+                                            <td>@playpal.FromUser.GathersPlayed.Count</td>
+                                        </tr>
+                                    }
+                                }
                             </tbody>
                         </table>
                     </div>
                 }
                 else
                 {
-                    <p class="h2 text-center">@Model.UserName still hasn't any playpals.</p>
+                    <p class="h2 text-center">@Model.UserName still hasn't any userToAdds.</p>
                 }
             </div>
         </div>

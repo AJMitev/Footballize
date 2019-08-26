@@ -1,6 +1,9 @@
 ﻿namespace Footballize.Web.ViewModels.Users
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using AutoMapper;
     using Models;
     using Services.Mapping;
 
@@ -15,6 +18,7 @@
         public bool IsSameUser { get; set; }
         public ICollection<GatherUser> GathersPlayed { get; set; }
         public ICollection<RecruitmentUser> GamesRecruited { get; set; }
-        public ICollection<User> Playpals { get; set; }
+        public ICollection<Playpal> PlaypalsAdded { get; set; }
+        public ICollection<Playpal> PlaypalsAddedMe { get; set; }
     }
 }
