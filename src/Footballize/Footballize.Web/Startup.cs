@@ -18,6 +18,7 @@
     using Data.Seeding;
     using Footballize.Models;
     using Microsoft.AspNetCore.Localization;
+    using Middlewares;
     using ViewModels;
     using Services;
     using Services.Data;
@@ -113,6 +114,8 @@
             app.UseCookiePolicy();
 
             app.UseAuthentication();
+
+            app.UseMiddleware<RemoveBannedUserMiddleware>();
 
             app.UseMvc(routes =>
             {
