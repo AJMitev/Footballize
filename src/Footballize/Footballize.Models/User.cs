@@ -16,6 +16,7 @@
             this.GamesRecruited = new HashSet<RecruitmentUser>();
             this.PlaypalsAdded = new HashSet<Playpal>();
             this.PlaypalsAddedMe = new HashSet<Playpal>();
+            this.Reports = new HashSet<UserReport>();
         }
 
         public string FirstName { get; set; }
@@ -29,6 +30,7 @@
         
         public ICollection<GatherUser> GathersPlayed { get; set; }
         public ICollection<RecruitmentUser> GamesRecruited { get; set; }
+        public ICollection<UserReport> Reports { get; set; }
         public ICollection<Playpal> PlaypalsAdded { get; set; }
         public ICollection<Playpal> PlaypalsAddedMe { get; set; }
 

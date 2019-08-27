@@ -147,7 +147,7 @@
                                     <a asp-controller="Users" asp-action="Report" asp-route-id="@player.Id" class="btn btn-warning btn-fab btn-fab-mini btn-round">
                                         <i class="material-icons">report</i>
                                     </a>
-                                    @if (Model.Creator.UserName.Equals(User.Identity.Name))
+                                    @if (Model.Creator.UserName.Equals(User.Identity.Name) && Model.Status.Equals(GameStatus.Registration))
                                     {
                                         <a asp-controller="Gathers" asp-action="Kick" asp-route-gatherId="@Model.Id" asp-route-playerId="@player.Id" class="btn btn-danger btn-fab btn-fab-mini btn-round">
                                             <i class="material-icons">block</i>

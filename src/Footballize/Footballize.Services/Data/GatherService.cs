@@ -181,6 +181,11 @@
             await this.gatherRepository.SaveChangesAsync();
         }
 
+        public int GetGatherCount()
+        {
+            return this.gatherRepository.All().Count();
+        }
+
         public async Task<Gather> GetGatherAsync(string id)
         {
             return await this.gatherRepository.GetByIdAsync(id);

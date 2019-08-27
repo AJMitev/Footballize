@@ -14,5 +14,8 @@
         Task BanPlayer(User player, int minutes);
         Task RemoveBan(User player);
         Task CreateReport(UserReport report);
+        ICollection<TViewModel> GetBannedUsers<TViewModel>();
+        int GetUsersCount();
+        ICollection<TViewModel> GetReportedUsers<TViewModel>();
     }
 }

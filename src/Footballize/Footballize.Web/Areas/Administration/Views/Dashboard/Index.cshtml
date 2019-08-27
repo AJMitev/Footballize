@@ -1,7 +1,179 @@
 ﻿@model Footballize.Web.Areas.Administration.ViewModels.Dashboard.IndexViewModel
 @{
-    this.ViewData["Title"] = "Admin dashboard";
+    this.ViewData["Title"] = "Dashboard";
 }
 
-<h1>@this.ViewData["Title"]</h1>
-Settings: @this.Model.SettingsCount
+<div class="row">
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-header card-header-warning card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">supervisor_account</i>
+                </div>
+                <p class="card-category">Gathers Played</p>
+                <h3 class="card-title">
+                    @Model.GathersPlayedCount
+                </h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-header card-header-success card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">group_add</i>
+                </div>
+                <p class="card-category">Recruitments</p>
+                <h3 class="card-title">@Model.RecruitmentsCount</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-header card-header-info card-header-icon">
+                <div class="card-icon">
+                    <i class="fa fa-users"></i>
+                </div>
+                <p class="card-category">Registred Users</p>
+                <h3 class="card-title">@Model.RegisteredUsersCount</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-header card-header-danger card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">gavel</i>
+                </div>
+                <p class="card-category">Banned Users</p>
+                <h3 class="card-title">@Model.BannedPlayersCount</h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card card-chart">
+            <div class="card-header card-header-success">
+                <div class="ct-chart" id="dailySalesChart"></div>
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">Daily Sales</h4>
+                <p class="card-category">
+                    <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span> increase in today sales.
+                </p>
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                    <i class="material-icons">access_time</i> updated 4 minutes ago
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-chart">
+            <div class="card-header card-header-warning">
+                <div class="ct-chart" id="websiteViewsChart"></div>
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">Email Subscriptions</h4>
+                <p class="card-category">Last Campaign Performance</p>
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                    <i class="material-icons">access_time</i> campaign sent 2 days ago
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-chart">
+            <div class="card-header card-header-danger">
+                <div class="ct-chart" id="completedTasksChart"></div>
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">Completed Tasks</h4>
+                <p class="card-category">Last Campaign Performance</p>
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                    <i class="material-icons">access_time</i> campaign sent 2 days ago
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6 col-md-12">
+        <div class="card">
+            <div class="card-header card-header-warning">
+                <h4 class="card-title">Reported Players</h4>
+                <p class="card-category">Currently there is @Model.ReportedUsers.Count() reported players</p>
+            </div>
+            <div class="card-body table-responsive">
+                <table class="table table-hover">
+                    <thead class="text-warning">
+                    <th>#</th>
+                    <th>Player Name</th>
+                    <th>Text</th>
+                    <th></th>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < @Model.ReportedUsers.Count(); i++)
+                        {
+                            var reportedPlayer = @Model.ReportedUsers.ToList()[i];
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>@reportedPlayer.ReportedPlayerName</td>
+                                <td>@reportedPlayer.Text</td>
+                                <td class="text-center">
+                                    <a asp-controller="Users" asp-action="Details" asp-route-id="@reportedPlayer.ReportedPlayerId" class="btn btn-primary btn-fab btn-fab-mini btn-round">
+                                        <i class="material-icons">person</i>
+                                    </a>
+                                    <a asp-controller="Users" asp-action="Ban" asp-route-id="@reportedPlayer.ReportedPlayerId" class="btn btn-danger btn-fab btn-fab-mini btn-round">
+                                        <i class="material-icons">gavel</i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-12">
+        <div class="card">
+            <div class="card-header card-header-danger">
+                <h4 class="card-title">Banned Players</h4>
+                <p class="card-category">Currently there is @Model.BannedPlayersCount banned players</p>
+            </div>
+            <div class="card-body table-responsive">
+                <table class="table table-hover">
+                    <thead class="text-warning">
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Ban expiration time</th>
+                    <th>Remove ban</th>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < @Model.BannedUsers.Count(); i++)
+                        {
+                            var bannedPlayer = Model.BannedUsers.ToList()[i];
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>@bannedPlayer.Name</td>
+                                <td>@bannedPlayer.BanUntil</td>
+                                <td class="text-center">
+                                    <a asp-controller="Users" asp-action="RemoveBan" asp-route-id="@bannedPlayer.Id" class="btn btn-info btn-fab btn-fab-mini btn-round">
+                                        <i class="material-icons">gavel</i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

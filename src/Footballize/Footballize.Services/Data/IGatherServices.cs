@@ -16,5 +16,6 @@
         Task StartGatherAsync(string id);
         Task CompleteGatherAsync(string id);
         Task DeleteGatherAsync(string id);
+        int GetGatherCount();
     }
 }

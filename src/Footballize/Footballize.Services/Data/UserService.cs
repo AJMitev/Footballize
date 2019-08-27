@@ -146,5 +146,28 @@
             await this.reportsRepository.AddAsync(report);
             await this.reportsRepository.SaveChangesAsync();
         }
+
+        public ICollection<TViewModel> GetBannedUsers<TViewModel>()
+        {
+            return this.userRepository
+                .All()
+                .Where(x => x.IsBanned)
+                .To<TViewModel>()
+                .ToList();
+
+        }
+
+        public int GetUsersCount()
+        {
+            return this.userRepository.All().Count();
+        }
+
+        public ICollection<TViewModel> GetReportedUsers<TViewModel>()
+        {
+            return this.reportsRepository
+                .All()
+                .To<TViewModel>()
+                .ToList();
+        }
     }
 }
