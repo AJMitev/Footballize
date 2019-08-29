@@ -1,5 +1,7 @@
 ﻿namespace Footballize.Common
 {
+    using System;
+
     public class GlobalConstants
     {
         public const string CanCreateGathersRoleName = "CanCreateGathers";
@@ -20,5 +22,6 @@
         public const string NotInRegistrationOrNoFreeSlotErrorMessage = "The game is not in Registration mode or there is no free slot available.";
         public const string PlayerIsBannedErrorMessage = "Banned players cannot participate games!";
         public const string InvalidRequestParametersErrorMessage = "Your request parameters are invalid!";
+        public const string EntityCannotBeNullErrorMessage = "{0} cannot be null!";
     }
 }
