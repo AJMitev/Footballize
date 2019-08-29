@@ -23,13 +23,6 @@
             this.userService = userService;
         }
 
-        [HttpGet]
-        public IActionResult Index()
-        {
-            var players = this.userService.GetUsers<UserGameDetailsViewModel>();
-
-            return this.View(players);
-        }
 
         [HttpGet]
         public async Task<IActionResult> AddPlaypal(string id)
@@ -101,7 +94,7 @@
         public async Task<IActionResult> Ban(string id)
         {
             var currentUser = await this.userManager.GetUserAsync(User);
-            var isInRole =  await this.userManager.IsInRoleAsync(currentUser,GlobalConstants.CanBanPlayers);
+            var isInRole = await this.userManager.IsInRoleAsync(currentUser, GlobalConstants.CanBanPlayers);
 
             if (!isInRole)
             {
@@ -116,7 +109,7 @@
             }
 
 
-            await this.userService.BanPlayer(player, 15);
+            await this.userService.BanPlayer(player, minutes: 15);
             return this.RedirectToAction("Details", new { id = id });
         }
 
@@ -124,7 +117,7 @@
         public async Task<IActionResult> RemoveBan(string id)
         {
             var currentUser = await this.userManager.GetUserAsync(User);
-            var isInRole =  await this.userManager.IsInRoleAsync(currentUser,GlobalConstants.CanBanPlayers);
+            var isInRole = await this.userManager.IsInRoleAsync(currentUser, GlobalConstants.CanBanPlayers);
 
             if (!isInRole)
             {
@@ -169,7 +162,7 @@
 
             await this.userService.CreateReport(report);
 
-            return this.RedirectToAction("Index");
+            return this.RedirectToAction("Index", "Home");
         }
     }
 }

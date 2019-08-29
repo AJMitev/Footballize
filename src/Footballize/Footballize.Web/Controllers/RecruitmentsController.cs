@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
     using AutoMapper;
+    using Common;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -215,7 +216,7 @@
                 return this.NotFound();
             }
 
-            if (game.Creator != currentUser)
+            if (game.Creator != currentUser && !this.User.IsInRole(GlobalConstants.CanDeleteRecruitmentRoleName))
             {
                 return this.Unauthorized();
             }
