@@ -14775,7 +14775,7 @@ fieldset[disabled] .form-group.is-focused .togglebutton label {
 
 .sidebar[data-color="purple"] li.active>a {
   background-color: #28a68d;
-  box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(156, 39, 176, 0.4);
+  box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 215, 176, 0.4);
 }
 
 .sidebar[data-color="azure"] li.active>a {
@@ -16778,7 +16778,7 @@ label {
 .card.bg-primary,
 .card.card-rotate.bg-primary .front,
 .card.card-rotate.bg-primary .back {
-  background: linear-gradient(60deg, #ab47bc, #8e24aa);
+    background: linear-gradient(60deg, #28a68d, #16705e);
 }
 
 .card .card-header-info .card-icon,
