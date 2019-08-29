@@ -3,6 +3,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Common;
+    using Exceptions;
     using Footballize.Data.Repositories;
     using Mapping;
     using Models;
@@ -18,6 +20,12 @@
 
         public async Task AddPitchAsync(Pitch pitch)
         {
+            if (pitch == null)
+            {
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Pitch)));
+            }
+
             await this._pitchRepository.AddAsync(pitch);
             await this._pitchRepository.SaveChangesAsync();
         }
@@ -46,12 +54,24 @@
 
         public async Task RemovePitchAsync(Pitch pitch)
         {
+            if (pitch == null)
+            {
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Pitch)));
+            }
+
             this._pitchRepository.Delete(pitch);
             await this._pitchRepository.SaveChangesAsync();
         }
 
         public async Task UpdatePitchAsync(Pitch pitch)
         {
+            if (pitch == null)
+            {
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Pitch)));
+            }
+
             this._pitchRepository.Update(pitch);
             await this._pitchRepository.SaveChangesAsync();
         }

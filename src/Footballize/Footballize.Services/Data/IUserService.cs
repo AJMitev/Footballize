@@ -1,6 +1,8 @@
 ﻿namespace Footballize.Services.Data
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq.Expressions;
     using System.Threading.Tasks;
     using Models;
 
@@ -14,8 +16,8 @@
         Task BanPlayer(User player, int minutes);
         Task RemoveBan(User player);
         Task CreateReport(UserReport report);
-        ICollection<TViewModel> GetBannedUsers<TViewModel>();
         int GetUsersCount();
-        ICollection<TViewModel> GetReportedUsers<TViewModel>();
+        ICollection<TViewModel> GetUserReports<TViewModel>();
+        ICollection<TViewModel> GetUsers<TViewModel>(Expression<Func<User, bool>> expression);
     }
 }

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Threading.Tasks;
     using Common;
     using Exceptions;
@@ -30,7 +31,8 @@
         {
             if (userToAdd == null || currentUser == null)
             {
-                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(User)));
             }
 
             if (userToAdd.Id == currentUser.Id)
@@ -85,7 +87,9 @@
         {
             if (playpalId == null || currentUserId == null)
             {
-                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, "PlayerId or UserId"));
+            
             }
 
             if (playpalId == currentUserId)
@@ -110,7 +114,8 @@
         {
             if (player == null)
             {
-                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(User)));
             }
 
 
@@ -125,9 +130,9 @@
         {
             if (player == null)
             {
-                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(User)));
             }
-
 
             player.IsBanned = false;
             player.BanUntil = null;
@@ -140,21 +145,11 @@
         {
             if (report == null)
             {
-                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(UserReport)));
             }
-
             await this.reportsRepository.AddAsync(report);
             await this.reportsRepository.SaveChangesAsync();
-        }
-
-        public ICollection<TViewModel> GetBannedUsers<TViewModel>()
-        {
-            return this.userRepository
-                .All()
-                .Where(x => x.IsBanned)
-                .To<TViewModel>()
-                .ToList();
-
         }
 
         public int GetUsersCount()
@@ -162,12 +157,21 @@
             return this.userRepository.All().Count();
         }
 
-        public ICollection<TViewModel> GetReportedUsers<TViewModel>()
+        public ICollection<TViewModel> GetUserReports<TViewModel>()
         {
             return this.reportsRepository
                 .All()
                 .To<TViewModel>()
                 .ToList();
+        }
+
+        public ICollection<TViewModel> GetUsers<TViewModel>(Expression<Func<User, bool>> expression)
+        {
+           return this.userRepository
+               .All()
+               .Where(expression)
+               .To<TViewModel>()
+               .ToList();
         }
     }
 }

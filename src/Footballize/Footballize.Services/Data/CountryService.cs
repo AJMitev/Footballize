@@ -1,13 +1,12 @@
 ﻿namespace Footballize.Services.Data
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Footballize.Data;
+    using Common;
+    using Exceptions;
     using Footballize.Data.Repositories;
     using Mapping;
-    using Microsoft.EntityFrameworkCore;
     using Models;
 
     public class CountryService : ICountryService
@@ -21,6 +20,11 @@
 
         public Task<int> AddCountryAsync(Country country)
         {
+            if (country == null)
+            {
+                throw new ServiceException(string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Country)));
+            }
+
             this.countriesRepository.AddAsync(country);
             return this.countriesRepository.SaveChangesAsync();
         }
@@ -41,6 +45,11 @@
 
         public async Task UpdateCountryAsync(Country country)
         {
+            if (country == null)
+            {
+                throw new ServiceException(string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Country)));
+            }
+
             this.countriesRepository.Update(country);
             await this.countriesRepository.SaveChangesAsync();
         }
@@ -57,6 +66,12 @@
         public async Task RemoveCountryAsync(string countryId)
         {
             var countryToRemove = await this.countriesRepository.GetByIdAsync(countryId);
+
+            if (countryToRemove == null)
+            {
+                throw new ServiceException(string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Country)));
+            }
+
             this.countriesRepository.Delete(countryToRemove);
             await this.countriesRepository.SaveChangesAsync();
         }

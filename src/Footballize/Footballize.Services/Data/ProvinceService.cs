@@ -3,6 +3,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Common;
+    using Exceptions;
     using Footballize.Data.Repositories;
     using Mapping;
     using Models;
@@ -36,6 +38,12 @@
 
         public async Task CreateProvinceAsync(Province province)
         {
+            if (province == null)
+            {
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Province)));
+            }
+
             await this.provincesRepository.AddAsync(province);
             await this.provincesRepository.SaveChangesAsync();
         }
@@ -58,6 +66,12 @@
 
         public async Task UpdateProvinceAsync(Province province)
         {
+            if (province == null)
+            {
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Province)));
+            }
+
             this.provincesRepository.Update(province);
             await this.provincesRepository.SaveChangesAsync();
         }

@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Common;
+    using Exceptions;
     using Footballize.Data.Repositories;
     using Mapping;
     using Models;
@@ -31,6 +33,12 @@
         public async Task DeleteTownAsync(string id)
         {
             var townToDelete = await this.townRepository.GetByIdAsync(id);
+
+            if (townToDelete == null)
+            {
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Town)));
+            }
             this.townRepository.Delete(townToDelete);
             await this.townRepository.SaveChangesAsync();
         }
@@ -55,6 +63,12 @@
 
         public async Task UpdateTownAsync(Town town)
         {
+            if (town == null)
+            {
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Town)));
+            }
+
             this.townRepository.Update(town);
             await this.townRepository.SaveChangesAsync();
         }

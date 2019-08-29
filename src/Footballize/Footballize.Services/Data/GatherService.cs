@@ -38,7 +38,7 @@
         {
             if (gather == null)
             {
-                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
+                throw new ServiceException(string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Gather)));
             }
 
             var gatherUser = new GatherUser
@@ -58,7 +58,8 @@
         {
             if (gather == null)
             {
-                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Gather)));
             }
 
             if (gather.Status != GameStatus.Registration)
@@ -84,8 +85,17 @@
 
         public async Task EnrollGatherAsync(Gather gather, User user)
         {
-            if (user == null || gather == null)
-                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
+            if (gather == null)
+            {
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Gather)));
+            }
+
+            if (user == null)
+            {
+                throw new ServiceException(string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(User)));
+
+            }
 
             if (gather.Status != GameStatus.Registration || gather.Players.Count >= gather.MaximumPlayers)
             {
@@ -129,7 +139,8 @@
 
             if (gather == null)
             {
-                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Gather)));
             }
 
             if (gather.Players.Count != gather.MaximumPlayers)
@@ -154,7 +165,8 @@
 
             if (game == null)
             {
-                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Gather)));
             }
 
             if (game.Status != GameStatus.Started)
@@ -174,7 +186,8 @@
 
             if (gatherToDelete == null)
             {
-                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Gather)));
             }
 
             this.gatherRepository.Delete(gatherToDelete);

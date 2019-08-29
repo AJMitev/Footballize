@@ -55,7 +55,8 @@
         {
             if (recruitment == null)
             {
-                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Recruitment)));
             }
 
             await this.recruitmentRepository.AddAsync(recruitment);
@@ -66,7 +67,8 @@
         {
             if (recruitment == null)
             {
-                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Recruitment)));
             }
 
             if (recruitment.Status != GameStatus.Registration)
@@ -92,8 +94,17 @@
         public async Task EnrollRecruitmentAsync(Recruitment recruitment, User user)
         {
 
-            if (user == null || recruitment == null)
-                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
+            if (recruitment == null)
+            {
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Recruitment)));
+            }
+
+            if (user == null)
+            {
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(User)));
+            }
 
             if (recruitment.Status != GameStatus.Registration || recruitment.Players.Count >= recruitment.MaximumPlayers)
             {
@@ -129,7 +140,8 @@
 
             if (gameToStart == null)
             {
-                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Recruitment)));
             }
 
             if (gameToStart.Players.Count != gameToStart.MaximumPlayers)
@@ -154,7 +166,8 @@
 
             if (game == null)
             {
-                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Recruitment)));
             }
 
             if (game.Status != GameStatus.Started)
@@ -174,7 +187,8 @@
 
             if (game == null)
             {
-                throw new ServiceException(GlobalConstants.InvalidRequestParametersErrorMessage);
+                throw new ServiceException(
+                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Recruitment)));
             }
 
             this.recruitmentRepository.Delete(game);

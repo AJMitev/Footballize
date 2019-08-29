@@ -5,6 +5,8 @@ namespace Footballize.Services.Data
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using Common;
+    using Exceptions;
     using Footballize.Data.Repositories;
 
     public class AddressService : IAddressService
@@ -18,6 +20,11 @@ namespace Footballize.Services.Data
 
         public async Task<string> CreateOrGetAddress(Address address)
         {
+            if (address == null)
+            {
+                throw new ServiceException(string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Address)));
+            }
+
             var currentAddress =  this.addressRepository
                 .All()
                 .SingleOrDefault(x=>x.Street.Equals(address.Street) && x.Number.Equals(address.Number));
@@ -33,6 +40,12 @@ namespace Footballize.Services.Data
 
         private async Task<string> CreateNewAddress(Address address)
         {
+            if (address == null)
+            {
+                throw new ServiceException(string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Address)));
+            }
+
+
             await this.addressRepository.AddAsync(address);
             await this.addressRepository.SaveChangesAsync();
 
