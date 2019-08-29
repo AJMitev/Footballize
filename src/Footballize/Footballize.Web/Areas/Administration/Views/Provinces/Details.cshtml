@@ -1,0 +1,60 @@
+﻿@model Footballize.Web.Areas.Administration.ViewModels.Provinces.ProvinceDetailsViewModel;
+@{
+    ViewData["Title"] = "Province Details";
+}
+
+
+<div class="row">
+    <div class="col-12">
+        <h2 class="title text-center">Towns in province @Model.Name</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-1 text-center">
+        <img id="country-image" src="/img/flags/@(Model.CountryName.ToLower()).png" width="48px" />
+
+    </div>
+    <div class="col-9">
+        <h2>@Model.Name, @Model.CountryName</h2>
+    </div>
+    <div class="col-2">
+        <div class="text-right">
+            <a asp-controller="Towns" asp-action="Add" asp-route-countryId="@Model.CountryId" asp-route-provinceId="@Model.Id">
+                <button class="btn btn-primary btn-round">
+                    <i class="material-icons">add</i> New Town
+                    <div class="ripple-container"></div>
+                </button>
+            </a>
+        </div>
+    </div>
+</div>
+<hr />
+<div class="row">
+
+    <table class="table table-borderless">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @for (int i = 0; i < Model.Towns.Count; i++)
+            {
+                var currentTown = @Model.Towns.ToList()[i];
+                <tr>
+                    <th scope="row">@(i + 1)</th>
+                    <td>@currentTown.Name</td>
+                    <td>
+                        <vc:admin-controls id="@currentTown.Id" name="@currentTown.Name" controller="Towns"></vc:admin-controls>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <p>We have @Model.Towns.Count records in total.</p>
+</div>

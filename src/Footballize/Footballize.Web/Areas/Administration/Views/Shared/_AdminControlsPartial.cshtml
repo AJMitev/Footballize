@@ -1,0 +1,58 @@
+﻿@model Footballize.Web.Areas.Administration.ViewModels.Shared.AdminControlsViewModel
+<!-- Buttons -->
+<a href="" class="btn btn-info btn-fab btn-round" data-toggle="modal" data-target="#editConfirm">
+    <i class="material-icons">edit</i>
+    <div class="ripple-container"></div>
+</a>
+<a href="" class="btn btn-danger btn-fab btn-round" data-toggle="modal" data-target="#deleteConfirm">
+    <i class="material-icons">delete</i>
+    <div class="ripple-container"></div>
+</a>
+
+<!-- Modal Delete-->
+<div class="modal fade" id="deleteConfirm" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmLabel">Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure that you want to delete <strong>@Model.Name</strong>? Once its done it cannot be undone!
+            </div>
+            <div class="modal-footer">
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit-->
+<div class="modal fade" id="editConfirm" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editConfirmLabel">Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure that you want to edit <strong>@Model.Name</strong>?
+            </div>
+            <div class="modal-footer">
+                <form asp-action="Edit" method="get">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info">Edit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

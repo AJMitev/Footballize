@@ -1,0 +1,35 @@
+﻿@model Footballize.Web.Areas.Administration.ViewModels.Provinces.ProvinceAddViewModel
+@{
+    ViewData["Title"] = "Add";
+}
+
+<h1 class="title">Add a new province</h1>
+<hr />
+<div class="row">
+    <div class="col-6">
+        <form asp-action="Add">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CountryName" class="control-label"></label>
+                <input asp-for="CountryName" class="form-control"  readonly=""/>
+            </div>
+            <input asp-for="CountryId" class="form-control" type="hidden" />
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div class="col-6">
+        
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

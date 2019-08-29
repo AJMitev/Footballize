@@ -1,0 +1,126 @@
+﻿@model Footballize.Web.Areas.Administration.ViewModels.Pitches.PitchAddViewModel
+@{
+    ViewData["Title"] = "Add Field";
+}
+
+<h2 class="title">Add a new field</h2>
+<hr />
+<div class="row">
+    <div class="col-6">
+        <form asp-action="Add">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CountryId" class="control-label"></label>
+                <select id="country" asp-for="CountryId" class="form-control">
+                    <option value="-1">Select an option</option>
+                </select>
+                <span asp-validation-for="CountryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TownId" class="control-label"></label>
+                <select id="town" asp-for="TownId" class="form-control">
+                    <option value="-1">Select an option</option>
+                </select>
+                <span asp-validation-for="TownId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Street" class="control-label"></label>
+                <input asp-for="Street" class="form-control" />
+                <span asp-validation-for="Street" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Number" class="control-label"></label>
+                <input asp-for="Number" class="form-control" />
+                <span asp-validation-for="Number" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div class="col-6">
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            $list = $("#country");
+            $.ajax({
+                url: "/api/countries/all/",
+                type: "GET",
+                traditional: true,
+                success: function (result) {
+                    $list.empty();
+                    $list.append('<option value="-1"> Select an option </option>');
+                    $.each(result,
+                        function (i, item) {
+                            $list.append('<option value="' + item["id"] + '"> ' + item["name"] + ' </option>');
+                        });
+                },
+                error: function () {
+                    alert("Something went wrong call the police");
+                }
+            });
+
+
+            $('#country').on("change",
+                function () {
+                    $townsList = $("#town");
+                    $.ajax({
+                        url: "/api/towns/all/" + $("#country").val(),
+                        type: "GET",
+                        data: { id: $("#province").val() },
+                        traditional: true,
+                        success: function (result) {
+                            $townsList.empty();
+                            $townsList.append('<option value="-1"> Select an option </option>');
+                            $.each(result,
+                                function (i, item) {
+                                    $townsList.append('<option value="' +
+                                        item["id"] +
+                                        '"> ' +
+                                        item["name"] +
+                                        ' </option>');
+                                });
+                        },
+                        error: function () {
+                            alert("Something went wrong call the police");
+                        }
+                    });
+                });
+
+            $('#town, #country').on('change',
+                function () {
+                    $pitchesList = $('#pitch');
+                    $.ajax({
+                        url: "/api/pitches/" + $('#town').val(),
+                        type: "GET",
+                        traditional: true,
+                        success: function (result) {
+                            $pitchesList.empty();
+                            $pitchesList.append('<option value="-1"> Select an option </option>');
+                            $.each(result,
+                                function (i, item) {
+                                    $pitchesList.append('<option value="' +
+                                        item["id"] +
+                                        '"> ' +
+                                        item["name"] +
+                                        ' </option>');
+                                });
+                        },
+                        error: function () {
+                            alert("Something went wrong call the police");
+                        }
+                    });
+                });
+        });
+    </script>
+}

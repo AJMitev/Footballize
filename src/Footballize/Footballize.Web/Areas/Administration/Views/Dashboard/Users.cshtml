@@ -1,0 +1,103 @@
+﻿@model Footballize.Web.Areas.Administration.ViewModels.Dashboard.AdminUsersViewModel
+@{
+    ViewData["Title"] = "Users";
+}
+
+<div class="row">
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-header card-header-success card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">group_add</i>
+                </div>
+                <p class="card-category">New Users</p>
+                <h3 class="card-title">@Model.NewUsersCount</h3>
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                    <span>Registered 30 days ago.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-header card-header-warning card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">supervisor_account</i>
+                </div>
+                <p class="card-category">Inactive Played</p>
+                <h3 class="card-title">
+                    @Model.InactiveUsersCount
+                </h3>
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                    <span>Last played 10 days ago.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-header card-header-danger card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">gavel</i>
+                </div>
+                <p class="card-category">Banned Users</p>
+                <h3 class="card-title">@Model.BannedUsersCount</h3>
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                    <span>Registered 30 days ago.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title ">Registered Users - @Model.Users.Count </h4>
+                <p class="card-category"> Here is a list with all registered users in our system</p>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class=" text-primary">
+                        <th class="text-center"></th>
+                        <th>Name</th>
+                        <th>Username</th>
+                        <th class="text-center">Member Since</th>
+                        <th class="text-center">Gathers</th>
+                        <th class="text-center">Recruiting Games</th>
+                        <th class="text-center"></th>
+                        <th class="text-center">Actions</th>
+                        </thead>
+                        <tbody>
+                            @foreach (var player in Model.Users.OrderBy(x => x.FullName).ThenBy(x => x.Username))
+                            {
+                                <tr>
+                                    <td class="text-center"><img src="/img/flags/bulgaria.png" width="16"></td>
+                                    <td>@player.FullName</td>
+                                    <td>@player.Username @if (@player.IsBanned)
+                                                         {<i class="material-icons">gavel</i>}</td>
+                                    <td class="text-center">@player.CreatedOn</td>
+                                    <td class="text-center">@player.GathersPlayedCount</td>
+                                    <td class="text-center">@player.GamesRecruitedCount</td>
+                                    <td class="text-center"></td>
+                                    <td class="td-actions text-center">
+                                        <a asp-controller="Users" asp-action="Details" asp-route-id="@player.Id" class="btn btn-info">
+                                            <i class="material-icons">person</i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

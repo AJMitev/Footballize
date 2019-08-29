@@ -8,5 +8,6 @@
     [Authorize(Roles = GlobalConstants.CanSeeAdminAreaRoleName)]
     public class AdminController : Controller
     {
+        
     }
 }

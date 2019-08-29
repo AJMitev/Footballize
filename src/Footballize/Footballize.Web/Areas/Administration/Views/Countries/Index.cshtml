@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Footballize.Web.Areas.Administration.ViewModels.Countries.CountriesIndexViewModel>
+
+@{
+    ViewData["Title"] = "Countries";
+}
+
+<hr />
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title ">Countries</h4>
+                <p class="card-category"> Currently we have @Model.Count() countries</p>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Flag</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Code</th>
+                            <th scope="col">Provinces</th>
+                            <th scope="col">Towns</th>
+
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Count(); i++)
+                        {
+                            <tr>
+                                <th scope="row">@(i + 1)</th>
+                                <td><img src="/img/flags/@(Model.ToList()[i].Name.ToLower()).png" width="32px" /></td>
+                                <td><a asp-action="Details" asp-route-id="@Model.ToList()[i].Id">@Model.ToList()[i].Name</a></td>
+                                <td>@Model.ToList()[i].IsoCode</td>
+                                <td>@Model.ToList()[i].ProvincesCount</td>
+                                <td>@Model.ToList()[i].TownsCount</td>
+                                <td>
+                                    <vc:admin-controls id="@Model.ToList()[i].Id" name="@Model.ToList()[i].Name" controller="Countries"></vc:admin-controls>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<p>We have @Model.Count() records in total.</p>
+<div class="text-right">
+    <a asp-action="Add">
+        <button class="btn btn-primary btn-round">
+            <i class="material-icons">add</i> New Country
+            <div class="ripple-container"></div>
+        </button>
+    </a>
+</div>

@@ -1,0 +1,91 @@
+﻿@model Footballize.Web.Areas.Administration.ViewModels.Towns.TownAddViewModel
+@{
+    ViewData["Title"] = "Add";
+}
+
+<h1>Add new town</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Add">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="CountryId" class="control-label"></label>
+                <select id="country" asp-for="CountryId" class="form-control">
+                    <option value="-1">Select an option</option>
+                </select>
+                <span asp-validation-for="CountryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProvinceId" class="control-label"></label>
+                <select id="province" asp-for="ProvinceId" class="form-control">
+                    <option value="-1">Select an option</option>
+                </select>
+                <span asp-validation-for="CountryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <input asp-for="CountryId" class="text-hide" id="countryId" />
+            <input asp-for="ProvinceId" class="text-hide" id="provinceId" />
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+
+            $list = $("#country");
+            $.ajax({
+                url: "/api/countries/",
+                type: "GET",
+                traditional: true,
+                success: function (result) {
+                    $list.empty();
+                    $list.append('<option value="-1"> Select an option </option>');
+                    $.each(result, function (i, item) {
+                        $list.append('<option value="' + item["id"] + '"> ' + item["name"] + ' </option>');
+                    });
+                    $selectedCountryId = $("#countryId").val();
+                    $list.val($selectedCountryId).change();
+                },
+                error: function () {
+                    alert("Something went wrong call the police");
+                }
+            });
+ 
+            $("#country").on("change", function () {
+                $provinceList = $("#province");
+                $.ajax({
+                    url: "/api/provinces/"+ $("#country").val(),
+                    type: "GET",
+                    data: { id: $("#country").val() }, //id of the state which is used to extract cities
+                    traditional: true,
+                    success: function (result) {
+                        $provinceList.empty();
+                        $provinceList.append('<option value="-1"> Select an option </option>');
+                        $.each(result, function (i, item) {
+                            $provinceList.append('<option value="' + item["id"] + '"> ' + item["name"] + ' </option>');
+                        });
+
+                        $selectedProvinceId = $("#provinceId").val();
+                        $provinceList.val($selectedProvinceId);
+                    },
+                    error: function () {
+                        alert("Something went wrong call the police");
+                    }
+                });
+            });
+
+        });
+    </script>
+}

@@ -1,0 +1,71 @@
+﻿@model Footballize.Web.Areas.Administration.ViewModels.Countries.CountryDetailsViewModel
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+<div class="row">
+    <div class="offset-2 col-md-8">
+        <h2 class="title text-center">Provinces and Towns in @Model.Name </h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class=" offset-1 col-md-1 text-center">
+        <img id="country-image" src="/img/flags/@(Model.Name.ToLower()).png" width="48px" />
+    </div>
+    <div class="col-md-3">
+        <h2 class="">@Model.Name</h2>
+    </div>
+    <div class="offset-2 col-md-5 text-right align-self-center">
+        <a asp-controller="Countries" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-info btn-round">
+            <i class="material-icons">edit</i> Edit
+            <div class="ripple-container"></div>
+        </a>
+        <a asp-controller="Provinces" asp-action="Add" asp-route-countryId="@Model.Id" class="btn btn-primary btn-round">
+            <i class="material-icons">add</i>Province
+            <div class="ripple-container"></div>
+        </a>
+    </div>
+   
+</div>
+<hr/>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="">
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Towns</th>
+                    <th></th>
+                    </thead>
+                    <tbody>
+                        @{
+                        var i = 0;
+                        }
+                        @foreach (var province in @Model.Provinces.OrderBy(p => p.Name))
+                        {
+
+                            <tr>
+                                <td>
+                                    @(++i)
+                                </td>
+                                <td>
+                                    <a asp-area="Administration" asp-controller="Provinces" asp-action="Details" asp-route-id="@province.Id"> @province.Name</a>
+                                </td>
+                                <td>
+                                    @province.Towns.Count
+                                </td>
+                                <td class="text-center">
+                                    <vc:admin-controls id="@province.Id" name="@province.Name" controller="Provinces"></vc:admin-controls>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
