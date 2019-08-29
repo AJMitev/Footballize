@@ -1,9 +1,9 @@
-﻿namespace Footballize.Web.Controllers.Api
+﻿namespace Footballize.Web.Areas.Api.Controllers
 {
     using System.Collections.Generic;
+    using Administration.ViewModels.Pitches;
     using Microsoft.AspNetCore.Mvc;
     using Services.Data;
-    using ViewModels.Pitches;
 
     public class PitchesController : ApiController
     {

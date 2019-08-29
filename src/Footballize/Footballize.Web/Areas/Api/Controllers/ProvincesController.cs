@@ -1,11 +1,11 @@
-﻿namespace Footballize.Web.Controllers.Api
+﻿namespace Footballize.Web.Areas.Api.Controllers
 {
     using System.Collections.Generic;
+    using Administration.ViewModels.Provinces;
     using Microsoft.AspNetCore.Mvc;
     using Services.Data;
-    using ViewModels.Provinces;
 
-   public class ProvincesController : ApiController
+    public class ProvincesController : ApiController
     {
         private readonly IProvinceServices provinceServices;
 

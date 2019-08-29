@@ -1,4 +1,4 @@
-﻿namespace Footballize.Web.Controllers.Api
+﻿namespace Footballize.Web.Areas.Api.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
 
