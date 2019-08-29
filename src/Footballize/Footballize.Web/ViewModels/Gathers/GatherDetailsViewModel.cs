@@ -2,9 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using Areas.Administration.ViewModels.Pitches;
     using Models;
     using Models.Enums;
-    using Pitches;
     using Services.Mapping;
     using Shared;
     using Users;

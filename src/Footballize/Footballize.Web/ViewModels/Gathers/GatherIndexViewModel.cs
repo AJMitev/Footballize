@@ -1,9 +1,9 @@
 ﻿namespace Footballize.Web.ViewModels.Gathers
 {
     using System;
+    using Areas.Administration.ViewModels.Pitches;
     using AutoMapper;
     using Models;
-    using Pitches;
     using Services.Mapping;
     using Users;
 

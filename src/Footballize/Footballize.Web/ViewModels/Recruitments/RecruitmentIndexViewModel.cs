@@ -1,10 +1,10 @@
 ﻿namespace Footballize.Web.ViewModels.Recruitments
 {
     using System;
+    using Areas.Administration.ViewModels.Pitches;
     using AutoMapper;
     using Models;
     using Models.Enums;
-    using Pitches;
     using Services.Mapping;
     using Users;
 
