@@ -161,7 +161,7 @@
             </table>
         </div>
     </div>
-    @if (@Model.Creator.UserName.Equals(User.Identity.Name))
+    @if (@Model.Creator.UserName.Equals(User.Identity.Name)|| User.IsInRole(GlobalConstants.CanDeleteGathersRoleName))
     {
         <partial name="_DeleteModalPartial" model="@(new DeleteModalPartialViewModel{Id = Model.Id, Title = Model.Title})" />
     }
@@ -170,30 +170,9 @@
 @section Scripts
 {
     <script>
-        function initMap() {
-            var location =
-            {
+        var lat = parseFloat('@Html.Raw(Model.Pitch.AddressLocationLatitude).ToString().Replace(',','.')');
+        var lng = parseFloat('@Html.Raw(Model.Pitch.AddressLocationLongitude).ToString().Replace(',','.')');
 
-                lat: parseFloat('@Html.Raw(Model.Pitch.AddressLocationLatitude).ToString().Replace(',','.')'),
-                lng: parseFloat('@Html.Raw(Model.Pitch.AddressLocationLongitude).ToString().Replace(',','.')')
-            };
-
-            var map = new google.maps.Map(
-                document.getElementById('map'),
-                {
-                    zoom: 14,
-                    center: location
-                });
-
-            var marker = new google.maps.Marker(
-                {
-                    position: location,
-                    map: map
-                });
-        }
-
-
-
-        initMap();
+        initMap(lat,lng);
     </script>
 }

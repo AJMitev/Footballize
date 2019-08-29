@@ -143,11 +143,11 @@
                                         <i class="material-icons">report</i>
                                     </a>
                                     @if (Model.Creator.UserName.Equals(User.Identity.Name) && Model.Status.Equals(GameStatus.Registration))
-                                     {
-                                         <a asp-controller="Recruitments" asp-action="Kick" asp-route-gatherId="@Model.Id" asp-route-playerId="@player.Id" class="btn btn-danger btn-fab btn-fab-mini btn-round">
-                                             <i class="material-icons">block</i>
-                                         </a>
-                                     }
+                                    {
+                                        <a asp-controller="Recruitments" asp-action="Kick" asp-route-gatherId="@Model.Id" asp-route-playerId="@player.Id" class="btn btn-danger btn-fab btn-fab-mini btn-round">
+                                            <i class="material-icons">block</i>
+                                        </a>
+                                    }
                                 }
                             </td>
                         </tr>
@@ -156,7 +156,7 @@
             </table>
         </div>
     </div>
-    @if (@Model.Creator.UserName.Equals(User.Identity.Name))
+    @if (@Model.Creator.UserName.Equals(User.Identity.Name) || User.IsInRole(GlobalConstants.CanDeleteRecruitmentRoleName))
     {
         <partial name="_DeleteModalPartial" model="@(new DeleteModalPartialViewModel{Id = Model.Id, Title = Model.Title})" />
     }
@@ -165,28 +165,9 @@
 @section Scripts
 {
     <script>
-       function initMap() {
-            var location =
-            {
+        var lat = parseFloat('@Html.Raw(Model.Pitch.AddressLocationLatitude).ToString().Replace(',','.')');
+        var lng = parseFloat('@Html.Raw(Model.Pitch.AddressLocationLongitude).ToString().Replace(',','.')');
 
-                lat: parseFloat('@Html.Raw(Model.Pitch.AddressLocationLatitude).ToString().Replace(',','.')'),
-                lng: parseFloat('@Html.Raw(Model.Pitch.AddressLocationLongitude).ToString().Replace(',','.')')
-            };
-
-            var map = new google.maps.Map(
-                document.getElementById('map'),
-                {
-                    zoom: 14,
-                    center: location
-                });
-
-            var marker = new google.maps.Marker(
-                {
-                    position: location,
-                    map: map
-                });
-        }
-
-       initMap();
+       initMap(lat,lng);
     </script>
 }
