@@ -1,12 +1,15 @@
 ﻿namespace Footballize.Services.Data
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq.Expressions;
     using System.Threading.Tasks;
     using Models;
 
     public interface IGatherServices
     {
         ICollection<TViewModel> GetGathers<TViewModel>();
+        ICollection<TViewModel> GetGathers<TViewModel>(Expression<Func<Gather, bool>> expression);
         TViewModel GetGather<TViewModel>(string id);
         Task<Gather> GetGatherAsync(string id);
         Gather GetGatherWithPlayers(string id);

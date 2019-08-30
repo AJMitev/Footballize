@@ -1,8 +1,10 @@
 ﻿namespace Footballize.Services.Data
 {
+    using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Threading.Tasks;
     using Common;
     using Exceptions;
@@ -29,7 +31,20 @@
         {
             return this.recruitmentRepository
                 .All()
-                .OrderBy(x => x.CreatedOn)
+                .Where(x=>x.StartingAt > DateTime.UtcNow)
+                .OrderBy(x => x.StartingAt)
+                .ThenBy(x=>x.Status)
+                .To<TViewModel>()
+                .ToList();
+        }
+        public ICollection<TViewModel> GetRecruitments<TViewModel>(Expression<Func<Recruitment,bool>> expression)
+        {
+            return this.recruitmentRepository
+                .All()
+                .Where(x=>x.StartingAt > DateTime.UtcNow)
+                .Where(expression)
+                .OrderBy(x => x.StartingAt)
+                .ThenBy(x=>x.Status)
                 .To<TViewModel>()
                 .ToList();
         }

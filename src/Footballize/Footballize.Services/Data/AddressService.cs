@@ -1,13 +1,11 @@
-﻿using Footballize.Models;
-
-namespace Footballize.Services.Data
+﻿namespace Footballize.Services.Data
 {
-    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using Common;
     using Exceptions;
     using Footballize.Data.Repositories;
+    using Models;
 
     public class AddressService : IAddressService
     {

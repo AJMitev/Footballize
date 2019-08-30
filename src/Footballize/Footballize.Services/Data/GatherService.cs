@@ -1,7 +1,9 @@
 ﻿namespace Footballize.Services.Data
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Threading.Tasks;
     using Common;
     using Exceptions;
@@ -41,15 +43,6 @@
                 throw new ServiceException(string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Gather)));
             }
 
-            var gatherUser = new GatherUser
-            {
-                Gather = gather,
-                User = gather.Creator
-            };
-
-            gather.Players.Add(gatherUser);
-
-            await this.gatherUserRepository.AddAsync(gatherUser);
             await this.gatherRepository.AddAsync(gather);
             await this.gatherRepository.SaveChangesAsync();
         }
@@ -129,6 +122,21 @@
         {
             return this.gatherRepository
                 .All()
+                .Where(x=>x.StartingAt > DateTime.UtcNow)
+                .OrderBy(x=>x.StartingAt)
+                .ThenBy(x=>x.Status)
+                .To<TViewModel>()
+                .ToList();
+        }
+
+        public ICollection<TViewModel> GetGathers<TViewModel>(Expression<Func<Gather,bool>> expression)
+        {
+            return this.gatherRepository
+                .All()
+                .Where(x=>x.StartingAt > DateTime.UtcNow)
+                .Where(expression)
+                .OrderBy(x=>x.StartingAt)
+                .ThenBy(x=>x.Status)
                 .To<TViewModel>()
                 .ToList();
         }
@@ -206,7 +214,10 @@
 
         public Gather GetGatherWithPlayers(string id)
         {
-            return this.gatherRepository.All().Include(x => x.Players).SingleOrDefault(x => x.Id == id);
+            return this.gatherRepository
+                .All()
+                .Include(x => x.Players)
+                .SingleOrDefault(x => x.Id == id);
         }
     }
 }
