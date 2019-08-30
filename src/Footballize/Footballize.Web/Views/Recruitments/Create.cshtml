@@ -9,7 +9,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
             <li class="breadcrumb-item"><a asp-controller="Recruitments" asp-action="Index">Recruitments</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Create</li>
+            <li class="breadcrumb-item active" aria-current="id">Create</li>
         </ol>
     </nav>
 </div>
@@ -29,7 +29,7 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="StartingAt" class="control-label"></label>
-                        <input type="text" asp-for="StartingAt" class="form-control datetimepicker"  />
+                        <input type="text" asp-for="StartingAt" data-date-format="MM-DD-YYYY HH:mm" class="form-control datetimepicker"  />
                         <span asp-validation-for="StartingAt" class="text-danger"></span>
                     </div>
                     <div class="form-group">
@@ -152,20 +152,7 @@
             
             //init DateTimePickers
             materialKit.initFormExtendedDatetimepickers();
-
-            $('.datetimepicker').datetimepicker({
-                icons: {
-                    time: "fa fa-clock-o",
-                    date: "fa fa-calendar",
-                    up: "fa fa-chevron-up",
-                    down: "fa fa-chevron-down",
-                    previous: 'fa fa-chevron-left',
-                    next: 'fa fa-chevron-right',
-                    today: 'fa fa-screenshot',
-                    clear: 'fa fa-trash',
-                    close: 'fa fa-remove'
-                }
-            });
+            initDatetimepicker();
         });
     </script>
 }

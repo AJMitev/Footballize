@@ -14,7 +14,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
             <li class="breadcrumb-item"><a asp-controller="Gathers" asp-action="Index">Gathers</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Match Details</li>
+            <li class="breadcrumb-item active" aria-current="id">Match Details</li>
         </ol>
     </nav>
 </div>
@@ -103,14 +103,14 @@
     else
     {
         <div class="col-2 offset-5">
-            @if (@Model.Players.Any(x => x.Username == User.Identity.Name))
+            @if (@Model.Players.Any(x => x.Username == User.Identity.Name) && @Model.Status == GameStatus.Registration)
             {
                 <a asp-controller="Gathers" asp-action="Leave" asp-route-id="@Model.Id" class="btn btn-danger btn-round">
                     <i class="material-icons">clear</i> Leave Gather
                 </a>
 
             }
-            else if (@Model.Players.Count < @Model.MaximumPlayers)
+            else if (@Model.Players.Count < @Model.MaximumPlayers  && @Model.Status == GameStatus.Registration)
             {
                 <a asp-controller="Gathers" asp-action="Enroll" asp-route-id="@Model.Id" class="btn btn-primary btn-round">
                     <i class="material-icons">add</i> Enroll Gather
@@ -119,49 +119,101 @@
         </div>
     }
 </div>
-<div class="row">
-    <div class="card">
-        <div class="card-body">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Player Title</th>
-                        <th>Games Played</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var player in @Model.Players)
-                    {
-                        <tr>
-                            <td>1</td>
-                            <td>@player.FullName</td>
-                            <td>@player.GamesCompleted</td>
-                            <td>
-                                <a asp-controller="Users" asp-action="Details" asp-route-id="@player.Id" class="btn btn-primary btn-fab btn-fab-mini btn-round">
-                                    <i class="material-icons">person</i>
-                                </a>
-                                @if (player.Username != User.Identity.Name)
-                                {
-                                    <a asp-controller="Users" asp-action="Report" asp-route-id="@player.Id" class="btn btn-warning btn-fab btn-fab-mini btn-round">
-                                        <i class="material-icons">report</i>
-                                    </a>
-                                    @if (Model.Creator.UserName.Equals(User.Identity.Name) && Model.Status.Equals(GameStatus.Registration))
-                                    {
-                                        <a asp-controller="Gathers" asp-action="Kick" asp-route-gatherId="@Model.Id" asp-route-playerId="@player.Id" class="btn btn-danger btn-fab btn-fab-mini btn-round">
-                                            <i class="material-icons">block</i>
-                                        </a>
-                                    }
-                                }
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+<div class="row row-eq-height">
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                <span class="h5 title text-center">Messaging Room</span>
+                <hr />
+                <div class="row">
+                    <div id="messagesList"></div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-8 align-content-end" id="messageGroup">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="material-icons">email</i>
+                                </span>
+                            </div>
+                            <input type="text" class="form-control" id="messageInput" placeholder="Message...">
+                        </div>
+                    </div>
+                    <div class="col-3 align-content-end">
+                        <button id="sendButton" class="btn  btn-primary btn-round">
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    @if (@Model.Creator.UserName.Equals(User.Identity.Name)|| User.IsInRole(GlobalConstants.CanDeleteGathersRoleName))
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                <span class="h5 title text-center">Players</span>
+                <hr />
+                <table class="table" id="playersList">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Player Title</th>
+                            <th>Games Played</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int playerInList = 0;
+
+                        }
+
+                        @foreach (var player in @Model.Players)
+                        {
+
+                            <tr>
+                                <td>@(playerInList += 1)</td>
+                                <td>@player.FullName</td>
+                                <td>@player.GamesCompleted</td>
+                                <td>
+                                    <a asp-controller="Users" asp-action="Details" asp-route-id="@player.Id" class="btn btn-primary btn-fab btn-fab-mini btn-round">
+                                        <i class="material-icons">person</i>
+                                    </a>
+                                    @if (player.Username != User.Identity.Name)
+                                    {
+                                        <a asp-controller="Users" asp-action="Report" asp-route-id="@player.Id" class="btn btn-warning btn-fab btn-fab-mini btn-round">
+                                            <i class="material-icons">report</i>
+                                        </a>
+                                        @if (Model.Creator.UserName.Equals(User.Identity.Name) && Model.Status.Equals(GameStatus.Registration))
+                                        {
+                                            <a asp-controller="Gathers" asp-action="Kick" asp-route-gatherId="@Model.Id" asp-route-playerId="@player.Id" class="btn btn-danger btn-fab btn-fab-mini btn-round">
+                                                <i class="material-icons">block</i>
+                                            </a>
+                                        }
+                                    }
+                                </td>
+                            </tr>
+
+
+                        }
+
+                        @for (int i = 0; i < @Math.Abs(@Model.MaximumPlayers - @Model.Players.Count); i++)
+                        {
+                            <tr>
+                                <td>@(playerInList += 1)</td>
+                                <td colspan="3"><span class="font-italic text-muted text-center">Empty slot</span></td>
+
+                            </tr>
+                        }
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    @if (@Model.Creator.UserName.Equals(User.Identity.Name) || User.IsInRole(GlobalConstants.CanDeleteGathersRoleName))
     {
         <partial name="_DeleteModalPartial" model="@(new DeleteModalPartialViewModel{Id = Model.Id, Title = Model.Title})" />
     }
@@ -174,5 +226,6 @@
         var lng = parseFloat('@Html.Raw(Model.Pitch.AddressLocationLongitude).ToString().Replace(',','.')');
 
         initMap(lat,lng);
+        startChat("@Model.Id");
     </script>
 }

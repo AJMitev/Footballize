@@ -26,7 +26,6 @@
                 if (user.IsBanned && user.BanUntil > DateTime.UtcNow)
                 {
                     await signInManager.SignOutAsync();
-                    //httpContext.Response.Redirect("/");
                 }
             }
 

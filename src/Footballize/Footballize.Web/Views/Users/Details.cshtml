@@ -9,7 +9,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
             <li class="breadcrumb-item"><a asp-controller="Users" asp-action="Index">Users</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Details for @Model.UserName</li>
+            <li class="breadcrumb-item active" aria-current="id">Details for @Model.UserName</li>
         </ol>
     </nav>
 </div>
@@ -123,7 +123,7 @@
                                 @foreach (var gather in @Model.GathersPlayed)
                                 {
                                     <tr>
-                                        <td>@gather.Gather.Title</td>
+                                        <td><a asp-controller="Gathers" asp-action="Details" asp-route-id="@gather.Gather.Id">@gather.Gather.Title</a></td>
                                         <td>@gather.Gather.TeamFormat</td>
                                         <td>@gather.Gather.Status</td>
                                         <td>@gather.Gather.StartingAt</td>
@@ -157,7 +157,7 @@
                                 @foreach (var game in @Model.GamesRecruited)
                                 {
                                     <tr>
-                                        <td>@game.Recruitment.Title</td>
+                                        <td><a asp-controller="Recruitments" asp-action="Details" asp-route-id="@game.Recruitment.Id">@game.Recruitment.Title</a></td>
                                         <td>@game.Recruitment.MaximumPlayers</td>
                                         <td>@game.Recruitment.Status</td>
                                         <td>@game.Recruitment.StartingAt</td>
@@ -192,7 +192,7 @@
                                     @foreach (var playpal in @Model.PlaypalsAdded)
                                     {
                                         <tr>
-                                            <td>@playpal.ToUser.UserName</td>
+                                            <td><a asp-controller="Users" asp-action="Details" asp-route-id="@playpal.ToUser.Id">@playpal.ToUser.UserName</a></td>
                                             <td>@playpal.ToUser.FirstName @playpal.ToUser.LastName</td>
                                             <td>@playpal.ToUser.GamesRecruited.Count</td>
                                             <td>@playpal.ToUser.GathersPlayed.Count</td>
@@ -204,7 +204,7 @@
                                     @foreach (var playpal in @Model.PlaypalsAddedMe)
                                     {
                                         <tr>
-                                            <td>@playpal.FromUser.UserName</td>
+                                            <td><a asp-controller="Users" asp-action="Details" asp-route-id="@playpal.FromUser.Id">@playpal.FromUser.UserName</a></td>
                                             <td>@playpal.FromUser.FirstName @playpal.FromUser.LastName</td>
                                             <td>@playpal.FromUser.GamesRecruited.Count</td>
                                             <td>@playpal.FromUser.GathersPlayed.Count</td>

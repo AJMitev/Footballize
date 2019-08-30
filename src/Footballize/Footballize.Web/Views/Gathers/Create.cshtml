@@ -9,72 +9,74 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
             <li class="breadcrumb-item"><a asp-controller="Gathers" asp-action="Index">Gathers</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Create</li>
+            <li class="breadcrumb-item active" aria-current="id">Create</li>
         </ol>
     </nav>
 </div>
+<div>
 
-<h1 class="title text-center">Create new Gather</h1>
-<hr />
-<div class="row">
-    <div class="col-12">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="row">
-                <div class="col-6">
-                    <div class="form-group">
-                        <label asp-for="Title" class="control-label"></label>
-                        <input asp-for="Title" class="form-control" />
-                        <span asp-validation-for="Title" class="text-danger"></span>
+    <h1 class="title text-center">Create new Gather</h1>
+    <hr />
+    <div class="row">
+        <div class="col-12">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label asp-for="Title" class="control-label"></label>
+                            <input asp-for="Title" class="form-control" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Description" class="control-label"></label>
+                            <textarea asp-for="Description" class="form-control"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="StartingAt" class="control-label"></label>
+                            <input type="text" asp-for="StartingAt" data-date-format="MM-DD-YYYY HH:mm" class="form-control datetimepicker" />
+                            <span asp-validation-for="StartingAt" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="TeamFormat" class="control-label"></label>
+                            <select asp-for="TeamFormat" asp-items="Html.GetEnumSelectList<TeamFormat>()" class="form-control">
+                                <option value="-1">Select an option</option>
+                            </select>
+                            <span asp-validation-for="TeamFormat" class="text-danger"></span>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="Description" class="control-label"></label>
-                        <textarea asp-for="Description" class="form-control"></textarea>
-                        <span asp-validation-for="Description" class="text-danger"></span>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label asp-for="CountryId" class="control-label"></label>
+                            <select id="country" asp-for="CountryId" class="form-control">
+                                <option value="-1">Select an option</option>
+                            </select>
+                            <span asp-validation-for="CountryId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="TownId" class="control-label"></label>
+                            <select id="town" asp-for="TownId" class="form-control">
+                                <option value="-1">Select an option</option>
+                            </select>
+                            <span asp-validation-for="TownId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="PitchId" class="control-label"></label>
+                            <select id="pitch" asp-for="PitchId" class="form-control">
+                                <option value="-1">Select an option</option>
+                            </select>
+                            <span asp-validation-for="PitchId" class="text-danger"></span>
+                        </div>
+
                     </div>
-                    <div class="form-group">
-                        <label asp-for="StartingAt" class="control-label"></label>
-                        <input type="text" asp-for="StartingAt" class="form-control datetimepicker"/>
-                        <span asp-validation-for="StartingAt" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="TeamFormat" class="control-label"></label>
-                        <select asp-for="TeamFormat" asp-items="Html.GetEnumSelectList<TeamFormat>()" class="form-control">
-                            <option value="-1">Select an option</option>
-                        </select>
-                        <span asp-validation-for="TeamFormat" class="text-danger"></span>
-                    </div>
+
                 </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label asp-for="CountryId" class="control-label"></label>
-                        <select id="country" asp-for="CountryId" class="form-control">
-                            <option value="-1">Select an option</option>
-                        </select>
-                        <span asp-validation-for="CountryId" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="TownId" class="control-label"></label>
-                        <select id="town" asp-for="TownId" class="form-control">
-                            <option value="-1">Select an option</option>
-                        </select>
-                        <span asp-validation-for="TownId" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="PitchId" class="control-label"></label>
-                        <select id="pitch" asp-for="PitchId" class="form-control">
-                            <option value="-1">Select an option</option>
-                        </select>
-                        <span asp-validation-for="PitchId" class="text-danger"></span>
-                    </div>
-
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary btn-lg btn-block" />
                 </div>
-
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary btn-lg btn-block" />
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -156,22 +158,7 @@
 
             //init DateTimePickers
             materialKit.initFormExtendedDatetimepickers();
-
-            $('.datetimepicker').datetimepicker({
-                locale: 'ru',
-                format: 'DD/MM/YYYY HH:mm',
-                icons: {
-                    time: "fa fa-clock-o",
-                    date: "fa fa-calendar",
-                    up: "fa fa-chevron-up",
-                    down: "fa fa-chevron-down",
-                    previous: 'fa fa-chevron-left',
-                    next: 'fa fa-chevron-right',
-                    today: 'fa fa-screenshot',
-                    clear: 'fa fa-trash',
-                    close: 'fa fa-remove'
-                }
-            });
+            initDatetimepicker();
         });
     </script>
 }

@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Reflection;
-    using AutoMapper;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.UI;
@@ -17,10 +16,9 @@
     using Data.Repositories;
     using Data.Seeding;
     using Footballize.Models;
-    using Microsoft.AspNetCore.Localization;
+    using Hubs;
     using Middlewares;
     using ViewModels;
-    using Services;
     using Services.Data;
     using Services.Mapping;
 
@@ -43,11 +41,17 @@
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.Configure<RequestLocalizationOptions>(options =>
-            {
-                options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("en-NZ");
-                options.SupportedCultures = new List<CultureInfo> { new CultureInfo("en-US"), new CultureInfo("en-NZ") };
-            });
+
+            var cultureInfo = new CultureInfo("en-US");
+            cultureInfo.NumberFormat.NumberGroupSeparator = ",";
+
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+            //services.Configure<RequestLocalizationOptions>(options =>
+            //{
+            //    options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("en-US");
+            //    options.SupportedCultures = new List<CultureInfo> { new CultureInfo("en-US"), new CultureInfo("en-NZ") };
+            //});
 
             services.AddDbContext<FootballizeDbContext>(options =>
                 options.UseSqlServer(
@@ -59,6 +63,8 @@
                 .AddRoleStore<FootballizeRoleStore>()
                 .AddDefaultTokenProviders()
                 .AddDefaultUI(UIFramework.Bootstrap4);
+
+            services.AddSignalR();
 
             // Seed data on application startup
             using (var serviceScope = services.BuildServiceProvider().CreateScope())
@@ -104,18 +110,24 @@
             }
             else
             {
+                app.UseStatusCodePagesWithRedirects("/Home/Error?code={0}");
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                //app.UseHsts();
             }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
             app.UseAuthentication();
-
             app.UseMiddleware<RemoveBannedUserMiddleware>();
+
+            app.UseSignalR(
+                routes =>
+                {
+                    routes.MapHub<ChatHub>("/chat");
+                });
+
 
             app.UseMvc(routes =>
             {

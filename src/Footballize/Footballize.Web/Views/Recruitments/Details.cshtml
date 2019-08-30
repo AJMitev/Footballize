@@ -14,7 +14,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
             <li class="breadcrumb-item"><a asp-controller="Recruitments" asp-action="Index">Recruit a Player</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Match Details</li>
+            <li class="breadcrumb-item active" aria-current="id">Match Details</li>
         </ol>
     </nav>
 </div>
@@ -98,14 +98,14 @@
     else
     {
         <div class="col-2 offset-5">
-            @if (@Model.Players.Any(x => x.Username == User.Identity.Name))
+            @if (@Model.Players.Any(x => x.Username == User.Identity.Name) && @Model.Status == GameStatus.Registration)
             {
                 <a asp-controller="Recruitments" asp-action="Leave" asp-route-id="@Model.Id" class="btn btn-danger btn-round">
                     <i class="material-icons">clear</i> Leave Game
                 </a>
 
             }
-            else if (@Model.Players.Count < @Model.MaximumPlayers)
+            else if (@Model.Players.Count < @Model.MaximumPlayers && @Model.Status == GameStatus.Registration)
             {
                 <a asp-controller="Recruitments" asp-action="Enroll" asp-route-id="@Model.Id" class="btn btn-primary btn-round">
                     <i class="material-icons">add</i> Enroll Game

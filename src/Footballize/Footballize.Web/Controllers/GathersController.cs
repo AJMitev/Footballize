@@ -1,5 +1,7 @@
 ﻿namespace Footballize.Web.Controllers
 {
+    using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
     using Common;
@@ -15,6 +17,8 @@
     [Authorize]
     public class GathersController : Controller
     {
+        private const int ItemsPerPage = 10;
+
         private readonly IGatherServices gatherServices;
         private readonly UserManager<User> userManager;
 
@@ -26,11 +30,28 @@
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(int id)
         {
-            var gathers = this.gatherServices.GetGathers<GatherIndexViewModel>();
+            id = Math.Max(1, id);
+            var skip = (id - 1) * ItemsPerPage;
 
-            return View(gathers);
+
+            var gathers = this.gatherServices.GetGathers<GatherIndexViewModel>(x => x.StartingAt > DateTime.UtcNow);
+
+            var filtered = gathers.Skip(skip).Take(ItemsPerPage).ToList();
+
+            var gathersCount = gathers.Count;
+            var pagesCount = (int)Math.Ceiling(gathersCount / (decimal)ItemsPerPage);
+
+            var model = new GatherListViewModel
+            {
+                Gathers = filtered,
+                PagesCount = pagesCount,
+                CurrentPage = id,
+                GathersCount =  gathersCount
+            };
+
+            return View(model);
         }
 
         [HttpGet]
@@ -60,7 +81,7 @@
             }
 
             await this.gatherServices.AddGatherAsync(newGather);
-            return this.RedirectToAction("Index");
+            return await this.Enroll(newGather.Id);
         }
 
         [HttpGet]
@@ -94,7 +115,7 @@
                 {
                     return this.NotFound();
                 }
-            
+
                 await this.gatherServices.LeaveGatherAsync(gather, currentUser.Id);
 
                 return this.RedirectToAction("Details", new { id = id });

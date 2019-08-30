@@ -1,5 +1,6 @@
 ﻿namespace Footballize.Web.Controllers
 {
+    using System;
     using System.Threading.Tasks;
     using AutoMapper;
     using Common;
@@ -27,7 +28,7 @@
         [HttpGet]
         public IActionResult Index()
         {
-            var recruitments = this.recruitmentService.GetRecruitments<RecruitmentIndexViewModel>();
+            var recruitments = this.recruitmentService.GetRecruitments<RecruitmentIndexViewModel>(x=>x.StartingAt > DateTime.UtcNow);
 
             return View(recruitments);
         }
