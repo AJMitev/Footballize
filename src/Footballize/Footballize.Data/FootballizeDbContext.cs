@@ -25,6 +25,7 @@
 
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Country> Countries { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
         public DbSet<Gather> Gathers { get; set; }
         public DbSet<GatherUser> GatherUsers { get; set; }
         public DbSet<Province> Provinces { get; set; }
@@ -42,6 +43,7 @@
 
             modelBuilder.ApplyConfiguration(new AddressConfig());
             modelBuilder.ApplyConfiguration(new CountryConfig());
+            modelBuilder.ApplyConfiguration(new ChatMessageConfig());
             modelBuilder.ApplyConfiguration(new GatherConfig());
             modelBuilder.ApplyConfiguration(new GatherUserConfig());
             modelBuilder.ApplyConfiguration(new RecruitmentConfig());
