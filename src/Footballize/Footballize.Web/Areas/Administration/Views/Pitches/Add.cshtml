@@ -2,12 +2,19 @@
 @{
     ViewData["Title"] = "Add Field";
 }
-
-<h2 class="title">Add a new field</h2>
+<div id="breadcrumb">
+    <nav aria-label="breadcrumb" role="navigation">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Pitches" asp-action="Index">Pitches</a></li>
+            <li class="breadcrumb-item active" aria-current="id">Add new field</li>
+        </ol>
+    </nav>
+</div>
 <hr />
 <div class="row">
     <div class="col-6">
-        <form asp-action="Add">
+        <form asp-action="Add" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -37,6 +44,20 @@
                 <label asp-for="Number" class="control-label"></label>
                 <input asp-for="Number" class="form-control" />
                 <span asp-validation-for="Number" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Latitude" class="control-label"></label>
+                <input asp-for="Latitude" class="form-control" />
+                <span asp-validation-for="Latitude" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Longitude" class="control-label"></label>
+                <input asp-for="Longitude" class="form-control" />
+                <span asp-validation-for="Longitude" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cover"></label>
+                <input asp-for="Cover" type="file" class="form-control-file">
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

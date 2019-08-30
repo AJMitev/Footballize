@@ -1,5 +1,8 @@
-﻿@using Microsoft.Extensions.Configuration
+﻿@using Footballize.Models
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Configuration
 @inject IConfiguration Configuration
+@inject UserManager<User> UserManager
 
 <!DOCTYPE html>
 <html lang="en">
@@ -15,6 +18,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
     <!-- CSS Files -->
     <link href="~/css/material-dashboard.css?v=2.1.1" rel="stylesheet" />
+    <link href="~/css/custom-admin.css" rel="stylesheet" />
 </head>
 
 <body class="">
@@ -85,8 +89,7 @@
                                     </p>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
-                                    <a class="dropdown-item">Profile</a>
-                                    <a class="dropdown-item" href="#">Settings</a>
+                                    <a class="dropdown-item" asp-controller="Users" asp-action="Details" asp-route-id="@UserManager.GetUserId(User)">Profile</a>
                                     <div class="dropdown-divider"></div>
                                     <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                                         <button type="submit" class="dropdown-item">Log out</button>
@@ -169,7 +172,7 @@
     <script src="~/js/plugins/chartist.min.js"></script>
     <!--  Notifications Plugin    -->
     <script src="~/js/plugins/bootstrap-notify.js"></script>
-    <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+    <!-- Control Center for Material Dashboard: parallax effects, scripts for the example ids etc -->
     <script src="~/js/material-dashboard.js?v=2.1.1" type="text/javascript"></script>
     <script src="~/js/demo.js" type="text/javascript"></script>
     <script>

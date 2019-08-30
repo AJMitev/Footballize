@@ -1,7 +1,9 @@
 ﻿namespace Footballize.Web.Areas.Administration.ViewModels.Pitches
 {
     using System.ComponentModel.DataAnnotations;
+    using Attributes;
     using AutoMapper;
+    using Microsoft.AspNetCore.Http;
     using Models;
     using Services.Mapping;
 
@@ -20,6 +22,20 @@
         public string ProvinceName { get; set; }
 
         public Address Address { get; set; }
+        
+        [Required(ErrorMessage = "Please select a file.")]
+        [DataType(DataType.Upload)]
+        [MaxFileSize(5* 1024 * 1024)]
+        [AllowedExtensions(new[] { ".jpg", ".png" })]
+        public IFormFile Cover { get; set; }
+
+        [Range(-180.0d, 180.0d)]
+        [Display(Name = "Longitude")]
+        public double LocationLongitude { get; set; }
+
+        [Range(-90.0d, 90.0d)]
+        [Display(Name = "Latitude")]
+        public double LocationLatitude { get; set; }
 
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {

@@ -6,23 +6,24 @@
     ViewData["Title"] = "Register";
 }
 
-<form class="form" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-    <div class="card-header card-header-primary text-center">
-        <h4 class="card-title">@ViewData["Title"]</h4>
-        <div class="social-line">
-            <a href="#pablo" class="btn btn-just-icon btn-link">
-                <i class="fa fa-facebook-square"></i>
-            </a>
-            <a href="#pablo" class="btn btn-just-icon btn-link">
-                <i class="fa fa-twitter"></i>
-            </a>
-            <a href="#pablo" class="btn btn-just-icon btn-link">
-                <i class="fa fa-google-plus"></i>
-            </a>
-        </div>
+<div class="card-header card-header-primary text-center">
+    <h4 class="card-title">@ViewData["Title"]</h4>
+    <div class="social-line">
+        <a href="#pablo" class="btn btn-just-icon btn-link">
+            <i class="fa fa-facebook-square"></i>
+        </a>
+        <a href="#pablo" class="btn btn-just-icon btn-link">
+            <i class="fa fa-twitter"></i>
+        </a>
+        <a href="#pablo" class="btn btn-just-icon btn-link">
+            <i class="fa fa-google-plus"></i>
+        </a>
     </div>
-    <p class="description text-center">Create a new account.</p>
-    <div asp-validation-summary="ModelOnly" ></div>
+</div>
+<p class="description text-center">Create a new account.</p>
+<form class="form" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+
+    <div asp-validation-summary="ModelOnly"></div>
     <div class="card-body">
         <div class="input-group">
             <div class="input-group-prepend">
@@ -87,11 +88,15 @@
                 </button>
             </div>
         </div>
-        <div class="footer text-center">
-            <span class="text-gray text-center">Already have an account? <a asp-area="Identity" asp-page="/Account/Login" class="text-success">Log in.</a></span>
-        </div>
     </div>
 </form>
+
+<div class="card-footer text-center">
+    <div>
+        <span class="text-gray text-center">Already have an account? <a asp-area="Identity" asp-page="/Account/Login" class="text-success">Log in.</a></span>
+
+    </div>
+</div>
 
 
 @section Scripts {

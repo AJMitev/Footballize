@@ -7,24 +7,26 @@
 
 
 }
-<form class="form" id="account" method="post">
-    <div class="card-header card-header-primary text-center">
-        <h4 class="card-title">@ViewData["Title"]</h4>
-        <div class="social-line">
-            <a href="#pablo" class="btn btn-just-icon btn-link">
-                <i class="fa fa-facebook-square"></i>
-            </a>
-            <a href="#pablo" class="btn btn-just-icon btn-link">
-                <i class="fa fa-twitter"></i>
-            </a>
-            <a href="#pablo" class="btn btn-just-icon btn-link">
-                <i class="fa fa-google-plus"></i>
-            </a>
-        </div>
+
+
+<div class="card-header card-header-primary text-center">
+    <h4 class="card-title">@ViewData["Title"]</h4>
+    <div class="social-line">
+        <a href="#pablo" class="btn btn-just-icon btn-link">
+            <i class="fa fa-facebook-square"></i>
+        </a>
+        <a href="#pablo" class="btn btn-just-icon btn-link">
+            <i class="fa fa-twitter"></i>
+        </a>
+        <a href="#pablo" class="btn btn-just-icon btn-link">
+            <i class="fa fa-google-plus"></i>
+        </a>
     </div>
-    <p class="description text-center">Please enter your credentials.</p>
-    <div class="card-body">
-        <div asp-validation-summary="All" class="text-danger"></div>
+</div>
+<p class="description text-center">Please enter your credentials.</p>
+<div class="card-body">
+    <form class="form" id="account" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger text-center"></div>
         <div class="input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text">
@@ -53,6 +55,7 @@
                 </label>
             </div>
         </div>
+        
         <div class="text-center">
             <button class="btn btn-primary">
                 Log In
@@ -60,12 +63,24 @@
             </button>
         </div>
 
-        <div class="footer text-center">
-            <p class="text-gray text-center">Forgot your password? <a asp-area="Identity" asp-page="/Account/ForgotPassword" class="text-success">Ask for new</a></p>
-            <p class="text-gray text-center">Don't Have an Account? <a asp-area="Identity" asp-page="/Account/Register" class="text-success">Register.</a></p>
+    </form>
+
+    <div class="card-footer text-center">
+        <div class="row">
+            <div class="identity-link">
+                <p class="text-gray text-center">Forgot your password? <br/> <a asp-area="Identity" asp-page="/Account/ForgotPassword" class="text-success">Ask for new</a></p>
+                </div>
+            <div class="identity-link">
+                <p class="text-gray text-center">Need an Account? <br/> <a asp-area="Identity" asp-page="/Account/Register" class="text-success">Register.</a></p>
+
+            </div>
+        </div>
+        <div class="row">
+
         </div>
     </div>
-</form>
+</div>
+
 
 
 @section Scripts {

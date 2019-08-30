@@ -20,6 +20,7 @@
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Title</th>
+                            <th scope="col">Title</th>
                             <th scope="col">Country</th>
                             <th scope="col">Town</th>
                             <th scope="col">Address</th>
@@ -29,23 +30,17 @@
                     <tbody>
                         @for (int i = 0; i < Model.Count(); i++)
                         {
-                            <tr>
-                                <th scope="row">@(i + 1)</th>
-                                <td><a asp-action="Details" asp-route-id="@Model.ToList()[i].Id">@Model.ToList()[i].Name</a></td>
-                                <td>@Model.ToList()[i].CountryName</td>
-                                <td>@Model.ToList()[i].TownName</td>
-                                <td>@Model.ToList()[i].AddressStreet, @Model.ToList()[i].AddressNumber</td>
-                                <td>
-                                    <a asp-action="Edit" asp-route-id="@Model.ToList()[i].Id" class="btn btn-info btn-fab btn-round" data-toggle="tooltip" data-placement="top" title="Modify">
-                                        <i class="material-icons">edit</i>
-                                        <div class="ripple-container"></div>
-                                    </a>
-                                    <a class="btn btn-danger btn-fab btn-round" asp-action="Delete" asp-route-id="@Model.ToList()[i].Id" data-toggle="tooltip" data-placement="top" title="Delete">
-                                        <i class="material-icons">delete</i>
-                                        <div class="ripple-container"></div>
-                                    </a>
-                                </td>
-                            </tr>
+                        <tr>
+                            <th scope="row">@(i + 1)</th>
+                            <td><img class="img-circle" src="/img/fields/@(Model.ToList()[i].Id).jpg" width="32px" /></td>
+                            <td><a asp-action="Details" asp-route-id="@Model.ToList()[i].Id">@Model.ToList()[i].Name</a></td>
+                            <td>@Model.ToList()[i].CountryName</td>
+                            <td>@Model.ToList()[i].TownName</td>
+                            <td>@Model.ToList()[i].AddressStreet, @Model.ToList()[i].AddressNumber</td>
+                            <td>
+                                <vc:admin-controls id="@Model.ToList()[i].Id" name="@Model.ToList()[i].Name" controller="Pitches"></vc:admin-controls>
+                            </td>
+                        </tr>
                         }
                     </tbody>
                 </table>

@@ -3,8 +3,6 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using Common;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Models;
@@ -57,7 +55,7 @@
                 && x.GamesRecruited.Any(y => (DateTime.UtcNow - y.CreatedOn).TotalDays >= 10)).Count;
 
             var newUsersCount =
-                this.userService.GetUsers<UserDetailsViewModel>(x => (DateTime.UtcNow - x.CreatedOn).TotalDays >= 10).Count;
+                this.userService.GetUsers<UserDetailsViewModel>(x => (DateTime.UtcNow - x.CreatedOn).TotalDays <= 30).Count;
 
             var model = new AdminUsersViewModel
             {
