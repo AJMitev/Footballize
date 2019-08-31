@@ -40,11 +40,14 @@
                             <span class="h4">@Model.Status</span>
                         </div>
                         <hr />
-                        <div>
-                            <p class="h5 font-italic description">Description</p>
-                            <span class="h4">@Model.Description</span>
-                        </div>
-                        <hr />
+                        @if (!string.IsNullOrEmpty(Model.Description) && !string.IsNullOrWhiteSpace(Model.Description))
+                        {
+                            <div>
+                                <p class="h5 font-italic description">Description</p>
+                                <span class="h4">@Model.Description</span>
+                            </div>
+                            <hr />
+                        }
                         <div>
                             <p class="h5 font-italic description">Teams Format</p>
                             <span class="h4">@(EnumHelper<TeamFormat>.GetDisplayValue(@Model.TeamFormat)) </span>
@@ -110,7 +113,7 @@
                 </a>
 
             }
-            else if (@Model.Players.Count < @Model.MaximumPlayers  && @Model.Status == GameStatus.Registration)
+            else if (@Model.Players.Count < @Model.MaximumPlayers && @Model.Status == GameStatus.Registration)
             {
                 <a asp-controller="Gathers" asp-action="Enroll" asp-route-id="@Model.Id" class="btn btn-primary btn-round">
                     <i class="material-icons">add</i> Enroll Gather

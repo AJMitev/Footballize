@@ -106,6 +106,15 @@
             
             await this._pitchService.UpdatePitchAsync(Mapper.Map<Pitch>(model));
 
+            var folderPath = hostingEnvironment.WebRootPath + "/img/fields/";
+            Directory.CreateDirectory(folderPath);
+
+
+            using (var stream = System.IO.File.OpenWrite(hostingEnvironment.WebRootPath +$"/img/fields/{model.Id}.jpg"))
+            {
+                await model.Cover.CopyToAsync(stream);
+            }
+
             return this.RedirectToAction("Index");
         }
 

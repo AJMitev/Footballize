@@ -4,11 +4,14 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <UserSecretsId>aspnet-Footballize.Web-91D72158-265B-42B8-9705-D175CBC1F928</UserSecretsId>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <ApplicationInsightsResourceId>/subscriptions/4cdbff0a-e92a-4eb5-a625-82bedc11ea4d/resourcegroups/footballize/providers/microsoft.insights/components/footballize</ApplicationInsightsResourceId>
+    <ApplicationInsightsAnnotationResourceId>/subscriptions/4cdbff0a-e92a-4eb5-a625-82bedc11ea4d/resourcegroups/footballize/providers/microsoft.insights/components/footballize</ApplicationInsightsAnnotationResourceId>
   </PropertyGroup>
 
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.1" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.7.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
@@ -27,6 +30,11 @@
     <Content Update="Areas\Administration\Views\Countries\Index.cshtml">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
   </ItemGroup>
 
 </Project>

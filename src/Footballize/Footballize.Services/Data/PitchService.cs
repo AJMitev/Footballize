@@ -97,6 +97,8 @@
                 .All()
                 .OrderBy(x => x.Name)
                 .Include(x=>x.Address)
+                .ThenInclude(x=>x.Location)
+                .Include(x=>x.Address)
                 .ThenInclude(x=>x.Town)
                 .ThenInclude(x=>x.Province)
                 .ThenInclude(x=>x.Country)

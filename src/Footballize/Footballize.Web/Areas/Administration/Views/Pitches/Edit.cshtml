@@ -55,6 +55,7 @@
             <div class="form-group">
                 <label asp-for="Cover"></label>
                 <input asp-for="Cover" type="file" class="form-control-file">
+                <span asp-validation-for="Cover" class="text-danger"></span>
             </div>
             <input name="AddressId" asp-for="Address.Id" class="text-hide" />
             <div class="form-group">

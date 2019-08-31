@@ -23,5 +23,13 @@
         [AllowedExtensions(new[] { ".jpg", ".png" })]
         public IFormFile Cover { get; set; }
 
+        [Range(-180.0d, 180.0d)]
+        [Display(Name = "Longitude")]
+        public double LocationLongitude { get; set; }
+
+        [Range(-90.0d, 90.0d)]
+        [Display(Name = "Latitude")]
+        public double LocationLatitude { get; set; }
+
     }
 }

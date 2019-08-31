@@ -42,7 +42,9 @@
             configuration.CreateMap<Pitch, PitchEditViewModel>()
                 .ForMember(x => x.CountryName, opt => opt.MapFrom(y => y.Address.Town.Province.Country.Name))
                 .ForMember(x => x.ProvinceName, opt => opt.MapFrom(y => y.Address.Town.Province.Name))
-                .ForMember(x => x.TownName, opt => opt.MapFrom(y => y.Address.Town.Name));
+                .ForMember(x => x.TownName, opt => opt.MapFrom(y => y.Address.Town.Name))
+                .ForMember(x => x.LocationLatitude, opt => opt.MapFrom(y => y.Address.Location.Latitude))
+                .ForMember(x => x.LocationLongitude, opt => opt.MapFrom(y => y.Address.Location.Longitude));
         }
     }
 }
