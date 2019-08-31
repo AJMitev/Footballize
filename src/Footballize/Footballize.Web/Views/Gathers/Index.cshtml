@@ -4,30 +4,40 @@
     ViewData["Title"] = "Index";
 }
 
-<div id="breadcrumb">
-    <nav aria-label="breadcrumb" role="navigation">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="id">Gathers</li>
-        </ol>
-    </nav>
-</div>
-<h2 class="title text-center">Games Available</h2>
-@if (TempData.ContainsKey("Error"))
-{
-    <div class="text-center">
-        <div class="alert text-danger"><strong>Error!</strong> @TempData["Error"]</div>
+<div class="row">
+    <div class="col-12">
+        <div id="breadcrumb">
+            <nav aria-label="breadcrumb" role="navigation">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="id">Gathers</li>
+                </ol>
+            </nav>
+        </div>
     </div>
-}
-<div class="text-right">
-    <a asp-action="Create" class="btn btn-primary btn-round">
-        <i class="material-icons">add</i> Create new Gather
-        <div class="ripple-container"></div>
-    </a>
 </div>
-<div>
-    <table class="table">
-        <thead>
+<div class="row">
+    <div class="col-11">
+        <h2 class="title text-center">Games Available</h2>
+        @if (TempData.ContainsKey("Error"))
+        {
+            <div class="text-center">
+                <div class="alert text-danger"><strong>Error!</strong> @TempData["Error"]</div>
+            </div>
+        }
+    </div>
+    <div class="col-1">
+        <div class="text-right">
+            <a asp-action="Create" class="btn btn-primary btn-round">
+                <i class="material-icons">add</i> <div class="ripple-container"></div>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <table class="table">
+            <thead>
             <tr class="text-center">
 
                 <th scope="col">Title</th>
@@ -38,8 +48,8 @@
                 <th scope="col">Creator</th>
                 <th scope="col">Details</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             @foreach (var match in Model.Gathers.OrderBy(x => x.StartingAt))
             {
                 <tr class="text-center">
@@ -70,10 +80,10 @@
                     </td>
                 </tr>
             }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 </div>
-
 <!-- Pagination -->
 <nav aria-label="Previous">
     <ul class="pagination justify-content-center">
@@ -118,7 +128,7 @@
             }
             if (i > 0 && pageNumber - 1 != pagesToShow[i - 1])
             {
-                <li class="page-item @className"><a class="page-link" asp-controller="Gathers" asp-action="Index" asp-route-id="@(pagesToShow[i - 1] + 1)" >...</a></li>
+                <li class="page-item @className"><a class="page-link" asp-controller="Gathers" asp-action="Index" asp-route-id="@(pagesToShow[i - 1] + 1)">...</a></li>
             }
             <li class="page-item @className"><a class="page-link" asp-controller="Gathers" asp-action="Index" asp-route-id="@pageNumber">@pageNumber</a></li>
         }

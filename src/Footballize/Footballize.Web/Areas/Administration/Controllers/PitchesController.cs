@@ -122,14 +122,14 @@
         public async Task<IActionResult> Delete(string id)
         {
 
-            var field = await this._pitchService.GetPitchAsync(id);
+            var field =  this._pitchService.GetPitch<PitchNameAndIdViewModel>(id);
 
             if (field == null)
             {
                 return this.NotFound();
             }
 
-            await this._pitchService.RemovePitchAsync(field);
+            await this._pitchService.RemovePitchAsync(Mapper.Map<Pitch>(field));
 
             return this.RedirectToAction("Index");
         }

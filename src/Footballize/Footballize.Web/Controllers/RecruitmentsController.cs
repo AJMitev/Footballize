@@ -98,7 +98,7 @@
         [HttpGet]
         public async Task<IActionResult> Start(string id)
         {
-            var game = this.recruitmentService.GetRecruitmentWithPlayers(id);
+            var game = this.recruitmentService.GetRecruitment<RecruitmentDetailsViewModel>(id);
             var currentUser = await this.userManager.GetUserAsync(User);
 
             if (game == null || currentUser == null)
@@ -157,7 +157,7 @@
         public async Task<IActionResult> Enroll(string id)
         {
             var currentUser = await this.userManager.GetUserAsync(User);
-            var game = this.recruitmentService.GetRecruitmentWithPlayers(id);
+            var game = this.recruitmentService.GetRecruitment<RecruitmentDetailsViewModel>(id);
 
             if (currentUser == null)
             {
@@ -166,7 +166,7 @@
 
             try
             {
-                await this.recruitmentService.EnrollRecruitmentAsync(game, currentUser);
+                await this.recruitmentService.EnrollRecruitmentAsync(Mapper.Map<Recruitment>(game), currentUser);
 
                 return this.RedirectToAction("Details", new { id = id });
             }

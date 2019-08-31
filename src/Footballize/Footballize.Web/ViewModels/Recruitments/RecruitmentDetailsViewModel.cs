@@ -8,7 +8,7 @@
     using Services.Mapping;
     using Users;
 
-    public class RecruitmentDetailsViewModel : IMapFrom<Recruitment>
+    public class RecruitmentDetailsViewModel : IMapFrom<Recruitment>, IMapTo<Recruitment>
     {
         public string Id { get; set; }
         public string Title { get; set; }
