@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Footballize.Services", "Foo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Footballize.Common", "Footballize.Common\Footballize.Common.csproj", "{6D491941-D64D-4F22-BB15-FE16A1F4EB58}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Footballize.Services.Tests", "Footballize.Services.Tests\Footballize.Services.Tests.csproj", "{FC4B4E98-BC85-47F8-8A83-5F701D02EC04}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{6D491941-D64D-4F22-BB15-FE16A1F4EB58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D491941-D64D-4F22-BB15-FE16A1F4EB58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D491941-D64D-4F22-BB15-FE16A1F4EB58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC4B4E98-BC85-47F8-8A83-5F701D02EC04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC4B4E98-BC85-47F8-8A83-5F701D02EC04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC4B4E98-BC85-47F8-8A83-5F701D02EC04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC4B4E98-BC85-47F8-8A83-5F701D02EC04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
