@@ -1,15 +1,15 @@
 ﻿namespace Footballize.Web.Areas.Administration.Controllers
 {
+    using System;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
-    using Common;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Services.Data;
+    using ViewModels.Dashboard;
     using ViewModels.Pitches;
 
     public class PitchesController : AdminController
@@ -26,11 +26,27 @@
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(int id)
         {
             var fields = this._pitchService.GetPitches<PitchIndexViewModel>().ToList();
+            id = Math.Max(1, id);
+            var skip = (id - 1) * PitchesListViewModel.ItemsPerPage;
 
-            return this.View(fields);
+            var filteredItems = fields.Skip(skip).Take(PitchesListViewModel.ItemsPerPage).ToList();
+
+            var fieldsCount = fields.Count;
+            var pagesCount = (int)Math.Ceiling(fieldsCount / (decimal)PitchesListViewModel.ItemsPerPage);
+
+            var model = new PitchesListViewModel
+            {
+                Items = filteredItems,
+                ItemsCount = fieldsCount,
+                CurrentPage = id,
+                PagesCount = pagesCount
+            };
+
+
+            return this.View(model);
         }
 
         [HttpGet]

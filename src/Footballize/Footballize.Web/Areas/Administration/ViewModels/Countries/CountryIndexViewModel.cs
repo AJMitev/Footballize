@@ -5,7 +5,7 @@
     using Models;
     using Services.Mapping;
 
-    public class CountriesIndexViewModel : IMapFrom<Country>, IHaveCustomMappings
+    public class CountryIndexViewModel : IMapFrom<Country>, IHaveCustomMappings
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -14,7 +14,7 @@
         public int TownsCount { get; set; }
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {
-            configuration.CreateMap<Country,CountriesIndexViewModel>()
+            configuration.CreateMap<Country,CountryIndexViewModel>()
                 .ForMember(x=>x.ProvincesCount,o=>o.MapFrom(p=>p.Provinces.Count))
                 .ForMember(x=>x.TownsCount,o=>o.MapFrom(p=>p.Provinces.Sum(t=>t.Towns.Count)));
         }

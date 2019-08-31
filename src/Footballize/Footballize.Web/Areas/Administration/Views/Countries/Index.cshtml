@@ -1,5 +1,4 @@
-﻿@model IEnumerable<Footballize.Web.Areas.Administration.ViewModels.Countries.CountriesIndexViewModel>
-
+﻿@model Footballize.Web.Areas.Administration.ViewModels.Countries.CountriesListViewModel
 @{
     ViewData["Title"] = "Countries";
 }
@@ -10,7 +9,7 @@
         <div class="card">
             <div class="card-header card-header-primary">
                 <h4 class="card-title ">Countries</h4>
-                <p class="card-category"> Currently we have @Model.Count() countries</p>
+                <p class="card-category"> Currently we have @Model.ItemsCount countries</p>
             </div>
             <div class="card-body">
                 <table class="table">
@@ -27,30 +26,88 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @for (int i = 0; i < Model.Count(); i++)
+                        @for (int i = 0; i < Model.Items.Count(); i++)
                         {
                             <tr>
                                 <th scope="row">@(i + 1)</th>
-                                <td><img src="/img/flags/@(Model.ToList()[i].Name.ToLower()).png" width="32px" /></td>
-                                <td><a asp-action="Details" asp-route-id="@Model.ToList()[i].Id">@Model.ToList()[i].Name</a></td>
-                                <td>@Model.ToList()[i].IsoCode</td>
-                                <td>@Model.ToList()[i].ProvincesCount</td>
-                                <td>@Model.ToList()[i].TownsCount</td>
+                                <td><img src="/img/flags/@(Model.Items.ToList()[i]?.Name.ToLower()).png" width="32px" /></td>
+                                <td><a asp-action="Details" asp-route-id="@Model.Items.ToList()[i].Id">@Model.Items.ToList()[i].Name</a></td>
+                                <td>@Model.Items.ToList()[i].IsoCode</td>
+                                <td>@Model.Items.ToList()[i].ProvincesCount</td>
+                                <td>@Model.Items.ToList()[i].TownsCount</td>
                                 <td>
-                                    <vc:admin-controls id="@Model.ToList()[i].Id" name="@Model.ToList()[i].Name" controller="Countries"></vc:admin-controls>
+                                    <vc:admin-controls id="@Model.Items.ToList()[i].Id" name="@Model.Items.ToList()[i].Name" controller="Countries"></vc:admin-controls>
                                 </td>
                             </tr>
                         }
                     </tbody>
                 </table>
             </div>
+            <!-- Pagination -->
+            <nav aria-label="Previous">
+                <ul class="pagination justify-content-center">
+                    @if (this.Model.CurrentPage > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-action="Index" asp-route-id="@this.Model.PreviousPage" aria-label="Предишна">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    }
+                    @{
+                        const int MorePagesToShow = 3;
+                        var pagesToShow = new List<int>();
+                        for (var i = 1; i <= MorePagesToShow; i++)
+                        {
+                            pagesToShow.Add(i);
+                        }
+                        for (var i = this.Model.CurrentPage - MorePagesToShow; i <= this.Model.CurrentPage + MorePagesToShow; i++)
+                        {
+                            if (i > 0)
+                            {
+                                pagesToShow.Add(i);
+                            }
+                        }
+                        for (var i = this.Model.PagesCount - MorePagesToShow + 1; i <= this.Model.PagesCount; i++)
+                        {
+                            if (i > 0)
+                            {
+                                pagesToShow.Add(i);
+                            }
+                        }
+                        pagesToShow = pagesToShow.Where(x => x <= this.Model.PagesCount).Distinct().OrderBy(x => x).ToList();
+                    }
+                    @for (var i = 0; i < pagesToShow.Count; i++)
+                    {
+                        var className = string.Empty;
+                        var pageNumber = pagesToShow[i];
+                        if (pageNumber == this.Model.CurrentPage)
+                        {
+                            className = "active";
+                        }
+                        if (i > 0 && pageNumber - 1 != pagesToShow[i - 1])
+                        {
+                            <li class="page-item @className"><a class="page-link" asp-action="Index" asp-route-id="@(pagesToShow[i - 1] + 1)">...</a></li>
+                        }
+                        <li class="page-item @className"><a class="page-link" asp-action="Index" asp-route-id="@pageNumber">@pageNumber</a></li>
+                    }
+                    @if (this.Model.CurrentPage < this.Model.PagesCount)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-action="Index" asp-route-id="@Model.NextPage" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
         </div>
     </div>
 </div>
 
 
 
-<p>We have @Model.Count() records in total.</p>
+<p>We have @Model.ItemsCount records in total.</p>
 <div class="text-right">
     <a asp-action="Add">
         <button class="btn btn-primary btn-round">

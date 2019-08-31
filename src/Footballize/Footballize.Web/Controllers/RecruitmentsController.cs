@@ -1,6 +1,7 @@
 ﻿namespace Footballize.Web.Controllers
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
     using Common;
@@ -15,6 +16,8 @@
     [Authorize]
     public class RecruitmentsController : Controller
     {
+        private const int ItemsPerPage = 10;
+
         private readonly IRecruitmentService recruitmentService;
         private readonly UserManager<User> userManager;
 
@@ -26,11 +29,27 @@
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(int id)
         {
-            var recruitments = this.recruitmentService.GetRecruitments<RecruitmentIndexViewModel>(x=>x.StartingAt > DateTime.UtcNow);
+            id = Math.Max(1, id);
+            var skip = (id - 1) * ItemsPerPage;
 
-            return View(recruitments);
+            var games = this.recruitmentService.GetRecruitments<RecruitmentIndexViewModel>(x => x.StartingAt > DateTime.UtcNow);
+
+            var filtered = games.Skip(skip).Take(ItemsPerPage).ToList();
+
+            var gathersCount = games.Count;
+            var pagesCount = (int)Math.Ceiling(gathersCount / (decimal)ItemsPerPage);
+
+            var model = new RecruitmentsListViewModel
+            {
+                PagesCount = pagesCount,
+                CurrentPage = id,
+                RecruitmentsCount =  gathersCount,
+                Recruitments = filtered
+            };
+
+            return View(model);
         }
 
         [HttpGet]

@@ -1,11 +1,14 @@
 ﻿namespace Footballize.Web.Areas.Administration.Controllers
 {
+    using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Services.Data;
     using ViewModels.Countries;
+    using ViewModels.Pitches;
 
     public class CountriesController : AdminController
     {
@@ -17,11 +20,27 @@
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(int id)
         {
-            var countries = this.countryService.GetCountries<CountriesIndexViewModel>();
+            var countries = this.countryService.GetCountries<CountryIndexViewModel>();
+
+            id = Math.Max(1, id);
+            var skip = (id - 1) * CountriesListViewModel.ItemsPerPage;
+
+            var filteredItems = countries.Skip(skip).Take(CountriesListViewModel.ItemsPerPage).ToList();
+
+            var itemsCount = countries.Count();
+            var pagesCount = (int)Math.Ceiling(itemsCount / (decimal)CountriesListViewModel.ItemsPerPage);
+
+            var model = new CountriesListViewModel
+            {
+                Items = filteredItems,
+                ItemsCount = itemsCount,
+                CurrentPage = id,
+                PagesCount = pagesCount
+            };
             
-            return View(countries);
+            return View(model);
         }
 
         [HttpGet]

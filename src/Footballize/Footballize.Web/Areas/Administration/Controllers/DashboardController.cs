@@ -46,7 +46,7 @@
             return this.View(indexModel);
         }
 
-        public IActionResult Users()
+        public IActionResult Users(int id)
         {
             var users = this.userService.GetUsers<UserDetailsViewModel>();
             var bannedPlayersCount = this.userService.GetUsers<BannedUsersViewModel>(x => x.IsBanned).Count;
@@ -57,12 +57,26 @@
             var newUsersCount =
                 this.userService.GetUsers<UserDetailsViewModel>(x => (DateTime.UtcNow - x.CreatedOn).TotalDays <= 30).Count;
 
+
+            
+            id = Math.Max(1, id);
+            var skip = (id - 1) * AdminUsersViewModel.ItemsPerPage;
+
+            var filteredItems = users.Skip(skip).Take(AdminUsersViewModel.ItemsPerPage).ToList();
+
+            var usersCount = users.Count;
+            var pagesCount = (int)Math.Ceiling(usersCount / (decimal)AdminUsersViewModel.ItemsPerPage);
+
+
             var model = new AdminUsersViewModel
             {
-                Users = users,
+                Items = filteredItems,
                 InactiveUsersCount = inactiveUsersCount,
                 BannedUsersCount = bannedPlayersCount,
-                NewUsersCount = newUsersCount
+                NewUsersCount = newUsersCount,
+                CurrentPage = id,
+                PagesCount = pagesCount,
+                ItemsCount = usersCount
             };
 
             return this.View(model);
