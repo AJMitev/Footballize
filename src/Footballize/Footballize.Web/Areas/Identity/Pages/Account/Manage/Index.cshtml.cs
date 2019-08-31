@@ -178,6 +178,27 @@ namespace Footballize.Web.Areas.Identity.Pages.Account.Manage
             await _picturesRepository.SaveChangesAsync();
         }
 
+
+        public async Task<IActionResult> OnGetDeleteUserPhoto()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            var profilePicture = _picturesRepository.All().SingleOrDefault(x => x.UserId == user.Id);
+
+            if (profilePicture != null)
+            {
+                _picturesRepository.Delete(profilePicture);
+                await _picturesRepository.SaveChangesAsync();
+            }
+
+
+            return RedirectToPage();
+        }
+
         public async Task<IActionResult> OnPostSendVerificationEmailAsync()
         {
             if (!ModelState.IsValid)
