@@ -59,7 +59,7 @@
         {
             return await this.userRepository.GetByIdAsync(id);
         }
-
+        
         public ICollection<TViewModel> GetUsers<TViewModel>()
         {
             return this.userRepository
@@ -149,6 +149,7 @@
                 throw new ServiceException(
                     string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(UserReport)));
             }
+
             await this.reportsRepository.AddAsync(report);
             await this.reportsRepository.SaveChangesAsync();
         }

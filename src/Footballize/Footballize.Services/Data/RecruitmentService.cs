@@ -53,17 +53,10 @@
         {
             return this.recruitmentRepository
                 .All()
+                .Include(x => x.Players)
                 .Where(x => x.Id.Equals(id))
                 .To<TViewModel>()
                 .SingleOrDefault();
-        }
-
-        public Recruitment GetRecruitmentWithPlayers(string id)
-        {
-            return this.recruitmentRepository
-                .All()
-                .Include(x => x.Players)
-                .SingleOrDefault(x => x.Id == id);
         }
 
         public async Task AddRecruitmentAsync(Recruitment recruitment)

@@ -11,7 +11,6 @@
         ICollection<TViewModel> GetRecruitments<TViewModel>();
         ICollection<TViewModel> GetRecruitments<TViewModel>(Expression<Func<Recruitment, bool>> expression);
         TViewModel GetRecruitment<TViewModel>(string id);
-        Recruitment GetRecruitmentWithPlayers(string id);
         Task<Recruitment> GetRecruitmentAsync(string id);
         Task AddRecruitmentAsync(Recruitment recruitment);
         Task LeaveRecruitmentAsync(Recruitment recruitment, string userId);

@@ -23,7 +23,7 @@
         {
             if (town == null)
             {
-                throw new NullReferenceException();
+                throw new ServiceException(string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Town)));
             }
 
             await this.townRepository.AddAsync(town);

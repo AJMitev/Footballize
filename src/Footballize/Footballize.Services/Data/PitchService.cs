@@ -91,8 +91,6 @@
                 .To<TViewModel>()
                 .SingleOrDefault();
 
-        public async Task<Pitch> GetPitchAsync(string id) => await this.pitchRepository.GetByIdAsync(id);
-
         public IEnumerable<TViewModel> GetPitches<TViewModel>() => this.pitchRepository
                 .All()
                 .OrderBy(x => x.Name)
