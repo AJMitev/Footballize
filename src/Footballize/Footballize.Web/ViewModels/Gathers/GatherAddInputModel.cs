@@ -12,6 +12,8 @@
         private const string StartingTimeErrorMessage = "Starting time should be in future.";
 
         [Required]
+        [MinLength(10)]
+        [MaxLength(30)]
         public string Title { get; set; }
 
         [Required]
@@ -27,8 +29,7 @@
         [Required]
         [Display(Name = "Team Format")]
         public TeamFormat TeamFormat { get; set; }
-
-
+        
         [Required]
         [Display(Name = "Pitch")]
         [RegularExpression(@"[({]?[a-fA-F0-9]{8}[-]?([a-fA-F0-9]{4}[-]?){3}[a-fA-F0-9]{12}[})]?")]

@@ -84,6 +84,13 @@
             }
 
             var model = Mapper.Map<UserDetailsViewModel>(user);
+
+            if (string.IsNullOrEmpty(model.ProfilePicturePathToFile))
+            {
+                model.ProfilePicturePathToFile =
+                    "https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Bearded_Man-17-512.png";
+            }
+
             var currentUser = await userManager.GetUserAsync(User);
             model.IsSameUser = id == currentUser.Id;
 

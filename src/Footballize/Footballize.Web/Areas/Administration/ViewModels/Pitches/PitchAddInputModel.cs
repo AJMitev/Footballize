@@ -28,7 +28,7 @@
         [Required(ErrorMessage = "Please select a file.")]
         [DataType(DataType.Upload)]
         [MaxFileSize(5 * 1024 * 1024)]
-        //[AllowedExtensions(new[] { ".jpg", ".png" })]
+        [AllowedExtensions(new[] { ".jpg", ".png" })]
         public IFormFile Cover { get; set; }
 
 

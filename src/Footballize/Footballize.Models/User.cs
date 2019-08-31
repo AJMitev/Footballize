@@ -27,6 +27,7 @@
         public DateTime? ModifiedOn { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime? DeletedOn { get; set; }
+        public ProfilePicture ProfilePicture { get; set; }
         
         public ICollection<GatherUser> GathersPlayed { get; set; }
         public ICollection<RecruitmentUser> GamesRecruited { get; set; }

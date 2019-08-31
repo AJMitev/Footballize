@@ -11,6 +11,8 @@
         private const string StartingTimeErrorMessage = "Starting time should be in future.";
 
         [Required]
+        [MinLength(10)]
+        [MaxLength(30)]
         public string Title { get; set; }
 
         [Required]

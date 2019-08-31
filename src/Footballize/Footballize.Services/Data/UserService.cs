@@ -80,6 +80,7 @@
                 .ThenInclude(x=>x.FromUser)
                 .Include(x => x.PlaypalsAdded)
                 .ThenInclude(x=>x.ToUser)
+                .Include(x=>x.ProfilePicture)
                 .SingleOrDefault(u => u.Id == id);
         }
 

@@ -12,25 +12,40 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Footballize.Web.Areas.Identity.Pages.Account.Manage
 {
+    using System.IO;
+    using Attributes;
+    using Data.Repositories;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
+
     public partial class IndexModel : PageModel
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IEmailSender _emailSender;
+        private readonly IHostingEnvironment _environment;
+        private readonly IRepository<ProfilePicture> _picturesRepository;
 
         public IndexModel(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IHostingEnvironment environment,
+            IRepository<ProfilePicture> picturesRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _environment = environment;
+            this._picturesRepository = picturesRepository;
         }
 
         public string Username { get; set; }
 
         public bool IsEmailConfirmed { get; set; }
+
+        public string ProfilePicturePath { get; set; }
+
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -47,6 +62,11 @@ namespace Footballize.Web.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [DataType(DataType.Upload)]
+            [MaxFileSize(5 * 1024 * 1024)]
+            [AllowedExtensions(new[] { ".jpg", ".png" })]
+            public IFormFile ProfilePicture { get; set; }
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -61,12 +81,18 @@ namespace Footballize.Web.Areas.Identity.Pages.Account.Manage
             var email = await _userManager.GetEmailAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
+            var profilePicture = _picturesRepository.All().SingleOrDefault(x => x.UserId == user.Id);
+            var profilePicturePath = profilePicture?.PathToFile ??
+                                     "http://style.anu.edu.au/_anu/4/images/placeholders/person_8x10.png";
+
             Username = userName;
+            ProfilePicturePath = profilePicturePath;
 
             Input = new InputModel
             {
                 Email = email,
                 PhoneNumber = phoneNumber
+
             };
 
             IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
@@ -109,9 +135,47 @@ namespace Footballize.Web.Areas.Identity.Pages.Account.Manage
                 }
             }
 
+
+            if (Input.ProfilePicture != null)
+            {
+                var profilePicture = _picturesRepository.All().SingleOrDefault(x => x.UserId == user.Id);
+
+                if (profilePicture != null)
+                {
+                    _picturesRepository.Delete(profilePicture);
+                    await _picturesRepository.SaveChangesAsync();
+                }
+
+                await SaveProfilePicture(user);
+            }
+
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();
+        }
+
+        private async Task SaveProfilePicture(User user)
+        {
+            var folderPath = this._environment.WebRootPath + "/img/profiles/";
+            Directory.CreateDirectory(folderPath);
+
+            using (var stream = System.IO.File.OpenWrite(_environment.WebRootPath + $"/img/profiles/{user.Id}.jpg"))
+            {
+                await Input.ProfilePicture.CopyToAsync(stream);
+            }
+
+
+            var entity = new ProfilePicture
+            {
+                Name = Input.ProfilePicture.FileName,
+                ContentType = Input.ProfilePicture.ContentType,
+                Size = Input.ProfilePicture.Length,
+                PathToFile = $"/img/profiles/{user.Id}.jpg",
+                UserId = user.Id
+            };
+
+            await _picturesRepository.AddAsync(entity);
+            await _picturesRepository.SaveChangesAsync();
         }
 
         public async Task<IActionResult> OnPostSendVerificationEmailAsync()

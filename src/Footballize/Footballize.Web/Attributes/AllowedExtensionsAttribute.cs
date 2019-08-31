@@ -3,6 +3,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.IO;
     using System.Linq;
+    using Common.FileTypeChecker;
     using Microsoft.AspNetCore.Http;
 
     public class AllowedExtensionsAttribute : ValidationAttribute
@@ -19,11 +20,18 @@
             object value, ValidationContext validationContext)
         {
             var file = value as IFormFile;
-            var extension = Path.GetExtension(file.FileName);
+            if (file == null) return ValidationResult.Success;
 
-            if (!(file == null))
+
+            var checker = new FileTypeChecker();
+
+            using (var stream = new MemoryStream())
             {
-                if (!extensions.Contains(extension.ToLower()))
+                file.CopyTo(stream);
+
+                var fileType = checker.GetFileType(stream);
+
+                if (!extensions.Contains(fileType.Extension.ToLower()))
                 {
                     return new ValidationResult(InvalidExtensionErrorMessage);
                 }

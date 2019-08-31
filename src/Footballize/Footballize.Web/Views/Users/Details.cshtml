@@ -8,7 +8,7 @@
     <nav aria-label="breadcrumb" role="navigation">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-            <li class="breadcrumb-item"><a asp-controller="Users" asp-action="Index">Users</a></li>
+            <li class="breadcrumb-item">Users</li>
             <li class="breadcrumb-item active" aria-current="id">Details for @Model.UserName</li>
         </ol>
     </nav>
@@ -25,7 +25,7 @@
             <div class="col-md-6 ml-auto mr-auto">
                 <div class="profile text-center">
                     <div class="avatar">
-                        <img src="https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Bearded_Man-17-512.png" width="150" alt="Circle Image" class="img-raised rounded-circle img-fluid">
+                        <img src="@Model.ProfilePicturePathToFile" width="150"  alt= "ProfilePicture" class="img-raised img-thumbnail img-fluid">
                     </div>
                     <div class="name">
                         <h3 class="title">
