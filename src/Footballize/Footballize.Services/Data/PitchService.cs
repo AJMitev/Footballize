@@ -39,52 +39,13 @@
 
         public IEnumerable<MostUsedPitchDTO> GetMostUsedPitches(int count = 3)
         {
-
-            var mostUsedInGather = this.gatherRepository.All().GroupBy(x => x.Pitch.Id,
-                x => x.Pitch.Name,
-                (k, g) => new MostUsedPitchDTO { Id = k, Name = g.FirstOrDefault(), TimesUsed = g.Count() });
-
-
-            var mostUsedInRecruiting = this.recruitmentRepository.All().GroupBy(x => x.Pitch.Id,
-                x => x.Pitch.Name,
-                (k, g) => new MostUsedPitchDTO { Id = k, Name = g.FirstOrDefault(), TimesUsed = g.Count() });
-
-            var mostUsedPitches = new HashSet<MostUsedPitchDTO>(mostUsedInGather);
-
-            foreach (var pitch in mostUsedInRecruiting)
-            {
-                var fieldFromDb = this.pitchRepository.All()
-                    .Include(x => x.Address)
-                    .ThenInclude(x => x.Town)
-                    .ThenInclude(x => x.Province)
-                    .ThenInclude(x => x.Country)
-                    .SingleOrDefault(x => x.Id == pitch.Id);
-
-                if (fieldFromDb != null)
-                {
-                    var fieldLocation = string.Concat(fieldFromDb.Address.Town.Name, ", ", fieldFromDb.Address.Town.Province.Country.Name);
-
-                    pitch.Location = fieldLocation;
-                }
-
-                if (mostUsedPitches.Any(x => x.Id == pitch.Id))
-                {
-                    var current = mostUsedPitches.SingleOrDefault(x => x.Id == pitch.Id);
-                    current.TimesUsed += pitch.TimesUsed;
-                    current.Location = pitch.Location;
-
-                    continue;
-                }
-
-               
-
-                mostUsedPitches.Add(pitch);
-            }
-
+            IQueryable<MostUsedPitchDTO> mostUsedInGather = GetMostUsedPitchesInGathers();
+            IQueryable<MostUsedPitchDTO> mostUsedInRecruiting = GetMostUsedPitchesInRecruitingGames();
+            HashSet<MostUsedPitchDTO> mostUsedPitches = GetMostUsedPitchFromAllGames(mostUsedInGather, mostUsedInRecruiting);
 
             return mostUsedPitches.Take(count);
         }
-
+        
         public TViewModel GetPitch<TViewModel>(string id) => this.pitchRepository
                 .All()
                 .Where(x => x.Id.Equals(id))
@@ -134,6 +95,57 @@
 
             this.pitchRepository.Update(pitch);
             await this.pitchRepository.SaveChangesAsync();
+        }
+
+        private HashSet<MostUsedPitchDTO> GetMostUsedPitchFromAllGames(IQueryable<MostUsedPitchDTO> mostUsedInGather, IQueryable<MostUsedPitchDTO> mostUsedInRecruiting)
+        {
+            var mostUsedPitches = new HashSet<MostUsedPitchDTO>(mostUsedInGather);
+
+            foreach (var pitch in mostUsedInRecruiting)
+            {
+                var fieldFromDb = this.pitchRepository.All()
+                    .Include(x => x.Address)
+                    .ThenInclude(x => x.Town)
+                    .ThenInclude(x => x.Province)
+                    .ThenInclude(x => x.Country)
+                    .SingleOrDefault(x => x.Id == pitch.Id);
+
+                if (fieldFromDb != null)
+                {
+                    var fieldLocation = string.Concat(fieldFromDb.Address.Town.Name, ", ", fieldFromDb.Address.Town.Province.Country.Name);
+
+                    pitch.Location = fieldLocation;
+                }
+
+                if (mostUsedPitches.Any(x => x.Id == pitch.Id))
+                {
+                    var current = mostUsedPitches.SingleOrDefault(x => x.Id == pitch.Id);
+                    current.TimesUsed += pitch.TimesUsed;
+                    current.Location = pitch.Location;
+
+                    continue;
+                }
+
+
+
+                mostUsedPitches.Add(pitch);
+            }
+
+            return mostUsedPitches;
+        }
+
+        private IQueryable<MostUsedPitchDTO> GetMostUsedPitchesInRecruitingGames()
+        {
+            return this.recruitmentRepository.All().GroupBy(x => x.Pitch.Id,
+                x => x.Pitch.Name,
+                (k, g) => new MostUsedPitchDTO { Id = k, Name = g.FirstOrDefault(), TimesUsed = g.Count() });
+        }
+
+        private IQueryable<MostUsedPitchDTO> GetMostUsedPitchesInGathers()
+        {
+            return this.gatherRepository.All().GroupBy(x => x.Pitch.Id,
+                x => x.Pitch.Name,
+                (k, g) => new MostUsedPitchDTO { Id = k, Name = g.FirstOrDefault(), TimesUsed = g.Count() });
         }
     }
 }
