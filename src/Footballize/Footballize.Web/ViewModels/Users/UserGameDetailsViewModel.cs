@@ -6,7 +6,7 @@
     using Models.Enums;
     using Services.Mapping;
 
-    public class UserGameDetailsViewModel : IMapFrom<User>, IMapFrom<RecruitmentUser>, IMapFrom<GatherUser>, IHaveCustomMappings
+    public class UserGameDetailsViewModel : IMapFrom<User>, IMapTo<User>, IMapFrom<RecruitmentUser>, IMapFrom<GatherUser>, IHaveCustomMappings
     {
         public string Id { get; set; }
         public string Username { get; set; }

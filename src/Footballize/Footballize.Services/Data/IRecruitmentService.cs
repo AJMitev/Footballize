@@ -14,7 +14,7 @@
         Task<Recruitment> GetRecruitmentAsync(string id);
         Task AddRecruitmentAsync(Recruitment recruitment);
         Task LeaveRecruitmentAsync(Recruitment recruitment, string userId);
-        Task EnrollRecruitmentAsync(Recruitment recruitment, User user);
+        Task EnrollRecruitmentAsync(string gameId, User user);
         Task StartRecruitmentAsync(string id);
         Task CompleteRecruitmentAsync(string id);
         Task DeleteRecruitmentAsync(string id);

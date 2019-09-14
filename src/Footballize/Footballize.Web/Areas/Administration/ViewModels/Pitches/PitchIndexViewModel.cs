@@ -4,7 +4,7 @@
     using Models;
     using Services.Mapping;
 
-    public class PitchIndexViewModel : IMapFrom<Pitch>, IHaveCustomMappings
+    public class PitchIndexViewModel : IMapFrom<Pitch>, IMapTo<Pitch>, IHaveCustomMappings
     {
         public string Id { get; set; }
         public string Name { get; set; }

@@ -99,8 +99,9 @@
             await this.recruiterUserRepository.SaveChangesAsync();
         }
 
-        public async Task EnrollRecruitmentAsync(Recruitment recruitment, User user)
+        public async Task EnrollRecruitmentAsync(string gameId, User user)
         {
+            var recruitment = this.recruitmentRepository.All().Include(x => x.Players).SingleOrDefault(x => x.Id == gameId);
 
             if (recruitment == null)
             {
@@ -144,7 +145,7 @@
 
         public async Task StartRecruitmentAsync(string id)
         {
-            var gameToStart = await this.recruitmentRepository.GetByIdAsync(id);
+            var gameToStart =  this.recruitmentRepository.All().Include(x => x.Players).SingleOrDefault(x => x.Id == id);
 
             if (gameToStart == null)
             {
@@ -205,7 +206,12 @@
 
         public async Task<Recruitment> GetRecruitmentAsync(string id)
         {
-            return await this.recruitmentRepository.GetByIdAsync(id);
+            var recruitment = this.recruitmentRepository.All()
+                .Include(x=>x.Players)
+                .Include(x=>x.Creator)
+                .SingleOrDefault(x => x.Id == id);
+
+            return await Task.FromResult(recruitment);
         }
     }
 }

@@ -85,72 +85,7 @@
                 service.LeaveRecruitmentAsync(entity, "70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
         }
 
-        [Theory]
-        [InlineData(GameStatus.Finished)]
-        [InlineData(GameStatus.Pending)]
-        [InlineData(GameStatus.Started)]
-        public void EnrollRecruitmentShowThrowIfGameStatusIsNotRegistration(GameStatus gameStatus)
-        {
-            var repo = new Mock<IDeletableEntityRepository<Recruitment>>();
-            var userRepo = new Mock<IDeletableEntityRepository<User>>();
-            var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
-            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object, userRepo.Object);
-
-            var entity = new Recruitment
-            {
-                Status = gameStatus
-            };
-
-            var user = new User();
-
-            Assert.Throws<ServiceException>(() =>
-                service.EnrollRecruitmentAsync(entity, user).GetAwaiter().GetResult());
-
-        }
-
-        [Fact]
-        public void EnrollRecruitmentShouldThrowIfThereIsNoSlotAvailable()
-        {
-            var repo = new Mock<IDeletableEntityRepository<Recruitment>>();
-            var userRepo = new Mock<IDeletableEntityRepository<User>>();
-            var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
-            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object, userRepo.Object);
-
-            var entity = new Recruitment
-            {
-                MaximumPlayers = 2,
-                Players = new List<RecruitmentUser>
-                {
-                    new RecruitmentUser(),
-                    new RecruitmentUser(),
-                }
-            };
-
-            var user = new User();
-
-            Assert.Throws<ServiceException>(() =>
-                service.EnrollRecruitmentAsync(entity, user).GetAwaiter().GetResult());
-        }
-
-        [Fact]
-        public void EnrollRecruitmentShouldThrowIfPlayerIsBanned()
-        {
-            var repo = new Mock<IDeletableEntityRepository<Recruitment>>();
-            var userRepo = new Mock<IDeletableEntityRepository<User>>();
-            var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
-            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object, userRepo.Object);
-
-            var user = new User
-            {
-                IsBanned = true
-            };
-
-            var entity = new Recruitment();
-
-            Assert.Throws<ServiceException>(() =>
-                service.EnrollRecruitmentAsync(entity, user).GetAwaiter().GetResult());
-        }
-
+        
         [Fact]
         public void EnrollRecruitmentShouldThrowIfEntityIsNull()
         {
@@ -164,18 +99,6 @@
             Assert.Throws<ServiceException>(() => service.EnrollRecruitmentAsync(null, user).GetAwaiter().GetResult());
         }
 
-        [Fact]
-        public void EnrollRecruitmentShouldThrowIfUserIsNull()
-        {
-            var repo = new Mock<IDeletableEntityRepository<Recruitment>>();
-            var userRepo = new Mock<IDeletableEntityRepository<User>>();
-            var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
-            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object, userRepo.Object);
-
-            var entity = new Recruitment();
-
-            Assert.Throws<ServiceException>(() => service.EnrollRecruitmentAsync(entity, null).GetAwaiter().GetResult());
-        }
 
         [Theory]
         [InlineData(GameStatus.Finished)]

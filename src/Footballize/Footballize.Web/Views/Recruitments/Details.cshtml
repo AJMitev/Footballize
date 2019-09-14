@@ -81,7 +81,7 @@
                         break;
                     case GameStatus.Started:
                         <a asp-controller="Recruitments" asp-action="Complete" asp-route-id="@Model.Id" class="btn btn-warning btn-round">
-                            <i class="material-icons">play_arrow</i> Complete Gather
+                            <i class="material-icons">play_arrow</i> Complete 
                         </a>
                         break;
                 }
@@ -144,7 +144,7 @@
                                     </a>
                                     @if (Model.Creator.UserName.Equals(User.Identity.Name) && Model.Status.Equals(GameStatus.Registration))
                                     {
-                                        <a asp-controller="Recruitments" asp-action="Kick" asp-route-gatherId="@Model.Id" asp-route-playerId="@player.Id" class="btn btn-danger btn-fab btn-fab-mini btn-round">
+                                        <a asp-controller="Recruitments" asp-action="Kick" asp-route-gameId="@Model.Id" asp-route-playerId="@player.Id" class="btn btn-danger btn-fab btn-fab-mini btn-round">
                                             <i class="material-icons">block</i>
                                         </a>
                                     }

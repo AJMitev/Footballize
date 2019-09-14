@@ -166,7 +166,7 @@
 
             try
             {
-                await this.recruitmentService.EnrollRecruitmentAsync(Mapper.Map<Recruitment>(game), currentUser);
+                await this.recruitmentService.EnrollRecruitmentAsync(game.Id, currentUser);
 
                 return this.RedirectToAction("Details", new { id = id });
             }
