@@ -1,6 +1,6 @@
 version: 1.0.{build}
 before_build:
-- ps: dotnet restore
+- ps: dotnet restore src\Footballize\Footballize.sln
 build:
   project: src\Footballize\Footballize.sln
   verbosity: minimal
