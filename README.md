@@ -1,4 +1,4 @@
-# Project - Footballize
+# Project - Footballize [![Build status](https://ci.appveyor.com/api/projects/status/w2kgqcu2ifuo3304?svg=true)](https://ci.appveyor.com/project/AJMitev/footballize)
 
 ## Type - Football Gathering System
 
