@@ -6,8 +6,10 @@
 
     public class TownAddViewModel : IMapFrom<Town>
     {
+        private const int NameMinLength = 5;
+
         [Required]
-        [MinLength(5)]
+        [MinLength(NameMinLength)]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Select Country")]

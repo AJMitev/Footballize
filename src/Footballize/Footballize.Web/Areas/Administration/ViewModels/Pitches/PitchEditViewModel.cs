@@ -9,6 +9,12 @@
 
     public class PitchEditViewModel : IMapFrom<Pitch>, IMapFrom<PitchEditInputModel>, IHaveCustomMappings
     {
+        private const int MaximumFileSize = 5 * 1024 * 1024;
+        private const double LongitudeMin = -180.0d;
+        private const double LongitudeMax = 180.0d;
+        private const double LatitudeMin = -90.0d;
+        private const double LatitudeMax = 90.0d;
+
         public string Id { get; set; }
         public string Name { get; set; }
 
@@ -25,15 +31,15 @@
         
         [Required(ErrorMessage = "Please select a file.")]
         [DataType(DataType.Upload)]
-        [MaxFileSize(5* 1024 * 1024)]
+        [MaxFileSize(MaximumFileSize)]
         [AllowedExtensions(new[] { ".jpg", ".png" })]
         public IFormFile Cover { get; set; }
 
-        [Range(-180.0d, 180.0d)]
+        [Range(LongitudeMin, LongitudeMax)]
         [Display(Name = "Longitude")]
         public double LocationLongitude { get; set; }
 
-        [Range(-90.0d, 90.0d)]
+         [Range(LatitudeMin, LatitudeMax)]
         [Display(Name = "Latitude")]
         public double LocationLatitude { get; set; }
 

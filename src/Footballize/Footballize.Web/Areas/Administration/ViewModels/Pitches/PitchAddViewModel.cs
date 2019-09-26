@@ -6,8 +6,19 @@
 
     public class PitchAddViewModel
     {
+        private const int MaximumFileSize = 5 * 1024 * 1024;
+        private const int NameMinLength = 5;
+        private const int StreetMinLength = 3;
+        private const int StreetMaxLength = 300;
+        private const string StreetMinNumber = "1";
+        private const string StreetMaxNumber = "999";
+        private const double LongitudeMin = -180.0d;
+        private const double LongitudeMax = 180.0d;
+        private const double LatitudeMin = -90.0d;
+        private const double LatitudeMax = 90.0d;
+
         [Required]
-        [MinLength(5)]
+        [MinLength(NameMinLength)]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Select Country")]
@@ -23,23 +34,23 @@
         public string TownId { get; set; }
 
         [Required]
-        [MinLength(3)]
-        [MaxLength(300)]
+        [MinLength(StreetMinLength)]
+        [MaxLength(StreetMaxLength)]
         public string Street { get; set; }
 
         [Required]
-        [MaxLength(3)]
+        [Range(typeof(int), StreetMinNumber, StreetMaxNumber)]
         public int Number { get; set; }
 
-        [Range(-180.0d, 180.0d)]
+        [Range(LongitudeMin, LongitudeMax)]
         public double Longitude { get; set; }
 
-        [Range(-90.0d, 90.0d)]
+        [Range(LatitudeMin, LatitudeMax)]
         public double Latitude { get; set; }
 
         [Required(ErrorMessage = "Please select a file.")]
         [DataType(DataType.Upload)]
-        [MaxFileSize(5 * 1024 * 1024)]
+        [MaxFileSize(MaximumFileSize)]
         [AllowedExtensions(new[] { ".jpg", ".png" })]
         public IFormFile Cover { get; set; }
     }

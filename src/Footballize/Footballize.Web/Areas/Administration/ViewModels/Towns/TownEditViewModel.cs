@@ -7,9 +7,11 @@
 
     public class TownEditViewModel : IMapFrom<Town>, IHaveCustomMappings
     {
+        private const int NameMinLength = 5;
+
         public string Id { get; set; }
         [Required]
-        [MinLength(5)]
+        [MinLength(NameMinLength)]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Select Country")]

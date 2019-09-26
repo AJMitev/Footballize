@@ -9,9 +9,11 @@
     public class RecruitmentInputModel : IMapTo<Recruitment>
     {
         private const string StartingTimeErrorMessage = "Starting time should be in future.";
+        private const string GuidExpression = @"[({]?[a-fA-F0-9]{8}[-]?([a-fA-F0-9]{4}[-]?){3}[a-fA-F0-9]{12}[})]?";
+        private const int TitleMaxLength = 23;
 
         [Required]
-        [MaxLength(23)]
+        [MaxLength(TitleMaxLength)]
         public string Title { get; set; }
 
         [Required]
@@ -26,7 +28,7 @@
 
         [Required]
         [Display(Name = "Pitch")]
-        [RegularExpression(@"[({]?[a-fA-F0-9]{8}[-]?([a-fA-F0-9]{4}[-]?){3}[a-fA-F0-9]{12}[})]?")]
+        [RegularExpression(GuidExpression)]
         public string PitchId { get; set; }
     }
 }
