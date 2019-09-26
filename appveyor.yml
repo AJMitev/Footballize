@@ -2,6 +2,6 @@ version: 1.0.{build}
 before_build:
 - ps: dotnet restore
 build:
-  project: /src/Footballize/Footballize.sln
+  project: src\Footballize\Footballize.sln
   verbosity: minimal
   publish_wap: true
