@@ -1,6 +1,7 @@
 ﻿namespace Footballize.Services.Tests
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Data;
     using Exceptions;
@@ -155,9 +156,11 @@
         [Fact]
         public void StartRecuitmentShouldChangeGameStatusToStarted()
         {
-            var game = new Recruitment { Status = GameStatus.Registration };
+            var game = new Recruitment { Id = "70400fb3-aed2-4876-aa9a-bcf8ba49ca9f", Status = GameStatus.Registration };
+            var gameList = new List<Recruitment>(); 
+            gameList.Add(game);
             var repo = new Mock<IDeletableEntityRepository<Recruitment>>();
-            repo.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(game));
+            repo.Setup(x => x.All()).Returns(gameList.AsQueryable());
             var userRepo = new Mock<IDeletableEntityRepository<User>>();
             var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
             var service = new RecruitmentService(repo.Object, userRecruitRepo.Object, userRepo.Object);
@@ -229,8 +232,10 @@
         public void GetRecuitmentShouldReturnValidEntity()
         {
             var game = new Recruitment { Id = "70400fb3-aed2-4876-aa9a-bcf8ba49ca9f" };
+            var games = new List<Recruitment>();
+            games.Add(game);
             var repo = new Mock<IDeletableEntityRepository<Recruitment>>();
-            repo.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(game));
+            repo.Setup(x => x.All()).Returns(games.AsQueryable());
             var userRepo = new Mock<IDeletableEntityRepository<User>>();
             var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
             var service = new RecruitmentService(repo.Object, userRecruitRepo.Object, userRepo.Object);
