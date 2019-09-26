@@ -1,0 +1,16 @@
+version: 1.0.{build}
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
+environment:
+  CODECOV_TOKEN: 955fbbab-c74e-4b30-8310-bc08a00b965c
+before_build:
+- ps: dotnet restore
+build:
+  project: src/Footballize/
+  verbosity: minimal
