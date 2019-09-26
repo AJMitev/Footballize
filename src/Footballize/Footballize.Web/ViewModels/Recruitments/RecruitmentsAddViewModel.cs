@@ -10,15 +10,18 @@
     public class RecruitmentsAddViewModel : IMapFrom<Recruitment>
     {
         private const string StartingTimeErrorMessage = "Starting time should be in future.";
-        private const string GuidExpression = @"[({]?[a-fA-F0-9]{8}[-]?([a-fA-F0-9]{4}[-]?){3}[a-fA-F0-9]{12}[})]?";
         private const int TitleMinLength = 5;
         private const int TitleMaxLength = 23;
         private const int DescriptionMinLength = 10;
         private const int DescriptionMaxLength = 300;
+        private const string MaximumPlayersCount = "22";
+        private const string MinimumPlayersCount = "1";
+        private const string GuidRegularExpression =
+            @"[({]?[a-fA-F0-9]{8}[-]?([a-fA-F0-9]{4}[-]?){3}[a-fA-F0-9]{12}[})]?";
 
         [Required]
-        [MaxLength(TitleMaxLength)]
-        [MinLength(TitleMinLength)]
+        [MaxLength(TitleMinLength)]
+        [MinLength(TitleMaxLength)]
         [Display(Name = "Title")]
         public string Title { get; set; }
 
@@ -33,28 +36,28 @@
         public DateTime StartingAt { get; set; }
 
         [Required]
-        [Range(typeof(int), "1", "22")]
+        [Range(typeof(int), MinimumPlayersCount, MaximumPlayersCount)]
         [Display(Name = "How many players do you need?")]
         public int MaximumPlayers { get; set; }
 
         [Required]
-        [RegularExpression(GuidExpression,ErrorMessage = "Select Country")]
+        [RegularExpression(GuidRegularExpression, ErrorMessage = "Select Country")]
         [Display(Name = "Country")]
         public string CountryId { get; set; }
 
         [Required]
         [Display(Name = "Province")]
-        [RegularExpression(GuidExpression, ErrorMessage = "Select a Province")]
+        [RegularExpression(GuidRegularExpression, ErrorMessage = "Select a Province")]
         public string ProvinceId { get; set; }
 
         [Required]
         [Display(Name = "Town")]
-        [RegularExpression(GuidExpression, ErrorMessage = "Select Town")]
+        [RegularExpression(GuidRegularExpression, ErrorMessage = "Select Town")]
         public string TownId { get; set; }
 
         [Required]
         [Display(Name = "Pitch")]
-        [RegularExpression(GuidExpression, ErrorMessage = "Select Pitch")]
+        [RegularExpression(GuidRegularExpression, ErrorMessage = "Select Pitch")]
         public string PitchId { get; set; }
     }
 }

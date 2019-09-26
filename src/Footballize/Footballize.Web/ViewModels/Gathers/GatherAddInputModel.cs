@@ -10,7 +10,9 @@
     public class GatherAddInputModel : IMapTo<Gather>
     {
         private const string StartingTimeErrorMessage = "Starting time should be in future.";
-        private const string GuidExpression = @"[({]?[a-fA-F0-9]{8}[-]?([a-fA-F0-9]{4}[-]?){3}[a-fA-F0-9]{12}[})]?";
+        private const string PitchRegularExpression =
+            @"[({]?[a-fA-F0-9]{8}[-]?([a-fA-F0-9]{4}[-]?){3}[a-fA-F0-9]{12}[})]?";
+
         private const int TitleMinLength = 10;
         private const int TitleMaxLength = 30;
         private const int DescriptionMinLength = 10;
@@ -36,7 +38,7 @@
         
         [Required]
         [Display(Name = "Pitch")]
-        [RegularExpression(GuidExpression)]
+        [RegularExpression(PitchRegularExpression)]
         public string PitchId { get; set; }
     }
 }
