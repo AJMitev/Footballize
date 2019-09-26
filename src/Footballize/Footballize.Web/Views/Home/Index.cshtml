@@ -50,95 +50,109 @@
     </div>
     <hr />
     <div class="row">
-        <div class="col-auto">
+        <div class="col-sm-12 col-md-6">
             <h3 class="text-center font-italic">Gathers that will start soon</h3>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Starting Time</th>
-                        <th scope="col">City</th>
-                        <th scope="col">Players</th>
-                        <th scope="col">Creator</th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var gather in @Model.Gathers)
-                    {
+            @if (Model.Gathers.Any())
+            {
+                <table class="table">
+                    <thead>
                         <tr>
-                            <th scope="row">
-                                @if (gather.StartingAt.Day == DateTime.Today.Day)
-                                {
-                                    <span class="align-middle"> @string.Concat("Today, at ", gather.StartingAt.ToString("HH:mm"))</span>
-                                }
-                                else if (gather.StartingAt.Day == DateTime.Today.AddDays(1).Day)
-                                {
-                                    <span class="align-middle"> @string.Concat("Tomorrow, at ", gather.StartingAt.ToString("HH:mm"))</span>
-                                }
-                                else
-                                {
-
-                                    <span class="align-middle">@gather.StartingAt.ToString("dd/MM/yyyy HH:ss")</span>
-                                }
-                            </th>
-                            <td>@gather.TownName</td>
-                            <td>@gather.PlayersEnrolledCount/@gather.PlayerSpotsCount</td>
-                            <td><a asp-controller="Users" asp-action="Details" asp-route-id="@gather.CreatorId">@gather.CreatorUserName</a></td>
-                            <td>
-                                <a asp-controller="Gathers" asp-action="Details" asp-route-id="@gather.Id" class="btn btn-primary btn-fab btn-round">
-                                    <i class="material-icons">add</i>
-                                    <div class="ripple-container"></div>
-                                </a>
-                            </td>
+                            <th scope="col">Starting Time</th>
+                            <th scope="col">City</th>
+                            <th scope="col">Players</th>
+                            <th scope="col">Creator</th>
+                            <th scope="col"></th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var gather in @Model.Gathers)
+                        {
+                            <tr>
+                                <th scope="row">
+                                    @if (gather.StartingAt.Day == DateTime.Today.Day)
+                                    {
+                                        <span class="align-middle"> @string.Concat("Today, at ", gather.StartingAt.ToString("HH:mm"))</span>
+                                    }
+                                    else if (gather.StartingAt.Day == DateTime.Today.AddDays(1).Day)
+                                    {
+                                        <span class="align-middle"> @string.Concat("Tomorrow, at ", gather.StartingAt.ToString("HH:mm"))</span>
+                                    }
+                                    else
+                                    {
+
+                                        <span class="align-middle">@gather.StartingAt.ToString("dd/MM/yyyy HH:ss")</span>
+                                    }
+                                </th>
+                                <td>@gather.TownName</td>
+                                <td>@gather.PlayersEnrolledCount/@gather.PlayerSpotsCount</td>
+                                <td><a asp-controller="Users" asp-action="Details" asp-route-id="@gather.CreatorId">@gather.CreatorUserName</a></td>
+                                <td>
+                                    <a asp-controller="Gathers" asp-action="Details" asp-route-id="@gather.Id" class="btn btn-primary btn-fab btn-round">
+                                        <i class="material-icons">add</i>
+                                        <div class="ripple-container"></div>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <h4 class=" text-center font-italic">Unfortunately there are no games that start soon</h4>
+            }
         </div>
-        <div class="col-auto">
+        <div class="col-sm-12 col-md-6">
             <h3 class=" text-center font-italic">Games looking for players</h3>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Starting Time</th>
-                        <th scope="col">City</th>
-                        <th scope="col">Players</th>
-                        <th scope="col">Creator</th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var recruitment in @Model.Recruitments)
-                    {
+            @if (!Model.Recruitments.Any())
+            {
+                <h4 class=" text-center font-italic">Unfortunately there are no games that start soon</h4>
+            }
+            else
+            {
+                <table class="table">
+                    <thead>
                         <tr>
-                            <th scope="row">
-                                @if (recruitment.StartingAt.Day == DateTime.Today.Day)
-                                {
-                                    <span class="align-middle"> @string.Concat("Today, at ", recruitment.StartingAt.ToString("HH:mm"))</span>
-                                }
-                                else if (recruitment.StartingAt.Day == DateTime.Today.AddDays(1).Day)
-                                {
-                                    <span class="align-middle"> @string.Concat("Tomorrow, at ", recruitment.StartingAt.ToString("HH:mm"))</span>
-                                }
-                                else
-                                {
-
-                                    <span class="align-middle">@recruitment.StartingAt.ToString("dd/MM/yyyy HH:ss")</span>
-                                }
-                            </th>
-                            <td>@recruitment.TownName</td>
-                            <td>@recruitment.PlayersEnrolledCount/@recruitment.PlayerSpotsCount</td>
-                            <td><a asp-controller="Users" asp-action="Details" asp-route-id="@recruitment.CreatorId">@recruitment.CreatorUserName</a></td>
-                            <td>
-                                <a asp-controller="Recruitments" asp-action="Details" asp-route-id="@recruitment.Id" class="btn btn-primary btn-fab btn-round">
-                                    <i class="material-icons">add</i>
-                                    <div class="ripple-container"></div>
-                                </a>
-                            </td>
+                            <th scope="col">Starting Time</th>
+                            <th scope="col">City</th>
+                            <th scope="col">Players</th>
+                            <th scope="col">Creator</th>
+                            <th scope="col"></th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var recruitment in @Model.Recruitments)
+                        {
+                            <tr>
+                                <th scope="row">
+                                    @if (recruitment.StartingAt.Day == DateTime.Today.Day)
+                                    {
+                                        <span class="align-middle"> @string.Concat("Today, at ", recruitment.StartingAt.ToString("HH:mm"))</span>
+                                    }
+                                    else if (recruitment.StartingAt.Day == DateTime.Today.AddDays(1).Day)
+                                    {
+                                        <span class="align-middle"> @string.Concat("Tomorrow, at ", recruitment.StartingAt.ToString("HH:mm"))</span>
+                                    }
+                                    else
+                                    {
+
+                                        <span class="align-middle">@recruitment.StartingAt.ToString("dd/MM/yyyy HH:ss")</span>
+                                    }
+                                </th>
+                                <td>@recruitment.TownName</td>
+                                <td>@recruitment.PlayersEnrolledCount/@recruitment.PlayerSpotsCount</td>
+                                <td><a asp-controller="Users" asp-action="Details" asp-route-id="@recruitment.CreatorId">@recruitment.CreatorUserName</a></td>
+                                <td>
+                                    <a asp-controller="Recruitments" asp-action="Details" asp-route-id="@recruitment.Id" class="btn btn-primary btn-fab btn-round">
+                                        <i class="material-icons">add</i>
+                                        <div class="ripple-container"></div>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
         </div>
     </div>
     <hr />
@@ -157,13 +171,13 @@
                                 <p class="card-subtitle"><i class="material-icons">location_on</i> @Model.Pitches.ToList()[i].Location</p>
                                 <p class="card-text">
                                     <i class="material-icons">timeline</i> Our members has choose @Model.Pitches.ToList()[i].Name @Model.Pitches.ToList()[i].TimesUsed times so far.
-                                    
+
                                 </p>
                             </div>
                         </div>
 
                     </div>
-                 
+
                 }
             </div>
         </div>
