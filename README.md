@@ -1,5 +1,6 @@
-# Footballize 
 [![Build status](https://ci.appveyor.com/api/projects/status/w2kgqcu2ifuo3304?svg=true)](https://ci.appveyor.com/project/AJMitev/footballize) [![Build Status](https://dev.azure.com/AleksanderJMitev/AleksanderJMitev/_apis/build/status/AJMitev.Footballize?branchName=master)](https://dev.azure.com/AleksanderJMitev/AleksanderJMitev/_build/latest?definitionId=1&branchName=master)
+# Footballize 
+
 ## Description
 
 Footballize is a Football Gathering System project which allows its users to easily organize a football event in their city or take a part of one that has already been created.
