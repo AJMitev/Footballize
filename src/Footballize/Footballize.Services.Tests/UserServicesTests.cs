@@ -112,7 +112,7 @@
             service.BanPlayer(player, 15).GetAwaiter().GetResult();
 
             //Assert
-            Assert.Equal(true, actual: player.IsBanned);
+            Assert.True(player.IsBanned);
         }
 
         [Fact]
@@ -147,7 +147,7 @@
             service.RemoveBan(player).GetAwaiter().GetResult();
 
             //Assert
-            Assert.Equal(false, actual: player.IsBanned);
+            Assert.False(player.IsBanned);
         }
 
         [Fact]
