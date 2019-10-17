@@ -1,11 +1,10 @@
 ﻿namespace Footballize.Web
 {
-    using System.Collections.Generic;
     using System.Globalization;
     using System.Reflection;
+    using AutoMapper;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Identity.UI;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -17,6 +16,8 @@
     using Data.Seeding;
     using Footballize.Models;
     using Hubs;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.Extensions.Hosting;
     using Middlewares;
     using ViewModels;
     using Services.Data;
@@ -47,11 +48,6 @@
 
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
-            //services.Configure<RequestLocalizationOptions>(options =>
-            //{
-            //    options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("en-US");
-            //    options.SupportedCultures = new List<CultureInfo> { new CultureInfo("en-US"), new CultureInfo("en-NZ") };
-            //});
 
             services.AddDbContext<FootballizeDbContext>(options =>
                 options.UseSqlServer(
@@ -61,25 +57,23 @@
                 .AddEntityFrameworkStores<FootballizeDbContext>()
                 .AddUserStore<FootballizeUserStore>()
                 .AddRoleStore<FootballizeRoleStore>()
-                .AddDefaultTokenProviders()
-                .AddDefaultUI(UIFramework.Bootstrap4);
+                .AddDefaultTokenProviders();
+
+            services.AddAuthorization(options =>
+            {
+                options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+            });
+
+            services.AddControllersWithViews(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()))
+                .AddViewOptions(options => options.HtmlHelperOptions.ClientValidationEnabled = true);
+
+            services.AddRazorPages();
 
             services.AddSignalR();
+            services.AddApplicationInsightsTelemetry();
 
-            // Seed data on application startup
-            using (var serviceScope = services.BuildServiceProvider().CreateScope())
-            {
-                var dbContext = serviceScope.ServiceProvider.GetRequiredService<FootballizeDbContext>();
-                dbContext.Database.Migrate();
-                ApplicationDbContextSeeder.Seed(dbContext, serviceScope.ServiceProvider);
-            }
-
-            AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
-            
-
-            services.AddMvc(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()))
-                .AddViewOptions(options => options.HtmlHelperOptions.ClientValidationEnabled = true)
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             
             // Identity stores
             services.AddTransient<IUserStore<User>, FootballizeUserStore>();
@@ -98,11 +92,23 @@
             services.AddTransient<IGatherServices, GatherService>();
             services.AddTransient<IRecruitmentService, RecruitmentService>();
             services.AddTransient<IUserService, UserService>();
+
+            AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
+            services.AddSingleton<IMapper>(AutoMapperConfig.MapperInstance);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+            // Seed data on application startup
+            using (var serviceScope = app.ApplicationServices.CreateScope())
+            {
+                var dbContext = serviceScope.ServiceProvider.GetRequiredService<FootballizeDbContext>();
+                dbContext.Database.Migrate();
+                ApplicationDbContextSeeder.Seed(dbContext, serviceScope.ServiceProvider);
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -112,33 +118,32 @@
             {
                 app.UseStatusCodePagesWithRedirects("/Home/Error?code={0}");
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                //app.UseHsts();
             }
+
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseRouting();
+
             app.UseCookiePolicy();
             app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseMiddleware<RemoveBannedUserMiddleware>();
 
-            app.UseSignalR(
-                routes =>
-                {
-                    routes.MapHub<ChatHub>("/chat");
-                });
-
-
-            app.UseMvc(routes =>
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
-                    name: "areas",
-                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-                );
+                endpoints.MapAreaControllerRoute("identity","identity","Identity/{controller=Home}/{action=Index}"
+                 );
 
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}"
+                 );
+
+                endpoints.MapHub<ChatHub>("/chat");
+                endpoints.MapRazorPages();
             });
         }
     }

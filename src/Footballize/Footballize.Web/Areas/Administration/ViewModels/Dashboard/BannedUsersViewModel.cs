@@ -10,7 +10,7 @@
         public string Id { get; set; }
         public string Name { get; set; }
         public DateTime BanUntil { get; set; }
-        public void CreateMappings(IMapperConfigurationExpression configuration)
+        public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<User, BannedUsersViewModel>()
                 .ForMember(x => x.Name, cfg => cfg.MapFrom(y => y.FirstName + " " + y.LastName));

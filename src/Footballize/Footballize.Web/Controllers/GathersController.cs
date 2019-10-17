@@ -21,11 +21,13 @@
 
         private readonly IGatherServices gatherServices;
         private readonly UserManager<User> userManager;
+        private readonly IMapper mapper;
 
-        public GathersController(IGatherServices gatherServices, UserManager<User> userManager)
+        public GathersController(IGatherServices gatherServices, UserManager<User> userManager, IMapper mapper)
         {
             this.gatherServices = gatherServices;
             this.userManager = userManager;
+            this.mapper = mapper;
         }
 
         [AllowAnonymous]
@@ -65,10 +67,10 @@
         {
             if (!ModelState.IsValid)
             {
-                return this.View(Mapper.Map<GatherAddViewModel>(model));
+                return this.View(this.mapper.Map<GatherAddViewModel>(model));
             }
 
-            var newGather = Mapper.Map<Gather>(model);
+            var newGather = this.mapper.Map<Gather>(model);
             newGather.Creator = await userManager.GetUserAsync(HttpContext.User);
             newGather.Status = GameStatus.Registration;
 
@@ -118,12 +120,12 @@
 
                 await this.gatherServices.LeaveGatherAsync(gather, currentUser.Id);
 
-                return this.RedirectToAction("Details", new { id = id });
+                return this.RedirectToAction("Details", new { id });
             }
             catch (ServiceException e)
             {
                 this.TempData["Error"] = e.Message;
-                return this.RedirectToAction("Details", new { id = id });
+                return this.RedirectToAction("Details", new { id });
             }
         }
 
@@ -142,12 +144,12 @@
 
                 await this.gatherServices.EnrollGatherAsync(gather, currentUser);
 
-                return this.RedirectToAction("Details", new { id = id });
+                return this.RedirectToAction("Details", new { id });
             }
             catch (ServiceException e)
             {
                 this.TempData["Error"] = e.Message;
-                return this.RedirectToAction("Details", new { id = id });
+                return this.RedirectToAction("Details", new { id });
             }
         }
 
@@ -170,12 +172,12 @@
                 }
 
                 await this.gatherServices.LeaveGatherAsync(gather, playerId);
-                return this.RedirectToAction("Details", new { id = gatherId });
+                return this.RedirectToAction("Details", new { gatherId });
             }
             catch (ServiceException e)
             {
                 this.TempData["Error"] = e.Message;
-                return this.RedirectToAction("Details", new { id = gatherId });
+                return this.RedirectToAction("Details", new { gatherId });
             }
         }
 
@@ -199,12 +201,12 @@
 
                 await this.gatherServices.StartGatherAsync(id);
 
-                return this.RedirectToAction("Details", new { id = id });
+                return this.RedirectToAction("Details", new { id });
             }
             catch (ServiceException e)
             {
                 this.TempData["Error"] = e.Message;
-                return this.RedirectToAction("Details", new { id = id });
+                return this.RedirectToAction("Details", new { id });
             }
         }
 
@@ -227,12 +229,12 @@
                 }
 
                 await this.gatherServices.CompleteGatherAsync(id);
-                return this.RedirectToAction("Details", new { id = id });
+                return this.RedirectToAction("Details", new { id });
             }
             catch (ServiceException e)
             {
                 this.TempData["Error"] = e.Message;
-                return this.RedirectToAction("Details", new { id = id });
+                return this.RedirectToAction("Details", new { id });
             }
         }
 

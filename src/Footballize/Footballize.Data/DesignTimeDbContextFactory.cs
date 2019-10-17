@@ -22,7 +22,7 @@
             builder.UseSqlServer(connectionString);
 
             // Stop client query evaluation
-            builder.ConfigureWarnings(w => w.Throw(RelationalEventId.QueryClientEvaluationWarning));
+            builder.ConfigureWarnings(w => w.Throw(RelationalEventId.QueryPossibleUnintendedUseOfEqualsWarning));
 
             return new FootballizeDbContext(builder.Options);
         }

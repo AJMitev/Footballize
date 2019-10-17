@@ -160,25 +160,23 @@
         <div class="col-12">
             <p class="h3 text-center"> Top Fields chosen by our players</p>
             <div class="row">
-                @for (int i = 0; i < Model.Pitches.Count; i++)
-                {
+               @foreach (var pitch in Model.Pitches)
+               {
+                   <div class="col-auto ">
+                       <div class="card" style="width: 20rem;">
+                           <img class="card-img-top" src="./img/fields/@(pitch.Id).jpg" alt="Card image cap">
+                           <div class="card-body">
+                               <p class="card-title"><i class="material-icons">bookmark</i> @pitch.Name</p>
+                               <p class="card-subtitle"><i class="material-icons">location_on</i> @pitch.Location</p>
+                               <p class="card-text">
+                                   <i class="material-icons">timeline</i> Our members has choose @pitch.Name @pitch.TimesUsed times so far.
 
-                    <div class="col-auto ">
-                        <div class="card" style="width: 20rem;">
-                            <img class="card-img-top" src="./img/fields/@(Model.Pitches.ToList()[i].Id).jpg" alt="Card image cap">
-                            <div class="card-body">
-                                <p class="card-title"><i class="material-icons">bookmark</i> @Model.Pitches.ToList()[i].Name</p>
-                                <p class="card-subtitle"><i class="material-icons">location_on</i> @Model.Pitches.ToList()[i].Location</p>
-                                <p class="card-text">
-                                    <i class="material-icons">timeline</i> Our members has choose @Model.Pitches.ToList()[i].Name @Model.Pitches.ToList()[i].TimesUsed times so far.
+                               </p>
+                           </div>
+                       </div>
 
-                                </p>
-                            </div>
-                        </div>
-
-                    </div>
-
-                }
+                   </div>
+               }
             </div>
         </div>
     </div>

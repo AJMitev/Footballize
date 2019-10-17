@@ -39,8 +39,8 @@
 
         public IEnumerable<MostUsedPitchDTO> GetMostUsedPitches(int count = 3)
         {
-            IQueryable<MostUsedPitchDTO> mostUsedInGather = GetMostUsedPitchesInGathers();
-            IQueryable<MostUsedPitchDTO> mostUsedInRecruiting = GetMostUsedPitchesInRecruitingGames();
+            var mostUsedInGather = GetMostUsedPitchesInGathers().ToList();
+            var mostUsedInRecruiting = GetMostUsedPitchesInRecruitingGames().ToList();
             HashSet<MostUsedPitchDTO> mostUsedPitches = GetMostUsedPitchFromAllGames(mostUsedInGather, mostUsedInRecruiting);
 
             return mostUsedPitches.Take(count);
@@ -97,7 +97,7 @@
             await this.pitchRepository.SaveChangesAsync();
         }
 
-        private HashSet<MostUsedPitchDTO> GetMostUsedPitchFromAllGames(IQueryable<MostUsedPitchDTO> mostUsedInGather, IQueryable<MostUsedPitchDTO> mostUsedInRecruiting)
+        private HashSet<MostUsedPitchDTO> GetMostUsedPitchFromAllGames(ICollection<MostUsedPitchDTO> mostUsedInGather, ICollection<MostUsedPitchDTO> mostUsedInRecruiting)
         {
             var mostUsedPitches = new HashSet<MostUsedPitchDTO>(mostUsedInGather);
 
@@ -134,18 +134,20 @@
             return mostUsedPitches;
         }
 
-        private IQueryable<MostUsedPitchDTO> GetMostUsedPitchesInRecruitingGames()
+        private IEnumerable<MostUsedPitchDTO> GetMostUsedPitchesInRecruitingGames()
         {
+            return null;
             return this.recruitmentRepository.All().GroupBy(x => x.Pitch.Id,
                 x => x.Pitch.Name,
-                (k, g) => new MostUsedPitchDTO { Id = k, Name = g.FirstOrDefault(), TimesUsed = g.Count() });
+                (k, g) => new MostUsedPitchDTO { Id = k, Name = g.FirstOrDefault(), TimesUsed = g.Count() }).ToList();
         }
 
-        private IQueryable<MostUsedPitchDTO> GetMostUsedPitchesInGathers()
+        private IEnumerable<MostUsedPitchDTO> GetMostUsedPitchesInGathers()
         {
+            return null;
             return this.gatherRepository.All().GroupBy(x => x.Pitch.Id,
                 x => x.Pitch.Name,
-                (k, g) => new MostUsedPitchDTO { Id = k, Name = g.FirstOrDefault(), TimesUsed = g.Count() });
+                (k, g) => new MostUsedPitchDTO { Id = k, Name = g.FirstOrDefault(), TimesUsed = g.Count() }).ToList();
         }
     }
 }

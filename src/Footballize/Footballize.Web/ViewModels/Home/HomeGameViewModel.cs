@@ -15,7 +15,7 @@
         public string CreatorUserName { get; set; }
         public string CreatorId { get; set; }
 
-        public void CreateMappings(IMapperConfigurationExpression configuration)
+        public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<Gather, HomeGameViewModel>()
                 .ForMember(x => x.TownName, cfg => cfg.MapFrom(y => y.Pitch.Address.Town.Name))

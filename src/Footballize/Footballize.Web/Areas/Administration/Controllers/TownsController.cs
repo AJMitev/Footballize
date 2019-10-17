@@ -12,10 +12,12 @@
     public class TownsController : AdminController
     {
         private readonly ITownService townService;
+        private readonly IMapper mapper;
 
-        public TownsController(ITownService townService)
+        public TownsController(ITownService townService, IMapper mapper)
         {
             this.townService = townService;
+            this.mapper = mapper;
         }
 
 
@@ -39,7 +41,7 @@
                 return this.View(new TownAddViewModel());
             }
 
-            var newTown = Mapper.Map<Town>(model);
+            var newTown = this.mapper.Map<Town>(model);
             this.townService.AddTownAsync(newTown);
 
             return this.RedirectToAction("Details", "Provinces", new { id = model.ProvinceId });
@@ -63,11 +65,11 @@
         {
             if (!ModelState.IsValid)
             {
-                return this.View(Mapper.Map<TownEditViewModel>(model));
+                return this.View(this.mapper.Map<TownEditViewModel>(model));
             }
 
 
-            await this.townService.UpdateTownAsync(Mapper.Map<Town>(model));
+            await this.townService.UpdateTownAsync(this.mapper.Map<Town>(model));
             return this.RedirectToAction("Details", "Provinces", new { id = model.ProvinceId });
         }
 

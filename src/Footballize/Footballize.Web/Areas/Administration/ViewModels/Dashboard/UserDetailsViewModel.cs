@@ -18,7 +18,7 @@
         public bool IsBanned { get; set; }
         
 
-        public void CreateMappings(IMapperConfigurationExpression configuration)
+        public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<User, UserDetailsViewModel>()
                 .ForMember(x => x.FullName, opt => opt.MapFrom(y => y.FirstName + " " + y.LastName))
