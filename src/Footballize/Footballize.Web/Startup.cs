@@ -1,5 +1,6 @@
 ﻿namespace Footballize.Web
 {
+    using System;
     using System.Globalization;
     using System.Reflection;
     using AutoMapper;
@@ -16,7 +17,9 @@
     using Footballize.Models;
     using Hubs;
     using Infrastructure;
+    using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.CookiePolicy;
     using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.DependencyInjection;
@@ -39,20 +42,13 @@
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
-
-            var cultureInfo = new CultureInfo("en-US");
-            cultureInfo.NumberFormat.NumberGroupSeparator = ",";
-
-            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
-            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
-
+            //services.Configure<CookiePolicyOptions>(options =>
+            //{
+            //    // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+            //    options.CheckConsentNeeded = context => true;
+            //    options.MinimumSameSitePolicy = SameSiteMode.None;
+            //});
+            
             services.AddDbContext<FootballizeDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
@@ -69,7 +65,7 @@
                     .RequireAuthenticatedUser()
                     .Build();
             });
-
+            
             services.AddControllersWithViews(options => 
                     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()))
                 .AddViewOptions(options => options.HtmlHelperOptions.ClientValidationEnabled = true)
@@ -83,6 +79,7 @@
 
             services.AddApplicationInsightsTelemetry();
 
+            services.ConfigureApplicationCookie(options => options.LoginPath = "/Identity/Account/LogIn");
             
             // Identity stores
             services.AddTransient<IUserStore<User>, FootballizeUserStore>();
@@ -109,7 +106,6 @@
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
             // Seed data on application startup
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
@@ -135,24 +131,26 @@
 
             app.UseRouting();
 
-            app.UseCookiePolicy();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseCookiePolicy();
 
             app.UseMiddleware<RemoveBannedUserMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapAreaControllerRoute("identity","identity","Identity/{controller=Home}/{action=Index}"
-                 );
+                endpoints.MapHub<ChatHub>("/chat");
+                endpoints.MapRazorPages();
 
+                endpoints.MapAreaControllerRoute(
+                    name: "admin", 
+                    areaName:"Administration",
+                    pattern: "Administration/{controller=Dashboard}/{action=Index}/{id?}");
+                
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}"
                  );
-
-                endpoints.MapHub<ChatHub>("/chat");
-                endpoints.MapRazorPages();
             });
         }
     }
