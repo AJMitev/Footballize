@@ -72,11 +72,15 @@
 
             services.AddControllersWithViews(options => 
                     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()))
-                .AddViewOptions(options => options.HtmlHelperOptions.ClientValidationEnabled = true);
+                .AddViewOptions(options => options.HtmlHelperOptions.ClientValidationEnabled = true)
+                .AddRazorRuntimeCompilation();
 
-            services.AddRazorPages();
+            services.AddRazorPages()
+                .AddRazorRuntimeCompilation();
 
-            services.AddSignalR();
+            services.AddSignalR()
+                .AddNewtonsoftJsonProtocol();
+
             services.AddApplicationInsightsTelemetry();
 
             
