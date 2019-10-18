@@ -48,6 +48,7 @@
                         map.CreateMappings(configuration);
                     }
                 });
+
             MapperInstance = new Mapper(new MapperConfiguration(config));
         }
 
@@ -85,14 +86,15 @@
             return toMaps;
         }
 
+
         private static IEnumerable<IHaveCustomMappings> GetCustomMappings(IEnumerable<Type> types)
         {
             var customMaps = from t in types
-                from i in t.GetTypeInfo().GetInterfaces()
-                where typeof(IHaveCustomMappings).GetTypeInfo().IsAssignableFrom(t) &&
-                      !t.GetTypeInfo().IsAbstract &&
-                      !t.GetTypeInfo().IsInterface
-                select (IHaveCustomMappings) Activator.CreateInstance(t);
+                             from i in t.GetTypeInfo().GetInterfaces()
+                             where typeof(IHaveCustomMappings).GetTypeInfo().IsAssignableFrom(t) &&
+                                   !t.GetTypeInfo().IsAbstract &&
+                                   !t.GetTypeInfo().IsInterface
+                             select (IHaveCustomMappings)Activator.CreateInstance(t);
 
             return customMaps;
         }
