@@ -8,13 +8,13 @@
     using Common;
     using Exceptions;
     using Footballize.Data.Repositories;
-    using Mapping;
+    using Footballize.Services.Mapping;
     using Microsoft.EntityFrameworkCore;
     using Models;
     using Models.Enums;
     using GlobalConstants = Common.GlobalConstants;
 
-    public class GatherService : IGatherServices
+    public class GatherService : IGatherService
     {
         private readonly IDeletableEntityRepository<Gather> gatherRepository;
         private readonly IDeletableEntityRepository<GatherUser> gatherUserRepository;

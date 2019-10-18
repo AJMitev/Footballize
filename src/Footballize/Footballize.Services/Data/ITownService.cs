@@ -4,7 +4,7 @@
     using System.Threading.Tasks;
     using Models;
 
-    public interface ITownService
+    public interface ITownService : IService
     {
         Task AddTownAsync(Town town);
         TViewModel GetTown<TViewModel>(string id);

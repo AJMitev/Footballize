@@ -9,7 +9,7 @@
     using Mapping;
     using Models;
 
-    public class ProvinceService : IProvinceServices
+    public class ProvinceService : IProvinceService
     {
         private readonly IDeletableEntityRepository<Province> provincesRepository;
 

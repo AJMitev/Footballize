@@ -5,7 +5,7 @@
     using DTOs;
     using Models;
 
-    public interface IPitchService
+    public interface IPitchService : IService
     {
         Task AddPitchAsync(Pitch pitch);
         IEnumerable<TViewModel> GetPitches<TViewModel>();

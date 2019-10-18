@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
     using Models;
 
-    public interface IUserService
+    public interface IUserService : IService
     {
         ICollection<TViewModel> GetUsers<TViewModel>();
         Task<User> GetUserAsync(string id);

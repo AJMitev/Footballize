@@ -4,7 +4,7 @@
     using System.Threading.Tasks;
     using Models;
 
-    public interface IProvinceServices
+    public interface IProvinceService : IService
     {
         IEnumerable<TViewModel> GetProvinces<TViewModel>();
         IEnumerable<TViewModel> GetProvincesByCountry<TViewModel>(string countryId);

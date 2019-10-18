@@ -4,7 +4,7 @@
     using System.Threading.Tasks;
     using Models;
 
-    public interface ICountryService
+    public interface ICountryService : IService
     {
         Task<int> AddCountryAsync(Country country);
         Task RemoveCountryAsync(string countryId);
