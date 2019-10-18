@@ -23,8 +23,8 @@
             //Arrange
             var gatherRepositoryMoq = new Mock<IDeletableEntityRepository<Gather>>();
             var gatherUserRepositoryMoq = new Mock<IDeletableEntityRepository<GatherUser>>();
-            var userRepositoryMoq = new Mock<IDeletableEntityRepository<User>>();
-            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object, userRepositoryMoq.Object);
+             
+            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object );
 
 
             //Assert
@@ -38,8 +38,8 @@
             //Arrange
             var gatherRepositoryMoq = new Mock<IDeletableEntityRepository<Gather>>();
             var gatherUserRepositoryMoq = new Mock<IDeletableEntityRepository<GatherUser>>();
-            var userRepositoryMoq = new Mock<IDeletableEntityRepository<User>>();
-            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object, userRepositoryMoq.Object);
+             
+            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object );
 
             //Assert
 
@@ -55,8 +55,8 @@
             //Arrange
             var gatherRepositoryMoq = new Mock<IDeletableEntityRepository<Gather>>();
             var gatherUserRepositoryMoq = new Mock<IDeletableEntityRepository<GatherUser>>();
-            var userRepositoryMoq = new Mock<IDeletableEntityRepository<User>>();
-            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object, userRepositoryMoq.Object);
+             
+            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object );
 
             // Act
 
@@ -77,8 +77,8 @@
             //Arrange
             var gatherRepositoryMoq = new Mock<IDeletableEntityRepository<Gather>>();
             var gatherUserRepositoryMoq = new Mock<IDeletableEntityRepository<GatherUser>>();
-            var userRepositoryMoq = new Mock<IDeletableEntityRepository<User>>();
-            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object, userRepositoryMoq.Object);
+             
+            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object );
 
 
             var gather = new Gather
@@ -105,8 +105,8 @@
             gatherRepositoryMoq.Setup(x => x.All()).Returns(GetAllGather().AsQueryable());
 
             var gatherUserRepositoryMoq = new Mock<IDeletableEntityRepository<GatherUser>>();
-            var userRepositoryMoq = new Mock<IDeletableEntityRepository<User>>();
-            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object, userRepositoryMoq.Object);
+             
+            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object );
 
             //Act
 
@@ -125,8 +125,8 @@
             gatherRepositoryMoq.Setup(x => x.All()).Returns(GetAllGather().AsQueryable());
 
             var gatherUserRepositoryMoq = new Mock<IDeletableEntityRepository<GatherUser>>();
-            var userRepositoryMoq = new Mock<IDeletableEntityRepository<User>>();
-            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object, userRepositoryMoq.Object);
+             
+            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object );
 
             //Act
 
@@ -145,8 +145,8 @@
             gatherRepositoryMoq.Setup(x => x.All()).Returns(GetAllGather().AsQueryable());
 
             var gatherUserRepositoryMoq = new Mock<IDeletableEntityRepository<GatherUser>>();
-            var userRepositoryMoq = new Mock<IDeletableEntityRepository<User>>();
-            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object, userRepositoryMoq.Object);
+             
+            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object );
 
             //Act
 
@@ -161,8 +161,8 @@
             gatherRepositoryMoq.Setup(x => x.All()).Returns(GetAllGather().AsQueryable());
 
             var gatherUserRepositoryMoq = new Mock<IDeletableEntityRepository<GatherUser>>();
-            var userRepositoryMoq = new Mock<IDeletableEntityRepository<User>>();
-            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object, userRepositoryMoq.Object);
+             
+            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object );
 
             var game = new Gather();
             var user = new User{IsBanned = true};
@@ -179,8 +179,8 @@
             gatherRepositoryMoq.Setup(x => x.All()).Returns(GetAllGather().AsQueryable());
 
             var gatherUserRepositoryMoq = new Mock<IDeletableEntityRepository<GatherUser>>();
-            var userRepositoryMoq = new Mock<IDeletableEntityRepository<User>>();
-            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object, userRepositoryMoq.Object);
+             
+            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object );
 
             //Act
             var user = new User {Id = "70400fb3-aed2-4876-aa9a-bcf8ba49ca9f"};
@@ -207,8 +207,8 @@
             gatherRepositoryMoq.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns(Task.FromResult<Gather>(null));
 
             var gatherUserRepositoryMoq = new Mock<IDeletableEntityRepository<GatherUser>>();
-            var userRepositoryMoq = new Mock<IDeletableEntityRepository<User>>();
-            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object, userRepositoryMoq.Object);
+             
+            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object );
 
             //Act
             Assert.Throws<ServiceException>(() => service.StartGatherAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
@@ -233,8 +233,8 @@
             gatherRepositoryMoq.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns(Task.FromResult<Gather>(gather));
 
             var gatherUserRepositoryMoq = new Mock<IDeletableEntityRepository<GatherUser>>();
-            var userRepositoryMoq = new Mock<IDeletableEntityRepository<User>>();
-            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object, userRepositoryMoq.Object);
+             
+            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object );
 
 
             Assert.Throws<ServiceException>(() => service.StartGatherAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
@@ -255,8 +255,8 @@
             gatherRepositoryMoq.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns(Task.FromResult<Gather>(gather));
 
             var gatherUserRepositoryMoq = new Mock<IDeletableEntityRepository<GatherUser>>();
-            var userRepositoryMoq = new Mock<IDeletableEntityRepository<User>>();
-            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object, userRepositoryMoq.Object);
+             
+            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object );
 
 
             Assert.Throws<ServiceException>(() => service.StartGatherAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
@@ -276,8 +276,8 @@
             gatherRepositoryMoq.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(game));
 
             var gatherUserRepositoryMoq = new Mock<IDeletableEntityRepository<GatherUser>>();
-            var userRepositoryMoq = new Mock<IDeletableEntityRepository<User>>();
-            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object, userRepositoryMoq.Object);
+             
+            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object );
 
             //Act
             service.StartGatherAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult();
@@ -294,8 +294,8 @@
             gatherRepositoryMoq.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns(Task.FromResult<Gather>(null));
 
             var gatherUserRepositoryMoq = new Mock<IDeletableEntityRepository<GatherUser>>();
-            var userRepositoryMoq = new Mock<IDeletableEntityRepository<User>>();
-            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object, userRepositoryMoq.Object);
+             
+            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object );
 
             //Act
             Assert.Throws<ServiceException>(() =>
@@ -317,8 +317,8 @@
             gatherRepositoryMoq.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns(Task.FromResult<Gather>(gather));
 
             var gatherUserRepositoryMoq = new Mock<IDeletableEntityRepository<GatherUser>>();
-            var userRepositoryMoq = new Mock<IDeletableEntityRepository<User>>();
-            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object, userRepositoryMoq.Object);
+             
+            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object );
 
 
             Assert.Throws<ServiceException>(() => service.CompleteGatherAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
@@ -337,8 +337,8 @@
             gatherRepositoryMoq.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns(Task.FromResult<Gather>(gather));
 
             var gatherUserRepositoryMoq = new Mock<IDeletableEntityRepository<GatherUser>>();
-            var userRepositoryMoq = new Mock<IDeletableEntityRepository<User>>();
-            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object, userRepositoryMoq.Object);
+             
+            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object );
 
             //Act
             service.CompleteGatherAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult();
@@ -355,8 +355,8 @@
             gatherRepositoryMoq.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns(Task.FromResult<Gather>(null));
 
             var gatherUserRepositoryMoq = new Mock<IDeletableEntityRepository<GatherUser>>();
-            var userRepositoryMoq = new Mock<IDeletableEntityRepository<User>>();
-            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object, userRepositoryMoq.Object);
+             
+            var service = new GatherService(gatherRepositoryMoq.Object, gatherUserRepositoryMoq.Object );
 
 
             Assert.Throws<ServiceException>(() => service.DeleteGatherAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());

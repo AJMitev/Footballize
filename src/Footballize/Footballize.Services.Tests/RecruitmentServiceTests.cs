@@ -17,9 +17,8 @@
         public void AddRecruitmentShouldThrowsIfParameterIsNull()
         {
             var repo = new Mock<IDeletableEntityRepository<Recruitment>>();
-            var userRepo = new Mock<IDeletableEntityRepository<User>>();
             var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
-            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object, userRepo.Object);
+            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
             Assert.Throws<ServiceException>(() => service.AddRecruitmentAsync(null).GetAwaiter().GetResult());
         }
@@ -28,9 +27,8 @@
         public void AddRecruitmentInvokesRepositoryOnce()
         {
             var repo = new Mock<IDeletableEntityRepository<Recruitment>>();
-            var userRepo = new Mock<IDeletableEntityRepository<User>>();
             var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
-            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object, userRepo.Object);
+            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
             var entity = new Recruitment();
 
@@ -43,9 +41,8 @@
         public void LeaveRecruitmentThrowIfUserIdIsNull()
         {
             var repo = new Mock<IDeletableEntityRepository<Recruitment>>();
-            var userRepo = new Mock<IDeletableEntityRepository<User>>();
             var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
-            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object, userRepo.Object);
+            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
             var entity = new Recruitment();
 
@@ -56,9 +53,8 @@
         public void LeaveRecruitmentThrowsIfRecruitmentIsNull()
         {
             var repo = new Mock<IDeletableEntityRepository<Recruitment>>();
-            var userRepo = new Mock<IDeletableEntityRepository<User>>();
             var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
-            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object, userRepo.Object);
+            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
             var entity = new Recruitment();
 
@@ -72,9 +68,8 @@
         public void LeaveRecruitmentShouldThrowsIfGameStatusIsNotRegister(GameStatus status)
         {
             var repo = new Mock<IDeletableEntityRepository<Recruitment>>();
-            var userRepo = new Mock<IDeletableEntityRepository<User>>();
             var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
-            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object, userRepo.Object);
+            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
             var entity = new Recruitment
             {
@@ -91,9 +86,8 @@
         public void EnrollRecruitmentShouldThrowIfEntityIsNull()
         {
             var repo = new Mock<IDeletableEntityRepository<Recruitment>>();
-            var userRepo = new Mock<IDeletableEntityRepository<User>>();
             var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
-            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object, userRepo.Object);
+            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
             var user = new User();
 
@@ -110,9 +104,8 @@
             var game = new Recruitment { Status = gameStatus };
             var repo = new Mock<IDeletableEntityRepository<Recruitment>>();
             repo.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(game));
-            var userRepo = new Mock<IDeletableEntityRepository<User>>();
             var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
-            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object, userRepo.Object);
+            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
             Assert.Throws<ServiceException>(() =>
                 service.StartRecruitmentAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
@@ -132,9 +125,8 @@
 
             var repo = new Mock<IDeletableEntityRepository<Recruitment>>();
             repo.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(game));
-            var userRepo = new Mock<IDeletableEntityRepository<User>>();
             var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
-            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object, userRepo.Object);
+            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
             Assert.Throws<ServiceException>(() =>
                 service.StartRecruitmentAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
@@ -145,9 +137,8 @@
         {
             var repo = new Mock<IDeletableEntityRepository<Recruitment>>();
             repo.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns(Task.FromResult<Recruitment>(null));
-            var userRepo = new Mock<IDeletableEntityRepository<User>>();
             var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
-            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object, userRepo.Object);
+            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
             Assert.Throws<ServiceException>(() =>
                 service.StartRecruitmentAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
@@ -157,13 +148,11 @@
         public void StartRecuitmentShouldChangeGameStatusToStarted()
         {
             var game = new Recruitment { Id = "70400fb3-aed2-4876-aa9a-bcf8ba49ca9f", Status = GameStatus.Registration };
-            var gameList = new List<Recruitment>(); 
-            gameList.Add(game);
+            var gameList = new List<Recruitment> {game};
             var repo = new Mock<IDeletableEntityRepository<Recruitment>>();
             repo.Setup(x => x.All()).Returns(gameList.AsQueryable());
-            var userRepo = new Mock<IDeletableEntityRepository<User>>();
             var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
-            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object, userRepo.Object);
+            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
             service.StartRecruitmentAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult();
 
@@ -181,7 +170,7 @@
             repo.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(game));
             var userRepo = new Mock<IDeletableEntityRepository<User>>();
             var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
-            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object, userRepo.Object);
+            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
             Assert.Throws<ServiceException>(() =>
                 service.CompleteRecruitmentAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
@@ -192,9 +181,8 @@
         {
             var repo = new Mock<IDeletableEntityRepository<Recruitment>>();
             repo.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns(Task.FromResult<Recruitment>(null));
-            var userRepo = new Mock<IDeletableEntityRepository<User>>();
             var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
-            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object, userRepo.Object);
+            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
             Assert.Throws<ServiceException>(() =>
                 service.CompleteRecruitmentAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
@@ -206,9 +194,8 @@
             var game = new Recruitment { Status = GameStatus.Started };
             var repo = new Mock<IDeletableEntityRepository<Recruitment>>();
             repo.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(game));
-            var userRepo = new Mock<IDeletableEntityRepository<User>>();
             var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
-            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object, userRepo.Object);
+            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
             service.CompleteRecruitmentAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult();
 
@@ -220,9 +207,8 @@
         {
             var repo = new Mock<IDeletableEntityRepository<Recruitment>>();
             repo.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns(Task.FromResult<Recruitment>(null));
-            var userRepo = new Mock<IDeletableEntityRepository<User>>();
             var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
-            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object, userRepo.Object);
+            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
             Assert.Throws<ServiceException>(() =>
                 service.DeleteRecruitmentAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
@@ -232,13 +218,11 @@
         public void GetRecuitmentShouldReturnValidEntity()
         {
             var game = new Recruitment { Id = "70400fb3-aed2-4876-aa9a-bcf8ba49ca9f" };
-            var games = new List<Recruitment>();
-            games.Add(game);
+            var games = new List<Recruitment> {game};
             var repo = new Mock<IDeletableEntityRepository<Recruitment>>();
             repo.Setup(x => x.All()).Returns(games.AsQueryable());
-            var userRepo = new Mock<IDeletableEntityRepository<User>>();
             var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
-            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object, userRepo.Object);
+            var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
             var expected = "70400fb3-aed2-4876-aa9a-bcf8ba49ca9f";
             var actual = service.GetRecruitmentAsync(expected).GetAwaiter().GetResult().Id;

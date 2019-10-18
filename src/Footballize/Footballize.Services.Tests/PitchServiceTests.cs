@@ -87,30 +87,5 @@
 
             repo.Verify(x=>x.Update(pitch), Times.Once);
         }
-
-
-        private ICollection<Pitch> GetPitches()
-        {
-            return new List<Pitch>
-            {
-                new Pitch
-                {
-                    Name = "Test 1",
-                    Id = "70400fb3-aed2-4876-aa9a-bcf8ba49ca9f"
-                },new Pitch
-                {
-                    Name = "Test 2"
-                },new Pitch
-                {
-                    Name = "Test 3"
-                },new Pitch
-                {
-                    Name = "Test 4"
-                },new Pitch
-                {
-                    Name = "Test 5"
-                },
-            };
-        }
     }
 }

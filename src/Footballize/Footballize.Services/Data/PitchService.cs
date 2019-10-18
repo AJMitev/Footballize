@@ -136,7 +136,6 @@
 
         private IEnumerable<MostUsedPitchDTO> GetMostUsedPitchesInRecruitingGames()
         {
-            return null;
             return this.recruitmentRepository.All().GroupBy(x => x.Pitch.Id,
                 x => x.Pitch.Name,
                 (k, g) => new MostUsedPitchDTO { Id = k, Name = g.FirstOrDefault(), TimesUsed = g.Count() }).ToList();
@@ -144,7 +143,6 @@
 
         private IEnumerable<MostUsedPitchDTO> GetMostUsedPitchesInGathers()
         {
-            return null;
             return this.gatherRepository.All().GroupBy(x => x.Pitch.Id,
                 x => x.Pitch.Name,
                 (k, g) => new MostUsedPitchDTO { Id = k, Name = g.FirstOrDefault(), TimesUsed = g.Count() }).ToList();
