@@ -18,13 +18,11 @@
     {
         private readonly IDeletableEntityRepository<Gather> gatherRepository;
         private readonly IDeletableEntityRepository<GatherUser> gatherUserRepository;
-        private readonly IDeletableEntityRepository<User> userRepository;
-
-        public GatherService(IDeletableEntityRepository<Gather> gatherRepository, IDeletableEntityRepository<GatherUser> gatherUserRepository, IDeletableEntityRepository<User> userRepository)
+        public GatherService(IDeletableEntityRepository<Gather> gatherRepository,
+            IDeletableEntityRepository<GatherUser> gatherUserRepository)
         {
             this.gatherRepository = gatherRepository;
             this.gatherUserRepository = gatherUserRepository;
-            this.userRepository = userRepository;
         }
 
         public TViewModel GetGather<TViewModel>(string id)

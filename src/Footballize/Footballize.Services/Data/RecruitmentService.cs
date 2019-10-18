@@ -18,13 +18,12 @@
     {
         private readonly IDeletableEntityRepository<Recruitment> recruitmentRepository;
         private readonly IDeletableEntityRepository<RecruitmentUser> recruiterUserRepository;
-        private readonly IDeletableEntityRepository<User> userRepository;
 
-        public RecruitmentService(IDeletableEntityRepository<Recruitment> recruitmentRepository, IDeletableEntityRepository<RecruitmentUser> recruiterUserRepository, IDeletableEntityRepository<User> userRepository)
+        public RecruitmentService(IDeletableEntityRepository<Recruitment> recruitmentRepository, 
+            IDeletableEntityRepository<RecruitmentUser> recruiterUserRepository)
         {
             this.recruitmentRepository = recruitmentRepository;
             this.recruiterUserRepository = recruiterUserRepository;
-            this.userRepository = userRepository;
         }
 
         public ICollection<TViewModel> GetRecruitments<TViewModel>()
