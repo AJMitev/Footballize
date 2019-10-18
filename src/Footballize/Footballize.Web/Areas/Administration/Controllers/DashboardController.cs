@@ -16,14 +16,14 @@
         private readonly UserManager<User> userManager;
         private readonly IRecruitmentService recruitmentService;
         private readonly IUserService userService;
-        private readonly IGatherServices gatherServices;
+        private readonly IGatherService gatherService;
 
-        public DashboardController(UserManager<User> userManager, IRecruitmentService recruitmentService, IUserService userService, IGatherServices gatherServices)
+        public DashboardController(UserManager<User> userManager, IRecruitmentService recruitmentService, IUserService userService, IGatherService gatherService)
         {
             this.userManager = userManager;
             this.recruitmentService = recruitmentService;
             this.userService = userService;
-            this.gatherServices = gatherServices;
+            this.gatherService = gatherService;
         }
 
         public async Task<IActionResult> Index()
@@ -39,7 +39,7 @@
                 BannedPlayersCount = bannedPlayers.Count,
                 BannedUsers = bannedPlayers,
                 RegisteredUsersCount = this.userService.GetUsersCount(),
-                GathersPlayedCount = this.gatherServices.GetGatherCount(),
+                GathersPlayedCount = this.gatherService.GetGatherCount(),
                 ReportedUsers = this.userService.GetUserReports<ReportedUsersViewModel>()
             };
 

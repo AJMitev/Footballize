@@ -19,13 +19,13 @@
     {
         private const int ItemsPerPage = 10;
 
-        private readonly IGatherServices gatherServices;
+        private readonly IGatherService gatherService;
         private readonly UserManager<User> userManager;
         private readonly IMapper mapper;
 
-        public GathersController(IGatherServices gatherServices, UserManager<User> userManager, IMapper mapper)
+        public GathersController(IGatherService gatherService, UserManager<User> userManager, IMapper mapper)
         {
-            this.gatherServices = gatherServices;
+            this.gatherService = gatherService;
             this.userManager = userManager;
             this.mapper = mapper;
         }
@@ -38,7 +38,7 @@
             var skip = (id - 1) * ItemsPerPage;
 
 
-            var gathers = this.gatherServices.GetGathers<GatherIndexViewModel>(x => x.StartingAt > DateTime.UtcNow);
+            var gathers = this.gatherService.GetGathers<GatherIndexViewModel>(x => x.StartingAt > DateTime.UtcNow);
 
             var filtered = gathers.Skip(skip).Take(ItemsPerPage).ToList();
 
@@ -82,14 +82,14 @@
                 case TeamFormat.ElevenPlayers: newGather.MaximumPlayers = 22; break;
             }
 
-            await this.gatherServices.AddGatherAsync(newGather);
+            await this.gatherService.AddGatherAsync(newGather);
             return await this.Enroll(newGather.Id);
         }
 
         [HttpGet]
         public IActionResult Details(string id)
         {
-            var gather = this.gatherServices.GetGather<GatherDetailsViewModel>(id);
+            var gather = this.gatherService.GetGather<GatherDetailsViewModel>(id);
 
             if (gather == null)
             {
@@ -111,14 +111,14 @@
                     return this.Forbid();
                 }
 
-                var gather = this.gatherServices.GetGatherWithPlayers(id);
+                var gather = this.gatherService.GetGatherWithPlayers(id);
 
                 if (gather == null)
                 {
                     return this.NotFound();
                 }
 
-                await this.gatherServices.LeaveGatherAsync(gather, currentUser.Id);
+                await this.gatherService.LeaveGatherAsync(gather, currentUser.Id);
 
                 return this.RedirectToAction("Details", new { id });
             }
@@ -134,7 +134,7 @@
         {
             try
             {
-                var gather = this.gatherServices.GetGatherWithPlayers(id);
+                var gather = this.gatherService.GetGatherWithPlayers(id);
                 var currentUser = await this.userManager.GetUserAsync(User);
 
                 if (currentUser == null || gather == null)
@@ -142,7 +142,7 @@
                     return this.NotFound();
                 }
 
-                await this.gatherServices.EnrollGatherAsync(gather, currentUser);
+                await this.gatherService.EnrollGatherAsync(gather, currentUser);
 
                 return this.RedirectToAction("Details", new { id });
             }
@@ -158,7 +158,7 @@
         {
             try
             {
-                var gather = await this.gatherServices.GetGatherAsync(gatherId);
+                var gather = await this.gatherService.GetGatherAsync(gatherId);
                 var currentUser = await this.userManager.GetUserAsync(User);
 
                 if (currentUser == null)
@@ -171,7 +171,7 @@
                     return this.Forbid();
                 }
 
-                await this.gatherServices.LeaveGatherAsync(gather, playerId);
+                await this.gatherService.LeaveGatherAsync(gather, playerId);
                 return this.RedirectToAction("Details", new { gatherId });
             }
             catch (ServiceException e)
@@ -186,7 +186,7 @@
         {
             try
             {
-                var game = this.gatherServices.GetGatherWithPlayers(id);
+                var game = this.gatherService.GetGatherWithPlayers(id);
                 var currentUser = await this.userManager.GetUserAsync(User);
 
                 if (game == null || currentUser == null)
@@ -199,7 +199,7 @@
                     return this.Unauthorized();
                 }
 
-                await this.gatherServices.StartGatherAsync(id);
+                await this.gatherService.StartGatherAsync(id);
 
                 return this.RedirectToAction("Details", new { id });
             }
@@ -215,7 +215,7 @@
         {
             try
             {
-                var game = this.gatherServices.GetGather<GatherDetailsViewModel>(id);
+                var game = this.gatherService.GetGather<GatherDetailsViewModel>(id);
                 var currentUser = await this.userManager.GetUserAsync(User);
 
                 if (game == null || currentUser == null)
@@ -228,7 +228,7 @@
                     return this.Unauthorized();
                 }
 
-                await this.gatherServices.CompleteGatherAsync(id);
+                await this.gatherService.CompleteGatherAsync(id);
                 return this.RedirectToAction("Details", new { id });
             }
             catch (ServiceException e)
@@ -241,7 +241,7 @@
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
-            var game = this.gatherServices.GetGather<GatherDetailsViewModel>(id);
+            var game = this.gatherService.GetGather<GatherDetailsViewModel>(id);
             var currentUser = await this.userManager.GetUserAsync(User);
 
             if (game == null || currentUser == null)
@@ -254,7 +254,7 @@
                 return this.Unauthorized();
             }
 
-            await this.gatherServices.DeleteGatherAsync(id);
+            await this.gatherService.DeleteGatherAsync(id);
 
             return this.RedirectToAction("Index");
         }

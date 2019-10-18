@@ -20,8 +20,8 @@
             @"[({]?[a-fA-F0-9]{8}[-]?([a-fA-F0-9]{4}[-]?){3}[a-fA-F0-9]{12}[})]?";
 
         [Required]
-        [MaxLength(TitleMinLength)]
-        [MinLength(TitleMaxLength)]
+        [MaxLength(TitleMaxLength)]
+        [MinLength(TitleMinLength)]
         [Display(Name = "Title")]
         public string Title { get; set; }
 

@@ -3,25 +3,29 @@
     using System.Globalization;
     using System.Reflection;
     using AutoMapper;
+    using Common;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
     using Data;
     using Data.Repositories;
     using Data.Seeding;
     using Footballize.Models;
     using Hubs;
+    using Infrastructure;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity.UI.Services;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
     using Middlewares;
     using ViewModels;
-    using Services.Data;
     using Services.Mapping;
+    using Services.Messaging;
 
     public class Startup
     {
@@ -66,7 +70,8 @@
                     .Build();
             });
 
-            services.AddControllersWithViews(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()))
+            services.AddControllersWithViews(options => 
+                    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()))
                 .AddViewOptions(options => options.HtmlHelperOptions.ClientValidationEnabled = true);
 
             services.AddRazorPages();
@@ -84,14 +89,14 @@
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
             // Application services
-            services.AddTransient<ICountryService, CountryService>();
-            services.AddTransient<IProvinceServices, ProvinceService>();
-            services.AddTransient<ITownService, TownService>();
-            services.AddTransient<IPitchService, PitchService>();
-            services.AddTransient<IAddressService, AddressService>();
-            services.AddTransient<IGatherServices, GatherService>();
-            services.AddTransient<IRecruitmentService, RecruitmentService>();
-            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IEmailSender>(
+                serviceProvider => new SendGridEmailSender(
+                    serviceProvider.GetRequiredService<ILoggerFactory>(),
+                    this.Configuration["SendGrid:ApiKey"],
+                    this.Configuration["SendGrid:SenderEmail"],
+                    GlobalConstants.SystemName));
+
+            services.AddConventionalServices();
 
             AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
             services.AddSingleton<IMapper>(AutoMapperConfig.MapperInstance);

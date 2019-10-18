@@ -12,15 +12,12 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="File.TypeChecker" Version="1.0.4" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.8.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
 
 
@@ -28,6 +25,8 @@
     <ProjectReference Include="..\Footballize.Common\Footballize.Common.csproj" />
     <ProjectReference Include="..\Footballize.Data\Footballize.Data.csproj" />
     <ProjectReference Include="..\Footballize.Models\Footballize.Models.csproj" />
+    <ProjectReference Include="..\Footballize.Services.Mapping\Footballize.Services.Mapping.csproj" />
+    <ProjectReference Include="..\Footballize.Services.Messaging\Footballize.Services.Messaging.csproj" />
     <ProjectReference Include="..\Footballize.Services\Footballize.Services.csproj" />
   </ItemGroup>
 

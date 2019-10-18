@@ -12,14 +12,14 @@
 
     public class HomeController : Controller
     {
-        private readonly IGatherServices gatherServices;
+        private readonly IGatherService gatherService;
         private readonly IRecruitmentService recruitmentService;
         private readonly IPitchService pitchService;
         private readonly IMapper mapper;
 
-        public HomeController(IGatherServices gatherServices, IRecruitmentService recruitmentService, IPitchService pitchService, IMapper mapper)
+        public HomeController(IGatherService gatherService, IRecruitmentService recruitmentService, IPitchService pitchService, IMapper mapper)
         {
-            this.gatherServices = gatherServices;
+            this.gatherService = gatherService;
             this.recruitmentService = recruitmentService;
             this.pitchService = pitchService;
             this.mapper = mapper;
@@ -28,7 +28,7 @@
         public IActionResult Index()
         {
 
-            var gathers = this.gatherServices.GetGathers<HomeGameViewModel>()
+            var gathers = this.gatherService.GetGathers<HomeGameViewModel>()
                 .Take(8)
                 .ToList();
 
