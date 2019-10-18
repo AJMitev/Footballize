@@ -1,5 +1,6 @@
 ﻿namespace Footballize.Models
 {
+    using System;
     using System.Collections.Generic;
     using Abstracts;
     using Enums;
@@ -8,6 +9,7 @@
     {
         public Recruitment()
         {
+            this.Id = Guid.NewGuid().ToString();
             this.Players = new List<RecruitmentUser>();
             this.Status = GameStatus.Registration;
         }

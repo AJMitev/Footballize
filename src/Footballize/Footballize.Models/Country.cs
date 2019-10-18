@@ -1,5 +1,6 @@
 ﻿namespace Footballize.Models
 {
+    using System;
     using System.Collections.Generic;
     using Abstracts;
 
@@ -7,6 +8,7 @@
     {
         public Country()
         {
+            this.Id = Guid.NewGuid().ToString();
             this.Provinces = new HashSet<Province>();
         }
 
