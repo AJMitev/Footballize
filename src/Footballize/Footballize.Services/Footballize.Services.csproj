@@ -5,13 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="9.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Footballize.Common\Footballize.Common.csproj" />
     <ProjectReference Include="..\Footballize.Data\Footballize.Data.csproj" />
     <ProjectReference Include="..\Footballize.Models\Footballize.Models.csproj" />
+    <ProjectReference Include="..\Footballize.Services.Mapping\Footballize.Services.Mapping.csproj" />
   </ItemGroup>
 
   <ItemGroup>
