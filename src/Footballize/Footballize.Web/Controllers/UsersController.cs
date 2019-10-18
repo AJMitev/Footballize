@@ -16,11 +16,13 @@
     {
         private readonly UserManager<User> userManager;
         private readonly IUserService userService;
+        private readonly IMapper mapper;
 
-        public UsersController(UserManager<User> userManager, IUserService userService)
+        public UsersController(UserManager<User> userManager, IUserService userService, IMapper mapper)
         {
             this.userManager = userManager;
             this.userService = userService;
+            this.mapper = mapper;
         }
 
 
@@ -46,7 +48,7 @@
                 this.TempData["Error"] = e.Message;
             }
 
-            return this.RedirectToAction("Details", new { id = id });
+            return this.RedirectToAction("Details", new { id });
         }
 
         [HttpGet]
@@ -70,7 +72,7 @@
                 this.TempData["Error"] = e.Message;
             }
 
-            return this.RedirectToAction("Details", new { id = id });
+            return this.RedirectToAction("Details", new { id });
         }
 
         [HttpGet]
@@ -83,7 +85,7 @@
                 return this.NotFound();
             }
 
-            var model = Mapper.Map<UserDetailsViewModel>(user);
+            var model = this.mapper.Map<UserDetailsViewModel>(user);
 
             if (string.IsNullOrEmpty(model.ProfilePicturePathToFile))
             {
@@ -117,7 +119,7 @@
 
 
             await this.userService.BanPlayer(player, minutes: 15);
-            return this.RedirectToAction("Details", new { id = id });
+            return this.RedirectToAction("Details", new { id });
         }
 
         [HttpGet]
@@ -140,7 +142,7 @@
 
 
             await this.userService.RemoveBan(player);
-            return this.RedirectToAction("Details", new { id = id });
+            return this.RedirectToAction("Details", new { id });
         }
 
 
@@ -154,7 +156,7 @@
                 return this.NotFound();
             }
 
-            return this.View(Mapper.Map<UsersReportInputModel>(userToReport));
+            return this.View(this.mapper.Map<UsersReportInputModel>(userToReport));
         }
 
         [HttpPost]
@@ -165,7 +167,7 @@
                 return this.View(model);
             }
 
-            var report = Mapper.Map<UserReport>(model);
+            var report = this.mapper.Map<UserReport>(model);
 
             await this.userService.CreateReport(report);
 

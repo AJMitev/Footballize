@@ -18,7 +18,7 @@
 
         [Display(Name = "Country")]
         public string CountryName { get; set; }
-        public void CreateMappings(IMapperConfigurationExpression configuration)
+        public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<CountryNameAndIdViewModel, ProvinceAddViewModel>()
                 .ForMember(x => x.CountryId, cfg => cfg.MapFrom(y => y.Id))

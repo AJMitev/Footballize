@@ -9,6 +9,7 @@
     {
         public Gather()
         {
+            this.Id = Guid.NewGuid().ToString();
             this.Status = GameStatus.Registration;
             this.Players = new HashSet<GatherUser>();
             this.ChatMessages = new HashSet<ChatMessage>();

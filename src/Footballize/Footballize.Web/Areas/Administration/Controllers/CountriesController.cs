@@ -13,10 +13,12 @@
     public class CountriesController : AdminController
     {
         private readonly ICountryService countryService;
+        private readonly IMapper mapper;
 
-        public CountriesController(ICountryService countryService)
+        public CountriesController(ICountryService countryService, IMapper mapper)
         {
             this.countryService = countryService;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -55,7 +57,7 @@
             if (!ModelState.IsValid)
                 return this.View(model);
 
-            await this.countryService.AddCountryAsync(Mapper.Map<Country>(model));
+            await this.countryService.AddCountryAsync(this.mapper .Map<Country>(model));
 
             return this.RedirectToAction("Index");
         }
@@ -85,7 +87,7 @@
                 return this.NotFound();
             }
 
-            Mapper.Map(model, country);
+            this.mapper.Map(model, country);
 
             await this.countryService.UpdateCountryAsync(country);
 

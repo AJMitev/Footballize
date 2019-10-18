@@ -12,7 +12,7 @@
         public string IsoCode { get; set; }
         public int ProvincesCount { get; set; }
         public int TownsCount { get; set; }
-        public void CreateMappings(IMapperConfigurationExpression configuration)
+        public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<Country,CountryIndexViewModel>()
                 .ForMember(x=>x.ProvincesCount,o=>o.MapFrom(p=>p.Provinces.Count))

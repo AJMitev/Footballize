@@ -20,7 +20,7 @@
         public ICollection<Playpal> PlaypalsAddedMe { get; set; }
         public string ProfilePicturePathToFile { get; set; }
 
-        public void CreateMappings(IMapperConfigurationExpression configuration)
+        public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<User, UserDetailsViewModel>()
                 .ForMember(x => x.ProfilePicturePathToFile, cfg => cfg.MapFrom(y => y.ProfilePicture.PathToFile));

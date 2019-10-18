@@ -12,7 +12,7 @@
         public string Username { get; set; }
         public string FullName { get; set; }
         public int GamesCompleted { get; set; }
-        public void CreateMappings(IMapperConfigurationExpression configuration)
+        public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<GatherUser, UserGameDetailsViewModel>()
                 .ForMember(x => x.Id, opt => opt.MapFrom(y => y.User.Id))

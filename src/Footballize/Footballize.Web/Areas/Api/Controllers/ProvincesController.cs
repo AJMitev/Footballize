@@ -7,18 +7,18 @@
 
     public class ProvincesController : ApiController
     {
-        private readonly IProvinceServices provinceServices;
+        private readonly IProvinceService provinceService;
 
-        public ProvincesController(IProvinceServices provinceServices)
+        public ProvincesController(IProvinceService provinceService)
         {
-            this.provinceServices = provinceServices;
+            this.provinceService = provinceService;
         }
 
         // GET: api/Provinces/5
         [HttpGet("{id}")]
         public IEnumerable<ProvinceNameAndIdViewModel> Get(string id)
         {
-            var provinces = this.provinceServices.GetProvincesByCountry<ProvinceNameAndIdViewModel>(id);
+            var provinces = this.provinceService.GetProvincesByCountry<ProvinceNameAndIdViewModel>(id);
 
             return provinces;
         }

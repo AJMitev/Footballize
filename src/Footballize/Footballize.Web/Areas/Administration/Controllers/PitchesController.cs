@@ -14,21 +14,24 @@
 
     public class PitchesController : AdminController
     {
-        private readonly IPitchService _pitchService;
+        private readonly IPitchService pitchService;
         private readonly IAddressService addressService;
-        private readonly IHostingEnvironment hostingEnvironment;
+        private readonly IWebHostEnvironment hostingEnvironment;
+        private readonly IMapper mapper;
 
-        public PitchesController(IPitchService pitchService, IAddressService addressService, IHostingEnvironment hostingEnvironment)
+        public PitchesController(IPitchService pitchService, IAddressService addressService, 
+            IWebHostEnvironment hostingEnvironment, IMapper mapper)
         {
-            this._pitchService = pitchService;
+            this.pitchService = pitchService;
             this.addressService = addressService;
             this.hostingEnvironment = hostingEnvironment;
+            this.mapper = mapper;
         }
 
         [HttpGet]
         public IActionResult Index(int id)
         {
-            var fields = this._pitchService.GetPitches<PitchIndexViewModel>().ToList();
+            var fields = this.pitchService.GetPitches<PitchIndexViewModel>().ToList();
             id = Math.Max(1, id);
             var skip = (id - 1) * PitchesListViewModel.ItemsPerPage;
 
@@ -63,13 +66,13 @@
                 return this.View();
             }
 
-            var location = Mapper.Map<Location>(model);
-            var newAddress = Mapper.Map<Address>(model);
+            var location = this.mapper.Map<Location>(model);
+            var newAddress = this.mapper.Map<Address>(model);
             newAddress.Location = location;
             var addressId = await this.addressService.CreateOrGetAddress(newAddress);
-            var playfield = Mapper.Map<Pitch>(model);
+            var playfield = this.mapper.Map<Pitch>(model);
             playfield.AddressId = addressId;
-            await this._pitchService.AddPitchAsync(playfield);
+            await this.pitchService.AddPitchAsync(playfield);
 
             var folderPath = hostingEnvironment.WebRootPath + "/img/fields/";
             Directory.CreateDirectory(folderPath);
@@ -86,7 +89,7 @@
         [HttpGet]
         public IActionResult Edit(string id)
         {
-            var model = this._pitchService.GetPitch<PitchEditViewModel>(id);
+            var model = this.pitchService.GetPitch<PitchEditViewModel>(id);
 
             if (model == null)
             {
@@ -101,10 +104,10 @@
         {
             if (!ModelState.IsValid)
             {
-                return this.View(Mapper.Map<PitchEditViewModel>(model));
+                return this.View(this.mapper.Map<PitchEditViewModel>(model));
             }
             
-            await this._pitchService.UpdatePitchAsync(Mapper.Map<Pitch>(model));
+            await this.pitchService.UpdatePitchAsync(this.mapper.Map<Pitch>(model));
 
             var folderPath = hostingEnvironment.WebRootPath + "/img/fields/";
             Directory.CreateDirectory(folderPath);
@@ -122,14 +125,14 @@
         public async Task<IActionResult> Delete(string id)
         {
 
-            var field =  this._pitchService.GetPitch<PitchNameAndIdViewModel>(id);
+            var field =  this.pitchService.GetPitch<PitchNameAndIdViewModel>(id);
 
             if (field == null)
             {
                 return this.NotFound();
             }
 
-            await this._pitchService.RemovePitchAsync(Mapper.Map<Pitch>(field));
+            await this.pitchService.RemovePitchAsync(this.mapper.Map<Pitch>(field));
 
             return this.RedirectToAction("Index");
         }

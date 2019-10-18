@@ -12,6 +12,7 @@
             options.Password.RequireNonAlphanumeric = false;
             options.Password.RequiredLength = 6;
             options.User.RequireUniqueEmail = true;
+            options.SignIn.RequireConfirmedAccount = true;
         }
     }
 }

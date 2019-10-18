@@ -20,11 +20,13 @@
 
         private readonly IRecruitmentService recruitmentService;
         private readonly UserManager<User> userManager;
+        private readonly IMapper mapper;
 
-        public RecruitmentsController(IRecruitmentService recruitmentService, UserManager<User> userManager)
+        public RecruitmentsController(IRecruitmentService recruitmentService, UserManager<User> userManager,IMapper mapper)
         {
             this.recruitmentService = recruitmentService;
             this.userManager = userManager;
+            this.mapper = mapper;
         }
 
         [AllowAnonymous]
@@ -66,7 +68,7 @@
                 return this.View();
             }
 
-            var newRecruitment = Mapper.Map<Recruitment>(model);
+            var newRecruitment = this.mapper.Map<Recruitment>(model);
             newRecruitment.Creator = await userManager.GetUserAsync(HttpContext.User);
 
             try
@@ -115,12 +117,12 @@
             {
                 await this.recruitmentService.StartRecruitmentAsync(id);
 
-                return this.RedirectToAction("Details", new { id = id });
+                return this.RedirectToAction("Details", new { id });
             }
             catch (ServiceException e)
             {
                 this.TempData["Error"] = e.Message;
-                return this.RedirectToAction("Details", new { id = id });
+                return this.RedirectToAction("Details", new { id });
             }
         }
 
@@ -144,12 +146,12 @@
             {
                 await this.recruitmentService.CompleteRecruitmentAsync(id);
 
-                return this.RedirectToAction("Details", new { id = id });
+                return this.RedirectToAction("Details", new { id });
             }
             catch (ServiceException e)
             {
                 this.TempData["Error"] = e.Message;
-                return this.RedirectToAction("Details", new { id = id });
+                return this.RedirectToAction("Details", new { id });
             }
         }
 
@@ -168,12 +170,12 @@
             {
                 await this.recruitmentService.EnrollRecruitmentAsync(game.Id, currentUser);
 
-                return this.RedirectToAction("Details", new { id = id });
+                return this.RedirectToAction("Details", new { id });
             }
             catch (ServiceException e)
             {
                 this.TempData["Error"] = e.Message;
-                return this.RedirectToAction("Details", new { id = id });
+                return this.RedirectToAction("Details", new { id });
             }
         }
 
@@ -192,13 +194,13 @@
             {
                 await this.recruitmentService.LeaveRecruitmentAsync(game, currentUser.Id);
 
-                return this.RedirectToAction("Details", new { id = id });
+                return this.RedirectToAction("Details", new { id });
 
             }
             catch (ServiceException e)
             {
                 this.TempData["Error"] = e.Message;
-                return this.RedirectToAction("Details", new { id = id });
+                return this.RedirectToAction("Details", new { id });
             }
         }
 
@@ -216,12 +218,12 @@
             try
             {
                 await this.recruitmentService.LeaveRecruitmentAsync(game, playerId);
-                return this.RedirectToAction("Details", new { id = gameId });
+                return this.RedirectToAction("Details", new { gameId });
             }
             catch (ServiceException e)
             {
                 this.TempData["Error"] = e.Message;
-                return this.RedirectToAction("Details", new { id = gameId });
+                return this.RedirectToAction("Details", new { gameId });
             }
         }
 

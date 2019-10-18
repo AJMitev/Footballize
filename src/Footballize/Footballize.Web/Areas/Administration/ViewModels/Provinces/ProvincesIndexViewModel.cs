@@ -11,7 +11,7 @@
         public string CountryName { get; set; }
         public int TownsCount { get; set; }
 
-        public void CreateMappings(IMapperConfigurationExpression configuration)
+        public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<Province, ProvincesIndexViewModel>()
                 .ForMember(x => x.TownsCount, o => o.MapFrom(p => p.Towns.Count));

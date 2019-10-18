@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
     using Models;
 
-    public interface IRecruitmentService
+    public interface IRecruitmentService : IService
     {
         ICollection<TViewModel> GetRecruitments<TViewModel>();
         ICollection<TViewModel> GetRecruitments<TViewModel>(Expression<Func<Recruitment, bool>> expression);

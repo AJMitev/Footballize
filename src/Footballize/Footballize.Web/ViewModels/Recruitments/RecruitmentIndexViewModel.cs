@@ -28,7 +28,7 @@
 
         public UserSimpleViewModel Creator { get; set; }
 
-        public void CreateMappings(IMapperConfigurationExpression configuration)
+        public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<Recruitment, RecruitmentIndexViewModel>()
                 .ForMember(x => x.PlayersEnrolled, opt => opt.MapFrom(y => y.Players.Count));

@@ -12,7 +12,7 @@
         public string ReportedPlayerId { get; set; }
         public string ReportedPlayerName{ get; set; }
         public string ReportedPlayerUsername{ get; set; }
-        public void CreateMappings(IMapperConfigurationExpression configuration)
+        public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<UserReport, ReportedUsersViewModel>()
                 .ForMember(x => x.ReportedPlayerId, cfg => cfg.MapFrom(y => y.ReportedUserId))

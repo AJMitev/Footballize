@@ -15,7 +15,7 @@
         public double AddressLocationLatitude { get; set; }
         public double AddressLocationLongitude { get; set; }
 
-        public void CreateMappings(IMapperConfigurationExpression configuration)
+        public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<Pitch, PitchIndexViewModel>()
                 .ForMember(x => x.CountryName, opt => opt.MapFrom(y => y.Address.Town.Province.Country.Name))

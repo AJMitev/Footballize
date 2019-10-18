@@ -23,5 +23,6 @@
         public const string PlayerIsBannedErrorMessage = "Banned players cannot participate games!";
         public const string InvalidRequestParametersErrorMessage = "Your request parameters are invalid!";
         public const string EntityCannotBeNullErrorMessage = "{0} cannot be null!";
+        public const string SystemName = "Footballize";
     }
 }

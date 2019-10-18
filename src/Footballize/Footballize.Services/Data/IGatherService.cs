@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
     using Models;
 
-    public interface IGatherServices
+    public interface IGatherService : IService
     {
         ICollection<TViewModel> GetGathers<TViewModel>();
         ICollection<TViewModel> GetGathers<TViewModel>(Expression<Func<Gather, bool>> expression);
