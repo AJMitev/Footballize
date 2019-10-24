@@ -14,10 +14,8 @@
     {
         private readonly IRepository<ChatMessage> chatRepository;
 
-        public ChatHub(IRepository<ChatMessage> chatRepository)
-        {
-            this.chatRepository = chatRepository;
-        }
+        public ChatHub(IRepository<ChatMessage> chatRepository) 
+            => this.chatRepository = chatRepository;
 
         public async Task Send(string message, string gatherId)
         {
