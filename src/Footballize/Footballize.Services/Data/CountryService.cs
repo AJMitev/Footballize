@@ -14,27 +14,15 @@
         private readonly IDeletableEntityRepository<Country> countriesRepository;
 
         public CountryService(IDeletableEntityRepository<Country> countriesRepository)
-        {
-            this.countriesRepository = countriesRepository;
-        }
+            => this.countriesRepository = countriesRepository;
 
-        public Task<int> AddCountryAsync(Country country)
-        {
-            if (country == null)
-            {
-                throw new ServiceException(string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Country)));
-            }
 
-            this.countriesRepository.AddAsync(country);
-            return this.countriesRepository.SaveChangesAsync();
-        }
-
-        public Task<Country> GetCountryByIdAsync(string id)
+        public Task<Country> GetByIdAsync(string id)
         {
             return this.countriesRepository.GetByIdAsync(id);
         }
 
-        public IEnumerable<TViewModel> GetCountries<TViewModel>()
+        public IEnumerable<TViewModel> All<TViewModel>()
         {
             return this.countriesRepository
                 .All()
@@ -43,7 +31,7 @@
                 .ToList();
         }
 
-        public async Task UpdateCountryAsync(Country country)
+        public async Task UpdateAsync(Country country)
         {
             if (country == null)
             {
@@ -54,7 +42,7 @@
             await this.countriesRepository.SaveChangesAsync();
         }
 
-        public TViewModel GetCountry<TViewModel>(string id)
+        public TViewModel GetById<TViewModel>(string id)
         {
             return this.countriesRepository
                 .All()
@@ -63,7 +51,21 @@
                 .FirstOrDefault();
         }
 
-        public async Task RemoveCountryAsync(string countryId)
+        public Task<string> AddAsync(string name, string isoCode)
+        {
+            var country = new Country
+            {
+                Name = name,
+                IsoCode = isoCode
+            };
+
+            this.countriesRepository.AddAsync(country);
+            this.countriesRepository.SaveChangesAsync();
+
+            return Task.FromResult(country.Id);
+        }
+
+        public async Task DeleteAsync(string countryId)
         {
             var countryToRemove = await this.countriesRepository.GetByIdAsync(countryId);
 

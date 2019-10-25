@@ -5,10 +5,8 @@
     using System.Threading.Tasks;
     using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
-    using Models;
     using Services.Data;
     using ViewModels.Countries;
-    using ViewModels.Pitches;
 
     public class CountriesController : AdminController
     {
@@ -24,12 +22,15 @@
         [HttpGet]
         public IActionResult Index(int id)
         {
-            var countries = this.countryService.GetCountries<CountryIndexViewModel>();
+            var countries = this.countryService.All<CountryIndexViewModel>();
 
             id = Math.Max(1, id);
             var skip = (id - 1) * CountriesListViewModel.ItemsPerPage;
 
-            var filteredItems = countries.Skip(skip).Take(CountriesListViewModel.ItemsPerPage).ToList();
+            var filteredItems = countries
+                .Skip(skip)
+                .Take(CountriesListViewModel.ItemsPerPage)
+                .ToList();
 
             var itemsCount = countries.Count();
             var pagesCount = (int)Math.Ceiling(itemsCount / (decimal)CountriesListViewModel.ItemsPerPage);
@@ -41,15 +42,13 @@
                 CurrentPage = id,
                 PagesCount = pagesCount
             };
-            
+
             return View(model);
         }
 
         [HttpGet]
         public IActionResult Add()
-        {
-            return this.View();
-        }
+            => this.View();
 
         [HttpPost]
         public async Task<IActionResult> Add(CountryInputModel model)
@@ -57,15 +56,15 @@
             if (!ModelState.IsValid)
                 return this.View(model);
 
-            await this.countryService.AddCountryAsync(this.mapper .Map<Country>(model));
+            var id = await this.countryService.AddAsync(model.Name, model.IsoCode);
 
-            return this.RedirectToAction("Index");
+            return this.RedirectToAction(nameof(Details), new { id });
         }
 
         [HttpGet]
         public IActionResult Edit(string id)
         {
-            var model = this.countryService.GetCountry<CountryInputModel>(id);
+            var model = this.countryService.GetById<CountryInputModel>(id);
 
             if (model == null)
                 this.NotFound();
@@ -76,11 +75,10 @@
         [HttpPost]
         public async Task<IActionResult> Edit(CountryInputModel model)
         {
-
             if (!ModelState.IsValid)
                 return this.View(model);
 
-            var country = await this.countryService.GetCountryByIdAsync(model.Id);
+            var country = await this.countryService.GetByIdAsync(model.Id);
 
             if (country == null)
             {
@@ -89,23 +87,23 @@
 
             this.mapper.Map(model, country);
 
-            await this.countryService.UpdateCountryAsync(country);
+            await this.countryService.UpdateAsync(country);
 
-           return this.RedirectToAction("Index");
+            return this.RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
-            await this.countryService.RemoveCountryAsync(id);
+            await this.countryService.DeleteAsync(id);
 
-            return this.RedirectToAction("Index");
+            return this.RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
         public IActionResult Details(string id)
         {
-            var country = this.countryService.GetCountry<CountryDetailsViewModel>(id);
+            var country = this.countryService.GetById<CountryDetailsViewModel>(id);
 
             if (country == null)
             {

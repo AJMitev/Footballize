@@ -26,7 +26,7 @@
         [HttpGet]
         public IActionResult Add(string countryId)
         {
-            var country = this.countryService.GetCountry<CountryNameAndIdViewModel>(countryId);
+            var country = this.countryService.GetById<CountryNameAndIdViewModel>(countryId);
 
             if (country ==  null)
             {

@@ -6,11 +6,12 @@
 
     public interface ICountryService : IService
     {
-        Task<int> AddCountryAsync(Country country);
-        Task RemoveCountryAsync(string countryId);
-        TViewModel GetCountry<TViewModel>(string id);
-        Task<Country> GetCountryByIdAsync(string id);
-        IEnumerable<TViewModel> GetCountries<TViewModel>();
-        Task UpdateCountryAsync(Country country);
+        Task<string> AddAsync(string name, string isoCode);
+        Task DeleteAsync(string countryId);
+        TViewModel GetById<TViewModel>(string id);
+        //TODO: This should return DTO
+        Task<Country> GetByIdAsync(string id);
+        IEnumerable<TViewModel> All<TViewModel>();
+        Task UpdateAsync(Country country);
     }
 }

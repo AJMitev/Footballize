@@ -18,7 +18,7 @@
             var service = new CountryService(repo.Object);
 
             //Assert
-            Assert.Throws<ServiceException>(() => service.AddCountryAsync(null).GetAwaiter().GetResult());
+            Assert.Throws<ServiceException>(() => service.AddAsync(null).GetAwaiter().GetResult());
         }
 
         [Fact]
@@ -29,7 +29,7 @@
             var service = new CountryService(repo.Object);
 
             //Assert
-            Assert.Throws<ServiceException>(() => service.UpdateCountryAsync(null).GetAwaiter().GetResult());
+            Assert.Throws<ServiceException>(() => service.UpdateAsync(null).GetAwaiter().GetResult());
         }
 
         [Fact]
@@ -42,7 +42,7 @@
             //Act
             var country = new Country { Name = "Bulgaria" };
 
-            service.UpdateCountryAsync(country).GetAwaiter().GetResult();
+            service.UpdateAsync(country).GetAwaiter().GetResult();
 
             //Assert
             repo.Verify(x=>x.Update(country),Times.Once);
@@ -58,7 +58,7 @@
             var service = new CountryService(repo.Object);
 
             //Act
-            service.RemoveCountryAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult();
+            service.DeleteAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult();
 
             //Assert
             repo.Verify(x=>x.Delete(country),Times.Once);

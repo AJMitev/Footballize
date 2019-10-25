@@ -38,7 +38,7 @@
         [HttpGet("all/")]
         public IEnumerable<CountryNameAndIdViewModel> GetAll(string id)
         {
-            return this.countryService.GetCountries<CountryNameAndIdViewModel>();
+            return this.countryService.All<CountryNameAndIdViewModel>();
         }
     }
 }
