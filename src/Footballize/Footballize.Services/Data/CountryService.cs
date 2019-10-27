@@ -6,8 +6,9 @@
     using Common;
     using Exceptions;
     using Footballize.Data.Repositories;
+    using Footballize.Models;
+    using Footballize.Services.Models.Country;
     using Mapping;
-    using Models;
 
     public class CountryService : ICountryService
     {
@@ -17,39 +18,37 @@
             => this.countriesRepository = countriesRepository;
 
 
-        public Task<Country> GetByIdAsync(string id)
-        {
-            return this.countriesRepository.GetByIdAsync(id);
-        }
+        public CountryServiceModel GetByIdAsync(string id) 
+            => this.countriesRepository
+                .All()
+                .Where(x => x.Id == id)
+                .To<CountryServiceModel>()
+                .SingleOrDefault();
 
-        public IEnumerable<TViewModel> All<TViewModel>()
-        {
-            return this.countriesRepository
+        public IEnumerable<TViewModel> All<TViewModel>() 
+            => this.countriesRepository
                 .All()
                 .OrderBy(x => x.Name)
                 .To<TViewModel>()
                 .ToList();
-        }
 
-        public async Task UpdateAsync(Country country)
+        public async Task UpdateAsync(string id, string name, string isoCode)
         {
-            if (country == null)
-            {
-                throw new ServiceException(string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Country)));
-            }
+            var country = await this.countriesRepository.GetByIdAsync(id);
+
+            country.Name = name;
+            country.IsoCode = isoCode;
 
             this.countriesRepository.Update(country);
             await this.countriesRepository.SaveChangesAsync();
         }
 
-        public TViewModel GetById<TViewModel>(string id)
-        {
-            return this.countriesRepository
+        public TViewModel GetById<TViewModel>(string id) 
+            => this.countriesRepository
                 .All()
                 .Where(x => x.Id == id)
                 .To<TViewModel>()
                 .FirstOrDefault();
-        }
 
         public Task<string> AddAsync(string name, string isoCode)
         {
@@ -65,9 +64,9 @@
             return Task.FromResult(country.Id);
         }
 
-        public async Task DeleteAsync(string countryId)
+        public async Task DeleteAsync(string id)
         {
-            var countryToRemove = await this.countriesRepository.GetByIdAsync(countryId);
+            var countryToRemove = await this.countriesRepository.GetByIdAsync(id);
 
             if (countryToRemove == null)
             {

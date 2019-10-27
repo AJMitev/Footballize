@@ -2,52 +2,55 @@
 {
     using System.Linq;
     using System.Threading.Tasks;
-    using Common;
-    using Exceptions;
     using Footballize.Data.Repositories;
-    using Models;
+    using Footballize.Models;
+    using Mapping;
+    using Models.Address;
 
     public class AddressService : IAddressService
     {
         private readonly IDeletableEntityRepository<Address> addressRepository;
 
         public AddressService(IDeletableEntityRepository<Address> addressRepository)
+            => this.addressRepository = addressRepository;
+
+        public async Task<string> Create(string street, int number, double latitude, double longitude)
         {
-            this.addressRepository = addressRepository;
-        }
-
-        public async Task<string> CreateOrGetAddress(Address address)
-        {
-            if (address == null)
+            var address = new Address
             {
-                throw new ServiceException(string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Address)));
-            }
-
-            var currentAddress =  this.addressRepository
-                .All()
-                .SingleOrDefault(x=>x.Street.Equals(address.Street) && x.Number.Equals(address.Number));
-
-            if (currentAddress != null)
-            {
-                return currentAddress.Id;
-            }
-
-            string newAddressId = await this.CreateNewAddress(address);
-            return newAddressId;
-        }
-
-        private async Task<string> CreateNewAddress(Address address)
-        {
-            if (address == null)
-            {
-                throw new ServiceException(string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Address)));
-            }
-
-
+                Street = street,
+                Number = number,
+                Location = new Location
+                {
+                    Latitude = latitude,
+                    Longitude = longitude
+                }
+            };
+            
             await this.addressRepository.AddAsync(address);
             await this.addressRepository.SaveChangesAsync();
 
             return address.Id;
         }
+
+        public bool Exists(string street, int number)
+            => this.addressRepository
+                .All()
+                .Any(x => x.Street.Equals(street)
+                          && x.Number.Equals(number));
+
+        public TViewModel GetById<TViewModel>(string id)
+            => this.addressRepository
+                .All()
+                .Where(x => x.Id == id)
+                .To<TViewModel>()
+                .SingleOrDefault();
+
+        public AddressServiceModel GetByName(string street, int number)
+            => this.addressRepository
+                .All()
+                .Where(x => x.Street == street && x.Number == number)
+                .To<AddressServiceModel>()
+                .SingleOrDefault();
     }
 }

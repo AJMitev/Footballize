@@ -4,21 +4,22 @@
     using System.Collections.Generic;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
-    using Models;
+    using Footballize.Models;
+    using Footballize.Models.Enums;
+    using Models.Gather;
 
     public interface IGatherService : IService
     {
-        ICollection<TViewModel> GetGathers<TViewModel>();
-        ICollection<TViewModel> GetGathers<TViewModel>(Expression<Func<Gather, bool>> expression);
-        TViewModel GetGather<TViewModel>(string id);
-        Task<Gather> GetGatherAsync(string id);
-        Gather GetGatherWithPlayers(string id);
-        Task AddGatherAsync(Gather gather);
-        Task LeaveGatherAsync(Gather gather, string userId);
-        Task EnrollGatherAsync(Gather gather, User user);
-        Task StartGatherAsync(string id);
-        Task CompleteGatherAsync(string id);
-        Task DeleteGatherAsync(string id);
-        int GetGatherCount();
+        IEnumerable<TViewModel> GetAll<TViewModel>();
+        IEnumerable<TViewModel> GetAll<TViewModel>(Expression<Func<Gather, bool>> expression);
+        TViewModel GetById<TViewModel>(string id);
+        Task<GatherServiceModel> GetByIdAsync(string id);
+        Task<string> AddAsync(string title, string description, DateTime startingAt, TeamFormat teamFormat, string pitchId);
+        Task LeaveAsync(string gatherId, string userId);
+        Task EnrollAsync(string gatherId, string userId);
+        Task StartAsync(string id);
+        Task CompleteAsync(string id);
+        Task DeleteAsync(string id);
+        int GetCount();
     }
 }

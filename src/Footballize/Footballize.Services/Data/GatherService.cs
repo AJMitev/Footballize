@@ -5,48 +5,51 @@
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
-    using Common;
     using Exceptions;
     using Footballize.Data.Repositories;
+    using Footballize.Models;
+    using Footballize.Models.Enums;
     using Footballize.Services.Mapping;
+    using Footballize.Services.Models.Gather;
     using Microsoft.EntityFrameworkCore;
-    using Models;
-    using Models.Enums;
     using GlobalConstants = Common.GlobalConstants;
 
     public class GatherService : IGatherService
     {
         private readonly IDeletableEntityRepository<Gather> gatherRepository;
         private readonly IDeletableEntityRepository<GatherUser> gatherUserRepository;
+        private readonly IDeletableEntityRepository<User> userRepository;
+
         public GatherService(IDeletableEntityRepository<Gather> gatherRepository,
-            IDeletableEntityRepository<GatherUser> gatherUserRepository)
+            IDeletableEntityRepository<GatherUser> gatherUserRepository,
+            IDeletableEntityRepository<User> userRepository)
         {
             this.gatherRepository = gatherRepository;
             this.gatherUserRepository = gatherUserRepository;
+            this.userRepository = userRepository;
         }
-
-        public TViewModel GetGather<TViewModel>(string id)
+        
+        public async Task<string> AddAsync(string title, string description, DateTime startingAt, TeamFormat teamFormat, string pitchId)
         {
-            return this.gatherRepository
-                .All()
-                .Where(x => x.Id.Equals(id))
-                .To<TViewModel>()
-                .SingleOrDefault();
-        }
-
-        public async Task AddGatherAsync(Gather gather)
-        {
-            if (gather == null)
+            var gather = new Gather
             {
-                throw new ServiceException(string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Gather)));
-            }
+                Title = title,
+                Description = description,
+                StartingAt = startingAt,
+                TeamFormat = teamFormat,
+                PitchId = pitchId
+            };
 
             await this.gatherRepository.AddAsync(gather);
             await this.gatherRepository.SaveChangesAsync();
+
+            return gather.Id;
         }
 
-        public async Task LeaveGatherAsync(Gather gather, string userId)
+        public async Task LeaveAsync(string gatherId, string userId)
         {
+            var gather = await this.gatherRepository.GetByIdAsync(gatherId);
+
             if (gather == null)
             {
                 throw new ServiceException(
@@ -55,7 +58,7 @@
 
             if (gather.Status != GameStatus.Registration)
             {
-                throw new ServiceException(Common.GlobalConstants.KickPlayerOnlyInRegistrationModeErrorMessage);
+                throw new ServiceException(GlobalConstants.KickPlayerOnlyInRegistrationModeErrorMessage);
             }
 
             var gatherUser = gather?.Players.SingleOrDefault(u => u.UserId.Equals(userId));
@@ -70,12 +73,15 @@
             gather.Players.Remove(gatherUser);
             this.gatherRepository.Update(gather);
 
-            await this.gatherUserRepository.SaveChangesAsync();
             await this.gatherRepository.SaveChangesAsync();
         }
 
-        public async Task EnrollGatherAsync(Gather gather, User user)
+        public async Task EnrollAsync(string gatherId, string userId)
         {
+            var gather = await this.gatherRepository.GetByIdAsync(gatherId);
+            var user = await this.userRepository.GetByIdAsync(userId);
+
+
             if (gather == null)
             {
                 throw new ServiceException(
@@ -110,36 +116,15 @@
             };
 
             await this.gatherUserRepository.AddAsync(gatherUser);
-
             gather.Players.Add(gatherUser);
             this.gatherRepository.Update(gather);
+
             await this.gatherRepository.SaveChangesAsync();
         }
 
-        public ICollection<TViewModel> GetGathers<TViewModel>()
-        {
-            return this.gatherRepository
-                .All()
-                .Where(x=>x.StartingAt > DateTime.UtcNow)
-                .OrderBy(x=>x.StartingAt)
-                .ThenBy(x=>x.Status)
-                .To<TViewModel>()
-                .ToList();
-        }
 
-        public ICollection<TViewModel> GetGathers<TViewModel>(Expression<Func<Gather,bool>> expression)
-        {
-            return this.gatherRepository
-                .All()
-                .Where(x=>x.StartingAt > DateTime.UtcNow)
-                .Where(expression)
-                .OrderBy(x=>x.StartingAt)
-                .ThenBy(x=>x.Status)
-                .To<TViewModel>()
-                .ToList();
-        }
 
-        public async Task StartGatherAsync(string id)
+        public async Task StartAsync(string id)
         {
             var gather = await this.gatherRepository.GetByIdAsync(id);
 
@@ -165,7 +150,7 @@
             await this.gatherRepository.SaveChangesAsync();
         }
 
-        public async Task CompleteGatherAsync(string id)
+        public async Task CompleteAsync(string id)
         {
             var game = await this.gatherRepository.GetByIdAsync(id);
 
@@ -186,7 +171,7 @@
             await this.gatherRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteGatherAsync(string id)
+        public async Task DeleteAsync(string id)
         {
             var gatherToDelete = await this.gatherRepository.GetByIdAsync(id);
 
@@ -200,22 +185,40 @@
             await this.gatherRepository.SaveChangesAsync();
         }
 
-        public int GetGatherCount()
-        {
-            return this.gatherRepository.All().Count();
-        }
-
-        public async Task<Gather> GetGatherAsync(string id)
-        {
-            return await this.gatherRepository.GetByIdAsync(id);
-        }
-
-        public Gather GetGatherWithPlayers(string id)
-        {
-            return this.gatherRepository
+        public int GetCount() 
+            => this.gatherRepository
                 .All()
-                .Include(x => x.Players)
-                .SingleOrDefault(x => x.Id == id);
-        }
+                .Count();
+
+        public TViewModel GetById<TViewModel>(string id)
+           => this.gatherRepository
+               .All()
+               .Where(x => x.Id.Equals(id))
+               .To<TViewModel>()
+               .SingleOrDefault();
+
+       public async Task<GatherServiceModel> GetByIdAsync(string id)
+           => await this.gatherRepository
+               .All()
+               .Where(x => x.Id == id)
+               .To<GatherServiceModel>()
+               .SingleAsync();
+
+
+       IEnumerable<TViewModel> IGatherService.GetAll<TViewModel>()
+            => this.gatherRepository
+                .All()
+                .To<TViewModel>()
+                .ToList();
+
+        IEnumerable<TViewModel> IGatherService.GetAll<TViewModel>(Expression<Func<Gather, bool>> expression) 
+            => this.gatherRepository
+                .All()
+                .Where(x => x.StartingAt > DateTime.UtcNow)
+                .Where(expression)
+                .OrderBy(x => x.StartingAt)
+                .ThenBy(x => x.Status)
+                .To<TViewModel>()
+                .ToList();
     }
 }

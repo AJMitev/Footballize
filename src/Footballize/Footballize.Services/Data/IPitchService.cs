@@ -2,17 +2,19 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using DTOs;
-    using Models;
+    using Footballize.Models;
+    using Models.Pitch;
 
     public interface IPitchService : IService
     {
-        Task AddPitchAsync(Pitch pitch);
-        IEnumerable<TViewModel> GetPitches<TViewModel>();
-        IEnumerable<MostUsedPitchDTO> GetMostUsedPitches(int count = 3);
-        TViewModel GetPitch<TViewModel>(string id);
-        Task UpdatePitchAsync(Pitch pitch);
-        Task RemovePitchAsync(Pitch pitch);
-        IEnumerable<TViewModel> GetPitchesByTownId<TViewModel>(string id);
+        Task AddAsync(string name, string addressId);
+        IEnumerable<TViewModel> GetAll<TViewModel>();
+        IEnumerable<MostUsedPitchServiceModel> GetMostUsed(int count = 3);
+        Task<PitchServiceModel> GetByIdAsync(string id);
+        TViewModel GetById<TViewModel>(string id);
+        Task UpdateAsync(string id, string name, string addressId);
+        Task RemoveAsync(string id);
+        bool Exist(string name, string addressId);
+        IEnumerable<TViewModel> GetByTownId<TViewModel>(string id);
     }
 }

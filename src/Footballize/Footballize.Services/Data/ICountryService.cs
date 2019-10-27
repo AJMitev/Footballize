@@ -2,16 +2,15 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Models;
+    using Models.Country;
 
     public interface ICountryService : IService
     {
         Task<string> AddAsync(string name, string isoCode);
-        Task DeleteAsync(string countryId);
+        Task DeleteAsync(string id);
         TViewModel GetById<TViewModel>(string id);
-        //TODO: This should return DTO
-        Task<Country> GetByIdAsync(string id);
+        CountryServiceModel GetByIdAsync(string id);
         IEnumerable<TViewModel> All<TViewModel>();
-        Task UpdateAsync(Country country);
+        Task UpdateAsync(string id, string name, string isoCode);
     }
 }

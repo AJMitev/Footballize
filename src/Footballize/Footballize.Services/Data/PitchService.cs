@@ -1,16 +1,15 @@
 ﻿namespace Footballize.Services.Data
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Common;
-    using DTOs;
     using Exceptions;
     using Footballize.Data.Repositories;
+    using Footballize.Models;
     using Mapping;
     using Microsoft.EntityFrameworkCore;
-    using Models;
+    using Models.Pitch;
 
     public class PitchService : IPitchService
     {
@@ -37,44 +36,68 @@
             await this.pitchRepository.SaveChangesAsync();
         }
 
-        public IEnumerable<MostUsedPitchDTO> GetMostUsedPitches(int count = 3)
-        {
-            var mostUsedInGather = GetMostUsedPitchesInGathers().ToList();
-            var mostUsedInRecruiting = GetMostUsedPitchesInRecruitingGames().ToList();
-            HashSet<MostUsedPitchDTO> mostUsedPitches = GetMostUsedPitchFromAllGames(mostUsedInGather, mostUsedInRecruiting);
-
-            return mostUsedPitches.Take(count);
-        }
-        
-        public TViewModel GetPitch<TViewModel>(string id) => this.pitchRepository
+        public TViewModel GetById<TViewModel>(string id)
+            => this.pitchRepository
                 .All()
                 .Where(x => x.Id.Equals(id))
                 .To<TViewModel>()
                 .SingleOrDefault();
 
-        public IEnumerable<TViewModel> GetPitches<TViewModel>() => this.pitchRepository
+        public IEnumerable<TViewModel> GetAll<TViewModel>()
+            => this.pitchRepository
                 .All()
                 .OrderBy(x => x.Name)
-                .Include(x=>x.Address)
-                .ThenInclude(x=>x.Location)
-                .Include(x=>x.Address)
-                .ThenInclude(x=>x.Town)
-                .ThenInclude(x=>x.Province)
-                .ThenInclude(x=>x.Country)
+                .Include(x => x.Address)
+                .ThenInclude(x => x.Location)
+                .Include(x => x.Address)
+                .ThenInclude(x => x.Town)
+                .ThenInclude(x => x.Province)
+                .ThenInclude(x => x.Country)
                 .To<TViewModel>()
                 .ToList();
 
-        public IEnumerable<TViewModel> GetPitchesByTownId<TViewModel>(string id)
-        {
-            return this.pitchRepository
+        public IEnumerable<TViewModel> GetByTownId<TViewModel>(string id)
+            => this.pitchRepository
                  .All()
                  .Where(x => x.Address.TownId.Equals(id))
                  .OrderBy(x => x.Name)
                  .To<TViewModel>();
+
+        public async Task<PitchServiceModel> GetByIdAsync(string id)
+            => await this.pitchRepository
+                .All()
+                .Where(x => x.Id == id)
+                .To<PitchServiceModel>()
+                .SingleAsync();
+
+        public async Task AddAsync(string name, string addressId)
+        {
+            var pitch = new Pitch
+            {
+                Name = name,
+                AddressId = addressId
+            };
+
+            await this.pitchRepository.AddAsync(pitch);
+            await this.pitchRepository.SaveChangesAsync();
         }
 
-        public async Task RemovePitchAsync(Pitch pitch)
+        public async Task UpdateAsync(string id, string name, string addressId)
         {
+            var pitch = await this.pitchRepository.GetByIdAsync(id);
+
+            pitch.Name = name;
+            pitch.AddressId = addressId;
+
+            this.pitchRepository.Update(pitch);
+            await this.pitchRepository.SaveChangesAsync();
+        }
+
+        public async Task RemoveAsync(string id)
+        {
+            var pitch = await this.pitchRepository.GetByIdAsync(id);
+
+            // TODO: Should I throw exception into the services?
             if (pitch == null)
             {
                 throw new ServiceException(
@@ -84,22 +107,23 @@
             this.pitchRepository.Delete(pitch);
             await this.pitchRepository.SaveChangesAsync();
         }
+        public bool Exist(string name, string addressId)
+            => this.pitchRepository
+                .All()
+                .Any(x => x.Name == name && x.AddressId == addressId);
 
-        public async Task UpdatePitchAsync(Pitch pitch)
+        public IEnumerable<MostUsedPitchServiceModel> GetMostUsed(int count = 3)
         {
-            if (pitch == null)
-            {
-                throw new ServiceException(
-                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Pitch)));
-            }
+            var mostUsedInGather = GetMostUsedPitchesInGathers().ToList();
+            var mostUsedInRecruiting = GetMostUsedPitchesInRecruitingGames().ToList();
+            HashSet<MostUsedPitchServiceModel> mostUsedPitches = GetMostUsedPitchFromAllGames(mostUsedInGather, mostUsedInRecruiting);
 
-            this.pitchRepository.Update(pitch);
-            await this.pitchRepository.SaveChangesAsync();
+            return mostUsedPitches.Take(count);
         }
 
-        private HashSet<MostUsedPitchDTO> GetMostUsedPitchFromAllGames(ICollection<MostUsedPitchDTO> mostUsedInGather, ICollection<MostUsedPitchDTO> mostUsedInRecruiting)
+        private HashSet<MostUsedPitchServiceModel> GetMostUsedPitchFromAllGames(ICollection<MostUsedPitchServiceModel> mostUsedInGather, ICollection<MostUsedPitchServiceModel> mostUsedInRecruiting)
         {
-            var mostUsedPitches = new HashSet<MostUsedPitchDTO>(mostUsedInGather);
+            var mostUsedPitches = new HashSet<MostUsedPitchServiceModel>(mostUsedInGather);
 
             foreach (var pitch in mostUsedInRecruiting)
             {
@@ -125,27 +149,25 @@
 
                     continue;
                 }
-
-
-
+                
                 mostUsedPitches.Add(pitch);
             }
 
             return mostUsedPitches;
         }
 
-        private IEnumerable<MostUsedPitchDTO> GetMostUsedPitchesInRecruitingGames()
+        private IEnumerable<MostUsedPitchServiceModel> GetMostUsedPitchesInRecruitingGames()
         {
             return this.recruitmentRepository.All().GroupBy(x => x.Pitch.Id,
                 x => x.Pitch.Name,
-                (k, g) => new MostUsedPitchDTO { Id = k, Name = g.FirstOrDefault(), TimesUsed = g.Count() }).ToList();
+                (k, g) => new MostUsedPitchServiceModel { Id = k, Name = g.FirstOrDefault(), TimesUsed = g.Count() }).ToList();
         }
 
-        private IEnumerable<MostUsedPitchDTO> GetMostUsedPitchesInGathers()
+        private IEnumerable<MostUsedPitchServiceModel> GetMostUsedPitchesInGathers()
         {
             return this.gatherRepository.All().GroupBy(x => x.Pitch.Id,
                 x => x.Pitch.Name,
-                (k, g) => new MostUsedPitchDTO { Id = k, Name = g.FirstOrDefault(), TimesUsed = g.Count() }).ToList();
+                (k, g) => new MostUsedPitchServiceModel { Id = k, Name = g.FirstOrDefault(), TimesUsed = g.Count() }).ToList();
         }
     }
 }

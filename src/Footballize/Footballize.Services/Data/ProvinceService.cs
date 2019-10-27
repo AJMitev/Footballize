@@ -6,8 +6,8 @@
     using Common;
     using Exceptions;
     using Footballize.Data.Repositories;
+    using Footballize.Models;
     using Mapping;
-    using Models;
 
     public class ProvinceService : IProvinceService
     {
@@ -18,37 +18,33 @@
             this.provincesRepository = provincesRepository;
         }
 
-        public IEnumerable<TViewModel> GetProvinces<TViewModel>()
-        {
-            return this.provincesRepository
+        public IEnumerable<TViewModel> GetAll<TViewModel>()
+            => this.provincesRepository
                 .All()
                 .OrderBy(x => x.Name)
                 .To<TViewModel>();
-        }
 
-        public IEnumerable<TViewModel> GetProvincesByCountry<TViewModel>(string countryId)
-        {
-            return this.provincesRepository
+        public IEnumerable<TViewModel> GetAllByCountry<TViewModel>(string id)
+            => this.provincesRepository
                 .All()
-                .Where(p => p.CountryId.Equals(countryId))
+                .Where(p => p.CountryId.Equals(id))
                 .OrderBy(p => p.Name)
                 .ThenByDescending(p => p.Towns.Count)
                 .To<TViewModel>();
-        }
 
-        public async Task CreateProvinceAsync(Province province)
+        public async Task AddAsync(string name, string countryId)
         {
-            if (province == null)
+            var province = new Province
             {
-                throw new ServiceException(
-                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Province)));
-            }
+                Name = name,
+                CountryId = countryId
+            };
 
             await this.provincesRepository.AddAsync(province);
             await this.provincesRepository.SaveChangesAsync();
         }
 
-        public async Task RemoveProvinceAsync(string id)
+        public async Task RemoveAsync(string id)
         {
             var provinceToRemove = await this.provincesRepository.GetByIdAsync(id);
 
@@ -61,17 +57,17 @@
             await this.provincesRepository.SaveChangesAsync();
         }
 
-        public TViewModel GetProvince<TViewModel>(string id)
-        {
-            return this.provincesRepository
+        public TViewModel GetById<TViewModel>(string id) 
+            => this.provincesRepository
                 .All()
                 .Where(x => x.Id == id)
                 .To<TViewModel>()
                 .SingleOrDefault();
-        }
 
-        public async Task UpdateProvinceAsync(Province province)
+        public async Task UpdateAsync(string id, string name, string countryId)
         {
+            var province = await this.provincesRepository.GetByIdAsync(id);
+
             if (province == null)
             {
                 throw new ServiceException(
