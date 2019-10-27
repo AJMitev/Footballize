@@ -12,8 +12,8 @@
             this.Addresses = new HashSet<Address>();
         }
         public string Name { get; set; }
-        public virtual Province Province { get; set; }
+        public Province Province { get; set; }
         public string ProvinceId { get; set; }
-        public virtual ICollection<Address> Addresses { get; set; }
+        public ICollection<Address> Addresses { get; set; }
     }
 }

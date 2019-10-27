@@ -11,7 +11,7 @@
         }
 
         public string Name { get; set; }
-        public virtual Address Address { get; set; }
+        public Address Address { get; set; }
         public string AddressId { get; set; }
     }
 }

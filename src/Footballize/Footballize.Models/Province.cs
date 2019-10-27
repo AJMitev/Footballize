@@ -13,8 +13,8 @@
         }
 
         public string Name { get; set; }
-        public virtual Country Country { get; set; }
+        public Country Country { get; set; }
         public string CountryId { get; set; }
-        public virtual ICollection<Town> Towns { get; set; }
+        public ICollection<Town> Towns { get; set; }
     }
 }
