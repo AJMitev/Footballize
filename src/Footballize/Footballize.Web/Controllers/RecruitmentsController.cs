@@ -36,7 +36,7 @@
             id = Math.Max(1, id);
             var skip = (id - 1) * ItemsPerPage;
 
-            var games = this.recruitmentService.GetRecruitments<RecruitmentIndexViewModel>(x => x.StartingAt > DateTime.UtcNow);
+            var games = this.recruitmentService.GetAll<RecruitmentIndexViewModel>(x => x.StartingAt > DateTime.UtcNow);
 
             var filtered = games.Skip(skip).Take(ItemsPerPage).ToList();
 
@@ -73,7 +73,7 @@
 
             try
             {
-                await this.recruitmentService.AddRecruitmentAsync(newRecruitment);
+                await this.recruitmentService.AddAsync(newRecruitment);
 
                 return this.RedirectToAction("Index");
             }
@@ -87,7 +87,7 @@
         [HttpGet]
         public IActionResult Details(string id)
         {
-            var game = this.recruitmentService.GetRecruitment<RecruitmentDetailsViewModel>(id);
+            var game = this.recruitmentService.GetById<RecruitmentDetailsViewModel>(id);
 
             if (game == null)
             {
@@ -100,7 +100,7 @@
         [HttpGet]
         public async Task<IActionResult> Start(string id)
         {
-            var game = this.recruitmentService.GetRecruitment<RecruitmentDetailsViewModel>(id);
+            var game = this.recruitmentService.GetById<RecruitmentDetailsViewModel>(id);
             var currentUser = await this.userManager.GetUserAsync(User);
 
             if (game == null || currentUser == null)
@@ -115,7 +115,7 @@
 
             try
             {
-                await this.recruitmentService.StartRecruitmentAsync(id);
+                await this.recruitmentService.StartAsync(id);
 
                 return this.RedirectToAction("Details", new { id });
             }
@@ -129,7 +129,7 @@
         [HttpGet]
         public async Task<IActionResult> Complete(string id)
         {
-            var game = this.recruitmentService.GetRecruitment<RecruitmentDetailsViewModel>(id);
+            var game = this.recruitmentService.GetById<RecruitmentDetailsViewModel>(id);
             var currentUser = await this.userManager.GetUserAsync(User);
 
             if (game == null || currentUser == null)
@@ -144,7 +144,7 @@
 
             try
             {
-                await this.recruitmentService.CompleteRecruitmentAsync(id);
+                await this.recruitmentService.CompleteAsync(id);
 
                 return this.RedirectToAction("Details", new { id });
             }
@@ -159,7 +159,7 @@
         public async Task<IActionResult> Enroll(string id)
         {
             var currentUser = await this.userManager.GetUserAsync(User);
-            var game = this.recruitmentService.GetRecruitment<RecruitmentDetailsViewModel>(id);
+            var game = this.recruitmentService.GetById<RecruitmentDetailsViewModel>(id);
 
             if (currentUser == null)
             {
@@ -168,7 +168,7 @@
 
             try
             {
-                await this.recruitmentService.EnrollRecruitmentAsync(game.Id, currentUser);
+                await this.recruitmentService.EnrollAsync(game.Id, currentUser);
 
                 return this.RedirectToAction("Details", new { id });
             }
@@ -183,7 +183,7 @@
         public async Task<IActionResult> Leave(string id)
         {
             var currentUser = await this.userManager.GetUserAsync(User);
-            var game = await this.recruitmentService.GetRecruitmentAsync(id);
+            var game = await this.recruitmentService.GetByIdAsync(id);
 
             if (currentUser == null || game == null)
             {
@@ -192,7 +192,7 @@
 
             try
             {
-                await this.recruitmentService.LeaveRecruitmentAsync(game, currentUser.Id);
+                await this.recruitmentService.LeaveAsync(game, currentUser.Id);
 
                 return this.RedirectToAction("Details", new { id });
 
@@ -207,7 +207,7 @@
         [HttpGet]
         public async Task<IActionResult> Kick(string gameId, string playerId)
         {
-            var game = await this.recruitmentService.GetRecruitmentAsync(gameId);
+            var game = await this.recruitmentService.GetByIdAsync(gameId);
             var currentUser = await this.userManager.GetUserAsync(User);
 
             if (game.Creator != currentUser)
@@ -217,7 +217,7 @@
 
             try
             {
-                await this.recruitmentService.LeaveRecruitmentAsync(game, playerId);
+                await this.recruitmentService.LeaveAsync(game, playerId);
                 return this.RedirectToAction("Details", new { gameId });
             }
             catch (ServiceException e)
@@ -230,7 +230,7 @@
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
-            var game = await this.recruitmentService.GetRecruitmentAsync(id);
+            var game = await this.recruitmentService.GetByIdAsync(id);
             var currentUser = await this.userManager.GetUserAsync(User);
 
             if (game == null || currentUser == null)
@@ -243,7 +243,7 @@
                 return this.Unauthorized();
             }
 
-            await this.recruitmentService.DeleteRecruitmentAsync(id);
+            await this.recruitmentService.DeleteAsync(id);
 
             return this.RedirectToAction("Index");
         }

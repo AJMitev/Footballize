@@ -30,7 +30,7 @@
             await this.townRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteTownAsync(string id)
+        public async Task DeleteAsync(string id)
         {
             var townToDelete = await this.townRepository.GetByIdAsync(id);
 
@@ -43,7 +43,7 @@
             await this.townRepository.SaveChangesAsync();
         }
 
-        public TViewModel GetTown<TViewModel>(string id)
+        public TViewModel GetById<TViewModel>(string id)
         {
             return this.townRepository
                 .All()
@@ -52,7 +52,7 @@
                 .SingleOrDefault();
         }
 
-        public IEnumerable<TViewModel> GetTownsByCountry<TViewModel>(string countryId)
+        public IEnumerable<TViewModel> GetByCountryId<TViewModel>(string countryId)
         {
             return this.townRepository
                 .All()
@@ -61,7 +61,7 @@
                 .To<TViewModel>();
         }
 
-        public async Task UpdateTownAsync(Town town)
+        public async Task UpdateAsync(Town town)
         {
             if (town == null)
             {

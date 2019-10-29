@@ -51,7 +51,7 @@
             var service = new ProvinceService(repo.Object);
 
 
-            service.RemoveProvinceAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult();
+            service.RemoveAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult();
 
             repo.Verify(x => x.Delete(province), Times.Once);
         }
@@ -64,7 +64,7 @@
             var service = new ProvinceService(repo.Object);
 
 
-            Assert.Throws<ServiceException>(() => service.RemoveProvinceAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
+            Assert.Throws<ServiceException>(() => service.RemoveAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
 
         }
 
@@ -75,7 +75,7 @@
             repo.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns(Task.FromResult<Province>(null));
             var service = new ProvinceService(repo.Object);
 
-            Assert.Throws<ServiceException>(() => service.UpdateProvinceAsync(null).GetAwaiter().GetResult());
+            Assert.Throws<ServiceException>(() => service.UpdateAsync(null).GetAwaiter().GetResult());
         }
 
         [Fact]
@@ -90,7 +90,7 @@
             var repo = new Mock<IDeletableEntityRepository<Province>>();
             var service = new ProvinceService(repo.Object);
 
-            service.UpdateProvinceAsync(province).GetAwaiter().GetResult();
+            service.UpdateAsync(province).GetAwaiter().GetResult();
 
             repo.Verify(x => x.Update(province), Times.Once);
         }

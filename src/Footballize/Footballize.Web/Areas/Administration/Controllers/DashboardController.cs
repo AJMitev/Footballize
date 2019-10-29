@@ -35,11 +35,11 @@
             var indexModel = new IndexViewModel
             {
                 Id = currentUser.Id,
-                RecruitmentsCount = this.recruitmentService.GetRecruitments<RecruitmentIndexViewModel>().Count,
+                RecruitmentsCount = this.recruitmentService.GetAll<RecruitmentIndexViewModel>().Count,
                 BannedPlayersCount = bannedPlayers.Count,
                 BannedUsers = bannedPlayers,
                 RegisteredUsersCount = this.userService.GetUsersCount(),
-                GathersPlayedCount = this.gatherService.GetGatherCount(),
+                GathersPlayedCount = this.gatherService.GetCount(),
                 ReportedUsers = this.userService.GetUserReports<ReportedUsersViewModel>()
             };
 

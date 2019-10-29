@@ -87,7 +87,7 @@
 
             this.mapper.Map(model, country);
 
-            await this.countryService.UpdateAsync(country);
+            await this.countryService.UpdateAsync(model.Id, model.Name, model.IsoCode);
 
             return this.RedirectToAction(nameof(Index));
         }

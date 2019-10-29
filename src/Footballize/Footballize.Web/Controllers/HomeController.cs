@@ -32,7 +32,7 @@
                 .Take(8)
                 .ToList();
 
-            var recruitments = this.recruitmentService.GetRecruitments<HomeGameViewModel>()
+            var recruitments = this.recruitmentService.GetAll<HomeGameViewModel>()
                 .Take(8)
                 .ToList();
 

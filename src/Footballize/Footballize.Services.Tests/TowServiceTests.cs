@@ -38,7 +38,7 @@
             repo.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns(Task.FromResult<Town>(null));
             var service = new TownService(repo.Object);
 
-            Assert.Throws<ServiceException>(() => service.DeleteTownAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
+            Assert.Throws<ServiceException>(() => service.DeleteAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
         }
 
         [Fact]
@@ -47,7 +47,7 @@
             var repo = new Mock<IDeletableEntityRepository<Town>>();
             var service = new TownService(repo.Object);
 
-            Assert.Throws<ServiceException>(() => service.UpdateTownAsync(null).GetAwaiter().GetResult());
+            Assert.Throws<ServiceException>(() => service.UpdateAsync(null).GetAwaiter().GetResult());
         }
     }
 }

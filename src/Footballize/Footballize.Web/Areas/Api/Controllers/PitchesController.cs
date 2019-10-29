@@ -18,7 +18,7 @@
         [HttpGet("{id}")]
         public IEnumerable<PitchNameAndIdViewModel> Get(string id)
         {
-            return this.pitchService.GetPitchesByTownId<PitchNameAndIdViewModel>(id);
+            return this.pitchService.GetByTownId<PitchNameAndIdViewModel>(id);
         }
     }
 }

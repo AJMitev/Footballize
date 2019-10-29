@@ -50,7 +50,7 @@
         [HttpGet]
         public IActionResult Edit(string id)
         {
-            var townToEdit = this.townService.GetTown<TownEditViewModel>(id);
+            var townToEdit = this.townService.GetById<TownEditViewModel>(id);
 
             if (townToEdit ==  null)
             {
@@ -69,21 +69,21 @@
             }
 
 
-            await this.townService.UpdateTownAsync(this.mapper.Map<Town>(model));
+            await this.townService.UpdateAsync(this.mapper.Map<Town>(model));
             return this.RedirectToAction("Details", "Provinces", new { id = model.ProvinceId });
         }
 
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
-            var provinceId = this.townService.GetTown<TownEditViewModel>(id).ProvinceId;
+            var provinceId = this.townService.GetById<TownEditViewModel>(id).ProvinceId;
 
             if (provinceId ==  null)
             {
                 return this.NotFound();
             }
 
-            await this.townService.DeleteTownAsync(id);
+            await this.townService.DeleteAsync(id);
 
             return this.RedirectToAction("Details", "Provinces", new { id = provinceId });
         }

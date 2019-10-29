@@ -4,19 +4,22 @@
     using System.Collections.Generic;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
-    using Models;
+    using Footballize.Models;
+    using Footballize.Models.Enums;
+    using Models.Recruitment;
 
     public interface IRecruitmentService : IService
     {
-        ICollection<TViewModel> GetRecruitments<TViewModel>();
-        ICollection<TViewModel> GetRecruitments<TViewModel>(Expression<Func<Recruitment, bool>> expression);
-        TViewModel GetRecruitment<TViewModel>(string id);
-        Task<Recruitment> GetRecruitmentAsync(string id);
-        Task AddRecruitmentAsync(Recruitment recruitment);
-        Task LeaveRecruitmentAsync(Recruitment recruitment, string userId);
-        Task EnrollRecruitmentAsync(string gameId, User user);
-        Task StartRecruitmentAsync(string id);
-        Task CompleteRecruitmentAsync(string id);
-        Task DeleteRecruitmentAsync(string id);
+        ICollection<TViewModel> GetAll<TViewModel>();
+        ICollection<TViewModel> GetAll<TViewModel>(Expression<Func<Recruitment, bool>> expression);
+        TViewModel GetById<TViewModel>(string id);
+        Task<RecruitmentServiceModel> GetByIdAsync(string id);
+        Task AddAsync(string title, DateTime startingAt, string pitchId, string creatorId, int maximumPlayers, GameStatus gameStatus);
+        Task LeaveAsync(string gameId, string userId);
+        Task EnrollAsync(string gameId, string userId);
+        Task StartAsync(string id);
+        Task CompleteAsync(string id);
+        Task DeleteAsync(string id);
+        bool Exist(string id);
     }
 }

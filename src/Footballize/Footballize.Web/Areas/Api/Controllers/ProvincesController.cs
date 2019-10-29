@@ -18,7 +18,7 @@
         [HttpGet("{id}")]
         public IEnumerable<ProvinceNameAndIdViewModel> Get(string id)
         {
-            var provinces = this.provinceService.GetProvincesByCountry<ProvinceNameAndIdViewModel>(id);
+            var provinces = this.provinceService.GetAllByCountry<ProvinceNameAndIdViewModel>(id);
 
             return provinces;
         }

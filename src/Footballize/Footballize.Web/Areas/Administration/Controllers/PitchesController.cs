@@ -9,7 +9,6 @@
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Services.Data;
-    using ViewModels.Dashboard;
     using ViewModels.Pitches;
 
     public class PitchesController : AdminController
@@ -31,7 +30,7 @@
         [HttpGet]
         public IActionResult Index(int id)
         {
-            var fields = this.pitchService.GetPitches<PitchIndexViewModel>().ToList();
+            var fields = this.pitchService.GetAll<PitchIndexViewModel>().ToList();
             id = Math.Max(1, id);
             var skip = (id - 1) * PitchesListViewModel.ItemsPerPage;
 
@@ -66,14 +65,22 @@
                 return this.View();
             }
 
-            var location = this.mapper.Map<Location>(model);
-            var newAddress = this.mapper.Map<Address>(model);
-            newAddress.Location = location;
-            var addressId = await this.addressService.CreateOrGetAddress(newAddress);
+            string addressId;
+            if (this.addressService.Exists(model.Street, model.Number))
+            {
+                addressId = this.addressService.GetByName(model.Street, model.Number).Id;
+            }
+            else
+            {
+                addressId = await this.addressService.Create(model.Street, model.Number, model.Latitude, model.Longitude);
+            }
+            
             var playfield = this.mapper.Map<Pitch>(model);
             playfield.AddressId = addressId;
-            await this.pitchService.AddPitchAsync(playfield);
 
+            await this.pitchService.AddAsync(playfield);
+
+            // Extract this to separate service
             var folderPath = hostingEnvironment.WebRootPath + "/img/fields/";
             Directory.CreateDirectory(folderPath);
 
@@ -89,7 +96,7 @@
         [HttpGet]
         public IActionResult Edit(string id)
         {
-            var model = this.pitchService.GetPitch<PitchEditViewModel>(id);
+            var model = this.pitchService.GetById<PitchEditViewModel>(id);
 
             if (model == null)
             {
@@ -107,7 +114,7 @@
                 return this.View(this.mapper.Map<PitchEditViewModel>(model));
             }
             
-            await this.pitchService.UpdatePitchAsync(this.mapper.Map<Pitch>(model));
+            await this.pitchService.UpdateAsync(this.mapper.Map<Pitch>(model));
 
             var folderPath = hostingEnvironment.WebRootPath + "/img/fields/";
             Directory.CreateDirectory(folderPath);
@@ -125,14 +132,14 @@
         public async Task<IActionResult> Delete(string id)
         {
 
-            var field =  this.pitchService.GetPitch<PitchNameAndIdViewModel>(id);
+            var field =  this.pitchService.GetById<PitchNameAndIdViewModel>(id);
 
             if (field == null)
             {
                 return this.NotFound();
             }
 
-            await this.pitchService.RemovePitchAsync(this.mapper.Map<Pitch>(field));
+            await this.pitchService.RemoveAsync(this.mapper.Map<Pitch>(field));
 
             return this.RedirectToAction("Index");
         }

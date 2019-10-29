@@ -20,7 +20,7 @@
             var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
             var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
-            Assert.Throws<ServiceException>(() => service.AddRecruitmentAsync(null).GetAwaiter().GetResult());
+            Assert.Throws<ServiceException>(() => service.AddAsync(null).GetAwaiter().GetResult());
         }
 
         [Fact]
@@ -32,7 +32,7 @@
 
             var entity = new Recruitment();
 
-            service.AddRecruitmentAsync(entity).GetAwaiter().GetResult();
+            service.AddAsync(entity).GetAwaiter().GetResult();
 
             repo.Verify(x => x.AddAsync(entity), Times.Once);
         }
@@ -46,7 +46,7 @@
 
             var entity = new Recruitment();
 
-            Assert.Throws<ServiceException>(() => service.LeaveRecruitmentAsync(entity, null).GetAwaiter().GetResult());
+            Assert.Throws<ServiceException>(() => service.LeaveAsync(entity, null).GetAwaiter().GetResult());
         }
 
         [Fact]
@@ -58,7 +58,7 @@
 
             var entity = new Recruitment();
 
-            Assert.Throws<ServiceException>(() => service.LeaveRecruitmentAsync(null, "70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
+            Assert.Throws<ServiceException>(() => service.LeaveAsync(null, "70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
         }
 
         [Theory]
@@ -78,7 +78,7 @@
 
 
             Assert.Throws<ServiceException>(() =>
-                service.LeaveRecruitmentAsync(entity, "70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
+                service.LeaveAsync(entity, "70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
         }
 
         
@@ -91,7 +91,7 @@
 
             var user = new User();
 
-            Assert.Throws<ServiceException>(() => service.EnrollRecruitmentAsync(null, user).GetAwaiter().GetResult());
+            Assert.Throws<ServiceException>(() => service.EnrollAsync(null, user).GetAwaiter().GetResult());
         }
 
 
@@ -108,7 +108,7 @@
             var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
             Assert.Throws<ServiceException>(() =>
-                service.StartRecruitmentAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
+                service.StartAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
         }
 
         [Fact]
@@ -129,7 +129,7 @@
             var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
             Assert.Throws<ServiceException>(() =>
-                service.StartRecruitmentAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
+                service.StartAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
         }
 
         [Fact]
@@ -141,7 +141,7 @@
             var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
             Assert.Throws<ServiceException>(() =>
-                service.StartRecruitmentAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
+                service.StartAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
         }
 
         [Fact]
@@ -154,7 +154,7 @@
             var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
             var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
-            service.StartRecruitmentAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult();
+            service.StartAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult();
 
             Assert.Equal(GameStatus.Started, game.Status);
         }
@@ -173,7 +173,7 @@
             var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
             Assert.Throws<ServiceException>(() =>
-                service.CompleteRecruitmentAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
+                service.CompleteAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
         }
 
         [Fact]
@@ -185,7 +185,7 @@
             var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
             Assert.Throws<ServiceException>(() =>
-                service.CompleteRecruitmentAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
+                service.CompleteAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
         }
 
         [Fact]
@@ -197,7 +197,7 @@
             var userRecruitRepo = new Mock<IDeletableEntityRepository<RecruitmentUser>>();
             var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
-            service.CompleteRecruitmentAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult();
+            service.CompleteAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult();
 
             Assert.Equal(GameStatus.Finished, game.Status);
         }
@@ -211,7 +211,7 @@
             var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
             Assert.Throws<ServiceException>(() =>
-                service.DeleteRecruitmentAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
+                service.DeleteAsync("70400fb3-aed2-4876-aa9a-bcf8ba49ca9f").GetAwaiter().GetResult());
         }
 
         [Fact]
@@ -225,7 +225,7 @@
             var service = new RecruitmentService(repo.Object, userRecruitRepo.Object);
 
             var expected = "70400fb3-aed2-4876-aa9a-bcf8ba49ca9f";
-            var actual = service.GetRecruitmentAsync(expected).GetAwaiter().GetResult().Id;
+            var actual = service.GetByIdAsync(expected).GetAwaiter().GetResult().Id;
 
             Assert.Equal(expected, actual);
         }

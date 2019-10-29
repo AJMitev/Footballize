@@ -9,6 +9,8 @@
     using Common;
     using Exceptions;
     using Footballize.Data.Repositories;
+    using Footballize.Models;
+    using Footballize.Models.Enums;
     using Mapping;
     using Microsoft.EntityFrameworkCore;
     using Models;
@@ -26,7 +28,7 @@
             this.recruiterUserRepository = recruiterUserRepository;
         }
 
-        public ICollection<TViewModel> GetRecruitments<TViewModel>()
+        public ICollection<TViewModel> GetAll<TViewModel>()
         {
             return this.recruitmentRepository
                 .All()
@@ -36,7 +38,7 @@
                 .To<TViewModel>()
                 .ToList();
         }
-        public ICollection<TViewModel> GetRecruitments<TViewModel>(Expression<Func<Recruitment,bool>> expression)
+        public ICollection<TViewModel> GetAll<TViewModel>(Expression<Func<Recruitment,bool>> expression)
         {
             return this.recruitmentRepository
                 .All()
@@ -48,7 +50,7 @@
                 .ToList();
         }
 
-        public TViewModel GetRecruitment<TViewModel>(string id)
+        public TViewModel GetById<TViewModel>(string id)
         {
             return this.recruitmentRepository
                 .All()
@@ -58,7 +60,7 @@
                 .SingleOrDefault();
         }
 
-        public async Task AddRecruitmentAsync(Recruitment recruitment)
+        public async Task AddAsync(Recruitment recruitment)
         {
             if (recruitment == null)
             {
@@ -70,7 +72,7 @@
             await this.recruitmentRepository.SaveChangesAsync();
         }
 
-        public async Task LeaveRecruitmentAsync(Recruitment recruitment, string userId)
+        public async Task LeaveAsync(Recruitment recruitment, string userId)
         {
             if (recruitment == null)
             {
@@ -98,7 +100,7 @@
             await this.recruiterUserRepository.SaveChangesAsync();
         }
 
-        public async Task EnrollRecruitmentAsync(string gameId, User user)
+        public async Task EnrollAsync(string gameId, User user)
         {
             var recruitment = this.recruitmentRepository.All().Include(x => x.Players).SingleOrDefault(x => x.Id == gameId);
 
@@ -142,7 +144,7 @@
 
         }
 
-        public async Task StartRecruitmentAsync(string id)
+        public async Task StartAsync(string id)
         {
             var gameToStart =  this.recruitmentRepository.All().Include(x => x.Players).SingleOrDefault(x => x.Id == id);
 
@@ -168,7 +170,7 @@
             await this.recruitmentRepository.SaveChangesAsync();
         }
 
-        public async Task CompleteRecruitmentAsync(string id)
+        public async Task CompleteAsync(string id)
         {
             var game = await this.recruitmentRepository.GetByIdAsync(id);
 
@@ -189,7 +191,7 @@
             await this.recruitmentRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteRecruitmentAsync(string id)
+        public async Task DeleteAsync(string id)
         {
             var game = await this.recruitmentRepository.GetByIdAsync(id);
 
@@ -203,7 +205,7 @@
             await this.recruitmentRepository.SaveChangesAsync();
         }
 
-        public async Task<Recruitment> GetRecruitmentAsync(string id)
+        public async Task<Recruitment> GetByIdAsync(string id)
         {
             var recruitment = this.recruitmentRepository.All()
                 .Include(x=>x.Players)

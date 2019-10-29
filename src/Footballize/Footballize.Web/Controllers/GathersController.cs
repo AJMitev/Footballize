@@ -82,7 +82,7 @@
                 case TeamFormat.ElevenPlayers: newGather.MaximumPlayers = 22; break;
             }
 
-            await this.gatherService.AddGatherAsync(newGather);
+            await this.gatherService.AddAsync(newGather);
             return await this.Enroll(newGather.Id);
         }
 
@@ -118,7 +118,7 @@
                     return this.NotFound();
                 }
 
-                await this.gatherService.LeaveGatherAsync(gather, currentUser.Id);
+                await this.gatherService.LeaveAsync(gather, currentUser.Id);
 
                 return this.RedirectToAction("Details", new { id });
             }
@@ -142,7 +142,7 @@
                     return this.NotFound();
                 }
 
-                await this.gatherService.EnrollGatherAsync(gather, currentUser);
+                await this.gatherService.EnrollAsync(gather, currentUser);
 
                 return this.RedirectToAction("Details", new { id });
             }
@@ -158,7 +158,7 @@
         {
             try
             {
-                var gather = await this.gatherService.GetGatherAsync(gatherId);
+                var gather = await this.gatherService.GetByIdAsync(gatherId);
                 var currentUser = await this.userManager.GetUserAsync(User);
 
                 if (currentUser == null)
@@ -171,7 +171,7 @@
                     return this.Forbid();
                 }
 
-                await this.gatherService.LeaveGatherAsync(gather, playerId);
+                await this.gatherService.LeaveAsync(gather, playerId);
                 return this.RedirectToAction("Details", new { gatherId });
             }
             catch (ServiceException e)
@@ -199,7 +199,7 @@
                     return this.Unauthorized();
                 }
 
-                await this.gatherService.StartGatherAsync(id);
+                await this.gatherService.StartAsync(id);
 
                 return this.RedirectToAction("Details", new { id });
             }
@@ -228,7 +228,7 @@
                     return this.Unauthorized();
                 }
 
-                await this.gatherService.CompleteGatherAsync(id);
+                await this.gatherService.CompleteAsync(id);
                 return this.RedirectToAction("Details", new { id });
             }
             catch (ServiceException e)
@@ -254,7 +254,7 @@
                 return this.Unauthorized();
             }
 
-            await this.gatherService.DeleteGatherAsync(id);
+            await this.gatherService.DeleteAsync(id);
 
             return this.RedirectToAction("Index");
         }

@@ -2,14 +2,13 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Models;
 
     public interface ITownService : IService
     {
-        Task AddTownAsync(Town town);
-        TViewModel GetTown<TViewModel>(string id);
-        IEnumerable<TViewModel> GetTownsByCountry<TViewModel>(string countryId);
-        Task DeleteTownAsync(string id);
-        Task UpdateTownAsync(Town town);
+        Task AddTownAsync(string name, string provinceId);
+        TViewModel GetById<TViewModel>(string id);
+        IEnumerable<TViewModel> GetByCountryId<TViewModel>(string countryId);
+        Task DeleteAsync(string id);
+        Task UpdateAsync(string townId, string name, string provinceId);
     }
 }

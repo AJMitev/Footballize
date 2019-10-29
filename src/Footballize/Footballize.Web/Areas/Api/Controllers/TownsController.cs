@@ -40,7 +40,7 @@
         [HttpGet("all/{id}")]
         public IEnumerable<TownWithProvinceViewModel> GetAll(string id)
         {
-            return this.townService.GetTownsByCountry<TownWithProvinceViewModel>(id);
+            return this.townService.GetByCountryId<TownWithProvinceViewModel>(id);
         }
     }
 }
