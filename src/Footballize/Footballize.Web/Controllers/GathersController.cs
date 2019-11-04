@@ -16,7 +16,7 @@
     using ViewModels.Gathers;
 
     [Authorize]
-    public class GathersController : Controller
+    public class GathersController : ControllerBase
     {
         private const int ItemsPerPage = 10;
 
@@ -111,13 +111,13 @@
             if (gather.Status != GameStatus.Registration)
             {
 
-                this.TempData["Error"] = GlobalConstants.KickPlayerOnlyInRegistrationModeErrorMessage;
+                this.DisplayError(GlobalConstants.KickPlayerOnlyInRegistrationModeErrorMessage);
                 return this.RedirectToAction(nameof(Details), new { id });
             }
 
             if (gather.Players.All(x => x.UserId != currentUser.Id))
             {
-                this.TempData["Error"] = GlobalConstants.InvalidRequestParametersErrorMessage;
+                this.DisplayError(GlobalConstants.InvalidRequestParametersErrorMessage);
                 return this.RedirectToAction(nameof(Details), new { id });
             }
 
@@ -140,17 +140,17 @@
 
             if (gather.Status != GameStatus.Registration || gather.Players.Count >= gather.MaximumPlayers)
             {
-                this.TempData["Error"] = GlobalConstants.NotInRegistrationOrNoFreeSlotErrorMessage;
+                this.DisplayError(GlobalConstants.NotInRegistrationOrNoFreeSlotErrorMessage);
             }
 
             if (user.IsBanned)
             {
-                this.TempData["Error"] = GlobalConstants.PlayerIsBannedErrorMessage;
+                this.DisplayError(GlobalConstants.PlayerIsBannedErrorMessage);
             }
 
             if (gather.Players.Any(x => x.UserId == user.Id))
             {
-                this.TempData["Error"] = GlobalConstants.AlreadyJoinedErrorMessage;
+                this.DisplayError(GlobalConstants.AlreadyJoinedErrorMessage);
             }
 
             await this.gatherService.EnrollAsync(gather.Id, user.Id);
@@ -176,13 +176,13 @@
             if (gather.Status != GameStatus.Registration)
             {
 
-                this.TempData["Error"] = GlobalConstants.KickPlayerOnlyInRegistrationModeErrorMessage;
+                this.DisplayError(GlobalConstants.KickPlayerOnlyInRegistrationModeErrorMessage);
                 return this.RedirectToAction(nameof(Details), new { gatherId });
             }
 
             if (gather.Players.All(x => x.UserId != playerId))
             {
-                this.TempData["Error"] = GlobalConstants.InvalidRequestParametersErrorMessage;
+                this.DisplayError(GlobalConstants.InvalidRequestParametersErrorMessage);
                 return this.RedirectToAction(nameof(Details), new { gatherId });
             }
 
@@ -207,13 +207,13 @@
 
             if (gather.Players.Count != gather.MaximumPlayers)
             {
-                this.TempData["Error"] = GlobalConstants.RequiredNumberOfPlayersNotReachedErrorMessage;
+                this.DisplayError(GlobalConstants.RequiredNumberOfPlayersNotReachedErrorMessage);
                 return this.RedirectToAction(nameof(Details), new { id });
             }
 
             if (gather.Status != GameStatus.Registration)
             {
-                this.TempData["Error"] = GlobalConstants.ThisGameIsAlreadyStartedErrorMessage;
+                this.DisplayError( GlobalConstants.ThisGameIsAlreadyStartedErrorMessage);
                 return this.RedirectToAction(nameof(Details), new { id });
             }
 
@@ -240,7 +240,7 @@
 
                 if (game.Status != GameStatus.Started)
                 {
-                    this.TempData["Error"] = GlobalConstants.ThisGameIsNotStartedYetErrorMessage;
+                    this.DisplayError(GlobalConstants.ThisGameIsNotStartedYetErrorMessage);
                     return this.RedirectToAction(nameof(Details), new { id });
                 }
 
