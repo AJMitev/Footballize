@@ -14,5 +14,6 @@
         public TeamFormat TeamFormat { get; set; }
         public GameStatus Status { get; set; }
         public ICollection<GatherUserServiceModel> Players { get; set; }
+        public string CreatorId { get; set; }
     }
 }

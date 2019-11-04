@@ -1,4 +1,4 @@
-﻿namespace Footballize.Services.Data
+﻿namespace Footballize.Services
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

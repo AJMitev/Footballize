@@ -1,14 +1,14 @@
-﻿namespace Footballize.Services.Data
+﻿namespace Footballize.Services
 {
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Common;
     using Exceptions;
-    using Footballize.Data.Repositories;
+    using Data.Repositories;
     using Footballize.Models;
-    using Footballize.Services.Models.Country;
     using Mapping;
+    using Models.Country;
 
     public class CountryService : ICountryService
     {

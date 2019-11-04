@@ -1,8 +1,8 @@
-﻿namespace Footballize.Services.Data
+﻿namespace Footballize.Services
 {
     using System.Linq;
     using System.Threading.Tasks;
-    using Footballize.Data.Repositories;
+    using Data.Repositories;
     using Footballize.Models;
     using Mapping;
     using Models.Address;
@@ -14,7 +14,7 @@
         public AddressService(IDeletableEntityRepository<Address> addressRepository)
             => this.addressRepository = addressRepository;
 
-        public async Task<string> Create(string street, int number, double latitude, double longitude)
+        public async Task<string> AddAsync(string street, int number, double latitude, double longitude)
         {
             var address = new Address
             {

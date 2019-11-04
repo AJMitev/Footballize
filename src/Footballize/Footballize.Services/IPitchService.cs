@@ -1,13 +1,12 @@
-﻿namespace Footballize.Services.Data
+﻿namespace Footballize.Services
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Footballize.Models;
     using Models.Pitch;
 
     public interface IPitchService : IService
     {
-        Task AddAsync(string name, string addressId);
+        Task<string> AddAsync(string name, string addressId);
         IEnumerable<TViewModel> GetAll<TViewModel>();
         IEnumerable<MostUsedPitchServiceModel> GetMostUsed(int count = 3);
         Task<PitchServiceModel> GetByIdAsync(string id);

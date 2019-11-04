@@ -1,4 +1,4 @@
-﻿namespace Footballize.Services.Data
+﻿namespace Footballize.Services
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -13,10 +13,8 @@
     {
         private readonly IDeletableEntityRepository<Province> provincesRepository;
 
-        public ProvinceService(IDeletableEntityRepository<Province> provincesRepository)
-        {
-            this.provincesRepository = provincesRepository;
-        }
+        public ProvinceService(IDeletableEntityRepository<Province> provincesRepository) 
+            => this.provincesRepository = provincesRepository;
 
         public IEnumerable<TViewModel> GetAll<TViewModel>()
             => this.provincesRepository
@@ -32,7 +30,7 @@
                 .ThenByDescending(p => p.Towns.Count)
                 .To<TViewModel>();
 
-        public async Task AddAsync(string name, string countryId)
+        public async Task<string> AddAsync(string name, string countryId)
         {
             var province = new Province
             {
@@ -42,6 +40,8 @@
 
             await this.provincesRepository.AddAsync(province);
             await this.provincesRepository.SaveChangesAsync();
+
+            return province.Id;
         }
 
         public async Task RemoveAsync(string id)

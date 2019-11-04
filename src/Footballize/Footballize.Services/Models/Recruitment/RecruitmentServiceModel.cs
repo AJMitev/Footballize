@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using Data;
     using Footballize.Models;
     using Footballize.Models.Enums;
     using Mapping;
@@ -12,7 +11,7 @@
     public class RecruitmentServiceModel : IMapFrom<Recruitment>
     {
         public RecruitmentServiceModel() 
-            => this.Players = new HashSet<RecruitmentUserServiceModel>();
+            => this.Players = new HashSet<UserServiceModel>();
 
         public string Title { get; set; }
         public DateTime StartingAt { get; set; }
@@ -22,6 +21,6 @@
         public UserServiceModel Creator { get; set; }
         public int MaximumPlayers { get; set; }
         public GameStatus Status { get; set; }
-        public ICollection<RecruitmentUserServiceModel> Players { get; set; }
+        public ICollection<UserServiceModel> Players { get; set; }
     }
 }

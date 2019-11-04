@@ -1,34 +1,20 @@
-﻿namespace Footballize.Services.Data
+﻿namespace Footballize.Services
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Common;
     using Exceptions;
     using Footballize.Data.Repositories;
+    using Footballize.Models;
     using Mapping;
-    using Models;
 
     public class TownService : ITownService
     {
         private readonly IDeletableEntityRepository<Town> townRepository;
 
-        public TownService(IDeletableEntityRepository<Town> townRepository)
-        {
-            this.townRepository = townRepository;
-        }
-
-        public async Task AddTownAsync(Town town)
-        {
-            if (town == null)
-            {
-                throw new ServiceException(string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Town)));
-            }
-
-            await this.townRepository.AddAsync(town);
-            await this.townRepository.SaveChangesAsync();
-        }
+        public TownService(IDeletableEntityRepository<Town> townRepository) 
+            => this.townRepository = townRepository;
 
         public async Task DeleteAsync(string id)
         {
@@ -41,6 +27,36 @@
             }
             this.townRepository.Delete(townToDelete);
             await this.townRepository.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(string townId, string name, string provinceId)
+        {
+            var town = await this.townRepository.GetByIdAsync(townId);
+
+            town.Name = name;
+            town.ProvinceId = provinceId;
+
+            this.townRepository.Update(town);
+            await this.townRepository.SaveChangesAsync();
+        }
+
+        public bool Exists(string id)
+            => this.townRepository
+                .All()
+                .Any(x => x.Id == id);
+
+        public async Task<string> AddAsync(string name, string provinceId)
+        {
+           var town = new Town
+           {
+               Name = name,
+               ProvinceId = provinceId
+           };
+
+           await this.townRepository.AddAsync(town);
+           await this.townRepository.SaveChangesAsync();
+
+           return town.Id;
         }
 
         public TViewModel GetById<TViewModel>(string id)

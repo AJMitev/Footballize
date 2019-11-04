@@ -1,10 +1,8 @@
-﻿namespace Footballize.Services.Data
+﻿namespace Footballize.Services
 {
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Common;
-    using Exceptions;
     using Footballize.Data.Repositories;
     using Footballize.Models;
     using Mapping;
@@ -23,19 +21,7 @@
             this.gatherRepository = gatherRepository;
             this.recruitmentRepository = recruitmentRepository;
         }
-
-        public async Task AddPitchAsync(Pitch pitch)
-        {
-            if (pitch == null)
-            {
-                throw new ServiceException(
-                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Pitch)));
-            }
-
-            await this.pitchRepository.AddAsync(pitch);
-            await this.pitchRepository.SaveChangesAsync();
-        }
-
+      
         public TViewModel GetById<TViewModel>(string id)
             => this.pitchRepository
                 .All()
@@ -70,7 +56,7 @@
                 .To<PitchServiceModel>()
                 .SingleAsync();
 
-        public async Task AddAsync(string name, string addressId)
+        public async Task<string> AddAsync(string name, string addressId)
         {
             var pitch = new Pitch
             {
@@ -80,6 +66,8 @@
 
             await this.pitchRepository.AddAsync(pitch);
             await this.pitchRepository.SaveChangesAsync();
+
+            return pitch.Id;
         }
 
         public async Task UpdateAsync(string id, string name, string addressId)
@@ -97,11 +85,9 @@
         {
             var pitch = await this.pitchRepository.GetByIdAsync(id);
 
-            // TODO: Should I throw exception into the services?
             if (pitch == null)
             {
-                throw new ServiceException(
-                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Pitch)));
+                return;
             }
 
             this.pitchRepository.Delete(pitch);
@@ -116,12 +102,12 @@
         {
             var mostUsedInGather = GetMostUsedPitchesInGathers().ToList();
             var mostUsedInRecruiting = GetMostUsedPitchesInRecruitingGames().ToList();
-            HashSet<MostUsedPitchServiceModel> mostUsedPitches = GetMostUsedPitchFromAllGames(mostUsedInGather, mostUsedInRecruiting);
+            var mostUsedPitches = GetMostUsedPitchFromAllGames(mostUsedInGather, mostUsedInRecruiting);
 
             return mostUsedPitches.Take(count);
         }
 
-        private HashSet<MostUsedPitchServiceModel> GetMostUsedPitchFromAllGames(ICollection<MostUsedPitchServiceModel> mostUsedInGather, ICollection<MostUsedPitchServiceModel> mostUsedInRecruiting)
+        private IEnumerable<MostUsedPitchServiceModel> GetMostUsedPitchFromAllGames(ICollection<MostUsedPitchServiceModel> mostUsedInGather, ICollection<MostUsedPitchServiceModel> mostUsedInRecruiting)
         {
             var mostUsedPitches = new HashSet<MostUsedPitchServiceModel>(mostUsedInGather);
 
@@ -158,14 +144,14 @@
 
         private IEnumerable<MostUsedPitchServiceModel> GetMostUsedPitchesInRecruitingGames()
         {
-            return this.recruitmentRepository.All().GroupBy(x => x.Pitch.Id,
+            return this.recruitmentRepository.All().Include(x=>x.Pitch).ToList().GroupBy(x => x.Pitch.Id,
                 x => x.Pitch.Name,
                 (k, g) => new MostUsedPitchServiceModel { Id = k, Name = g.FirstOrDefault(), TimesUsed = g.Count() }).ToList();
         }
 
         private IEnumerable<MostUsedPitchServiceModel> GetMostUsedPitchesInGathers()
         {
-            return this.gatherRepository.All().GroupBy(x => x.Pitch.Id,
+            return this.gatherRepository.All().Include(x=>x.Pitch).ToList().GroupBy(x => x.Pitch.Id,
                 x => x.Pitch.Name,
                 (k, g) => new MostUsedPitchServiceModel { Id = k, Name = g.FirstOrDefault(), TimesUsed = g.Count() }).ToList();
         }

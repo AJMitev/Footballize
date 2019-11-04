@@ -1,4 +1,4 @@
-﻿namespace Footballize.Services.Data
+﻿namespace Footballize.Services
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -7,7 +7,7 @@
     {
         IEnumerable<TViewModel> GetAll<TViewModel>();
         IEnumerable<TViewModel> GetAllByCountry<TViewModel>(string id);
-        Task AddAsync(string name, string countryId);
+        Task<string> AddAsync(string name, string countryId);
         Task RemoveAsync(string id);
         TViewModel GetById<TViewModel>(string id);
         Task UpdateAsync(string id, string name, string countryId);
