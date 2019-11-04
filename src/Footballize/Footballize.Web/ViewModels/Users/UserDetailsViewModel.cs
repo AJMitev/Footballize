@@ -2,7 +2,9 @@
 {
     using System.Collections.Generic;
     using AutoMapper;
+    using Gathers;
     using Models;
+    using Recruitments;
     using Services.Mapping;
 
     public class UserDetailsViewModel : IMapFrom<User>, IHaveCustomMappings
@@ -14,10 +16,10 @@
         public bool IsBanned { get; set; }
         public string Email { get; set; }
         public bool IsSameUser { get; set; }
-        public ICollection<GatherUser> GathersPlayed { get; set; }
-        public ICollection<RecruitmentUser> GamesRecruited { get; set; }
-        public ICollection<Playpal> PlaypalsAdded { get; set; }
-        public ICollection<Playpal> PlaypalsAddedMe { get; set; }
+        public ICollection<GatherUserViewModel> GathersPlayed { get; set; }
+        public ICollection<RecruitmentUserViewModel> GamesRecruited { get; set; }
+        public ICollection<PlaypalViewModel> PlaypalsAdded { get; set; }
+        public ICollection<PlaypalViewModel> PlaypalsAddedMe { get; set; }
         public string ProfilePicturePathToFile { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
