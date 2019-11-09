@@ -7,7 +7,6 @@
     {
         public  ICollection<HomeGameViewModel> Gathers { get; set; }
         public  ICollection<HomeGameViewModel> Recruitments { get; set; }
-
         public ICollection<MostUsedPitchServiceModel> Pitches { get; set; }
     }
 }
