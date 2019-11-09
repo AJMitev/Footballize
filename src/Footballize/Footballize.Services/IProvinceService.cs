@@ -11,5 +11,6 @@
         Task RemoveAsync(string id);
         TViewModel GetById<TViewModel>(string id);
         Task UpdateAsync(string id, string name, string countryId);
+        bool Exist(string id);
     }
 }

@@ -3,11 +3,10 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Common;
-    using Exceptions;
     using Data.Repositories;
     using Footballize.Models;
     using Mapping;
+    using Microsoft.EntityFrameworkCore;
     using Models.Country;
 
     public class CountryService : ICountryService
@@ -43,6 +42,11 @@
             await this.countriesRepository.SaveChangesAsync();
         }
 
+        public bool Exist(string id)
+            => this.countriesRepository
+                .All()
+                .Any(x => x.Id == id);
+
         public TViewModel GetById<TViewModel>(string id) 
             => this.countriesRepository
                 .All()
@@ -67,11 +71,6 @@
         public async Task DeleteAsync(string id)
         {
             var countryToRemove = await this.countriesRepository.GetByIdAsync(id);
-
-            if (countryToRemove == null)
-            {
-                throw new ServiceException(string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Country)));
-            }
 
             this.countriesRepository.Delete(countryToRemove);
             await this.countriesRepository.SaveChangesAsync();

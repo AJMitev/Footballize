@@ -1,11 +1,13 @@
 ﻿namespace Footballize.Services
 {
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
     using Footballize.Data.Repositories;
     using Footballize.Models;
     using Mapping;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
     using Models.Pitch;
 
@@ -21,7 +23,7 @@
             this.gatherRepository = gatherRepository;
             this.recruitmentRepository = recruitmentRepository;
         }
-      
+
         public TViewModel GetById<TViewModel>(string id)
             => this.pitchRepository
                 .All()
@@ -48,6 +50,17 @@
                  .Where(x => x.Address.TownId.Equals(id))
                  .OrderBy(x => x.Name)
                  .To<TViewModel>();
+
+        public async Task SaveCoverAsync(string id, IFormFile cover, string hostingPath)
+        {
+            if (!Directory.Exists(hostingPath))
+            {
+                Directory.CreateDirectory(hostingPath);
+            }
+            
+            await using var stream = File.OpenWrite(string.Concat(hostingPath, $"{id}.jpg"));
+            await cover.CopyToAsync(stream);
+        }
 
         public async Task<PitchServiceModel> GetByIdAsync(string id)
             => await this.pitchRepository
@@ -93,6 +106,12 @@
             this.pitchRepository.Delete(pitch);
             await this.pitchRepository.SaveChangesAsync();
         }
+
+        public bool Exist(string id)
+            => this.pitchRepository
+                .All()
+                .Any(x => x.Id == id);
+
         public bool Exist(string name, string addressId)
             => this.pitchRepository
                 .All()
@@ -135,7 +154,7 @@
 
                     continue;
                 }
-                
+
                 mostUsedPitches.Add(pitch);
             }
 
@@ -144,14 +163,14 @@
 
         private IEnumerable<MostUsedPitchServiceModel> GetMostUsedPitchesInRecruitingGames()
         {
-            return this.recruitmentRepository.All().Include(x=>x.Pitch).ToList().GroupBy(x => x.Pitch.Id,
+            return this.recruitmentRepository.All().Include(x => x.Pitch).ToList().GroupBy(x => x.Pitch.Id,
                 x => x.Pitch.Name,
                 (k, g) => new MostUsedPitchServiceModel { Id = k, Name = g.FirstOrDefault(), TimesUsed = g.Count() }).ToList();
         }
 
         private IEnumerable<MostUsedPitchServiceModel> GetMostUsedPitchesInGathers()
         {
-            return this.gatherRepository.All().Include(x=>x.Pitch).ToList().GroupBy(x => x.Pitch.Id,
+            return this.gatherRepository.All().Include(x => x.Pitch).ToList().GroupBy(x => x.Pitch.Id,
                 x => x.Pitch.Name,
                 (k, g) => new MostUsedPitchServiceModel { Id = k, Name = g.FirstOrDefault(), TimesUsed = g.Count() }).ToList();
         }

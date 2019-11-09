@@ -3,8 +3,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Common;
-    using Exceptions;
     using Footballize.Data.Repositories;
     using Footballize.Models;
     using Mapping;
@@ -13,18 +11,12 @@
     {
         private readonly IDeletableEntityRepository<Town> townRepository;
 
-        public TownService(IDeletableEntityRepository<Town> townRepository) 
+        public TownService(IDeletableEntityRepository<Town> townRepository)
             => this.townRepository = townRepository;
 
         public async Task DeleteAsync(string id)
         {
             var townToDelete = await this.townRepository.GetByIdAsync(id);
-
-            if (townToDelete == null)
-            {
-                throw new ServiceException(
-                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Town)));
-            }
             this.townRepository.Delete(townToDelete);
             await this.townRepository.SaveChangesAsync();
         }
@@ -45,48 +37,38 @@
                 .All()
                 .Any(x => x.Id == id);
 
+        public async Task<string> GetProvinceId(string id)
+        {
+            var town = await this.townRepository.GetByIdAsync(id);
+            return town.ProvinceId;
+        }
+
         public async Task<string> AddAsync(string name, string provinceId)
         {
-           var town = new Town
-           {
-               Name = name,
-               ProvinceId = provinceId
-           };
+            var town = new Town
+            {
+                Name = name,
+                ProvinceId = provinceId
+            };
 
-           await this.townRepository.AddAsync(town);
-           await this.townRepository.SaveChangesAsync();
+            await this.townRepository.AddAsync(town);
+            await this.townRepository.SaveChangesAsync();
 
-           return town.Id;
+            return town.Id;
         }
 
         public TViewModel GetById<TViewModel>(string id)
-        {
-            return this.townRepository
+            => this.townRepository
                 .All()
-                .Where(x=>x.Id == id)
+                .Where(x => x.Id == id)
                 .To<TViewModel>()
                 .SingleOrDefault();
-        }
 
         public IEnumerable<TViewModel> GetByCountryId<TViewModel>(string countryId)
-        {
-            return this.townRepository
+            => this.townRepository
                 .All()
                 .Where(p => p.Province.CountryId.Equals(countryId))
                 .OrderBy(p => p.Name)
                 .To<TViewModel>();
-        }
-
-        public async Task UpdateAsync(Town town)
-        {
-            if (town == null)
-            {
-                throw new ServiceException(
-                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Town)));
-            }
-
-            this.townRepository.Update(town);
-            await this.townRepository.SaveChangesAsync();
-        }
     }
 }

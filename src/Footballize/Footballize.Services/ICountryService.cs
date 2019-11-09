@@ -12,5 +12,6 @@
         CountryServiceModel GetByIdAsync(string id);
         IEnumerable<TViewModel> All<TViewModel>();
         Task UpdateAsync(string id, string name, string isoCode);
+        bool Exist(string id);
     }
 }

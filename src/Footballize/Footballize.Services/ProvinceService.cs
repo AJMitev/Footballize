@@ -77,5 +77,10 @@
             this.provincesRepository.Update(province);
             await this.provincesRepository.SaveChangesAsync();
         }
+
+        public bool Exist(string id)
+            => this.provincesRepository
+                .All()
+                .Any(x => x.Id == id);
     }
 }

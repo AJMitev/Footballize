@@ -11,5 +11,6 @@
         Task DeleteAsync(string id);
         Task UpdateAsync(string townId, string name, string provinceId);
         bool Exists(string id);
+        Task<string> GetProvinceId(string id);
     }
 }
