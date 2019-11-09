@@ -9,7 +9,7 @@
             <nav aria-label="breadcrumb" role="navigation">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="id">Recruitments</li>
+                    <li class="breadcrumb-item active" aria-current="countryId">Recruitments</li>
                 </ol>
             </nav>
         </div>
@@ -92,7 +92,7 @@
         {
             <li class="page-item">
                 <a class="page-link" asp-controller="Recruitments" asp-action="Index" asp-route-id="@this.Model.PreviousPage" aria-label="Предишна">
-                    <span aria-hidden="true">&laquo;</span>
+                    <span aria-hcountryIdden="true">&laquo;</span>
                 </a>
             </li>
         }
@@ -137,7 +137,7 @@
         {
             <li class="page-item">
                 <a class="page-link" asp-action="Index" asp-route-id="@Model.NextPage" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
+                    <span aria-hcountryIdden="true">&raquo;</span>
                 </a>
             </li>
         }
