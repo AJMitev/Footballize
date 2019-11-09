@@ -20,7 +20,6 @@
                             <th scope="col">Title</th>
                             <th scope="col">Code</th>
                             <th scope="col">Provinces</th>
-                            <th scope="col">Towns</th>
 
                             <th scope="col">Actions</th>
                         </tr>
@@ -34,7 +33,6 @@
                                 <td><a asp-action="Details" asp-route-id="@Model.Items.ToList()[i].Id">@Model.Items.ToList()[i].Name</a></td>
                                 <td>@Model.Items.ToList()[i].IsoCode</td>
                                 <td>@Model.Items.ToList()[i].ProvincesCount</td>
-                                <td>@Model.Items.ToList()[i].TownsCount</td>
                                 <td>
                                     <vc:admin-controls id="@Model.Items.ToList()[i].Id" name="@Model.Items.ToList()[i].Name" controller="Countries"></vc:admin-controls>
                                 </td>
@@ -50,7 +48,7 @@
                     {
                         <li class="page-item">
                             <a class="page-link" asp-action="Index" asp-route-id="@this.Model.PreviousPage" aria-label="Предишна">
-                                <span aria-hidden="true">&laquo;</span>
+                                <span aria-hcountryIdden="true">&laquo;</span>
                             </a>
                         </li>
                     }
@@ -95,7 +93,7 @@
                     {
                         <li class="page-item">
                             <a class="page-link" asp-action="Index" asp-route-id="@Model.NextPage" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
+                                <span aria-hcountryIdden="true">&raquo;</span>
                             </a>
                         </li>
                     }

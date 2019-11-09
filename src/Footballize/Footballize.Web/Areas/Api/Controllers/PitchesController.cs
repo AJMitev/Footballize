@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using Administration.ViewModels.Pitches;
     using Microsoft.AspNetCore.Mvc;
-    using Services.Data;
+    using Services;
 
     public class PitchesController : ApiController
     {

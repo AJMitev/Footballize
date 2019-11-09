@@ -1,40 +1,37 @@
 ﻿namespace Footballize.Web.Areas.Administration.Controllers
 {
     using System;
-    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-    using AutoMapper;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
-    using Models;
-    using Services.Data;
+    using Services;
     using ViewModels.Pitches;
 
     public class PitchesController : AdminController
     {
         private readonly IPitchService pitchService;
         private readonly IAddressService addressService;
-        private readonly IWebHostEnvironment hostingEnvironment;
-        private readonly IMapper mapper;
+        private readonly string pitchCoverHostingPath;
 
-        public PitchesController(IPitchService pitchService, IAddressService addressService, 
-            IWebHostEnvironment hostingEnvironment, IMapper mapper)
+        public PitchesController(IPitchService pitchService, IAddressService addressService, IWebHostEnvironment hostingEnvironment)
         {
             this.pitchService = pitchService;
             this.addressService = addressService;
-            this.hostingEnvironment = hostingEnvironment;
-            this.mapper = mapper;
+            this.pitchCoverHostingPath = $"{hostingEnvironment.WebRootPath}/img/fields/";
         }
 
         [HttpGet]
         public IActionResult Index(int id)
         {
-            var fields = this.pitchService.GetAll<PitchIndexViewModel>().ToList();
+            var fields = this.pitchService.GetAll<PitchIndexViewModel>()
+                .ToList();
             id = Math.Max(1, id);
             var skip = (id - 1) * PitchesListViewModel.ItemsPerPage;
 
-            var filteredItems = fields.Skip(skip).Take(PitchesListViewModel.ItemsPerPage).ToList();
+            var filteredItems = fields.Skip(skip)
+                .Take(PitchesListViewModel.ItemsPerPage)
+                .ToList();
 
             var fieldsCount = fields.Count;
             var pagesCount = (int)Math.Ceiling(fieldsCount / (decimal)PitchesListViewModel.ItemsPerPage);
@@ -72,74 +69,53 @@
             }
             else
             {
-                addressId = await this.addressService.Create(model.Street, model.Number, model.Latitude, model.Longitude);
+                addressId = await this.addressService.AddAsync(model.Street, model.Number, model.Latitude, model.Longitude);
             }
-            
-            var playfield = this.mapper.Map<Pitch>(model);
-            playfield.AddressId = addressId;
 
-            await this.pitchService.AddAsync(playfield);
-
-            // Extract this to separate service
-            var folderPath = hostingEnvironment.WebRootPath + "/img/fields/";
-            Directory.CreateDirectory(folderPath);
-
-
-            using (var stream = System.IO.File.OpenWrite(hostingEnvironment.WebRootPath +$"/img/fields/{playfield.Id}.jpg"))
+            if (!this.pitchService.Exist(model.Name, addressId))
             {
-                await model.Cover.CopyToAsync(stream);
+                var pitchId = await this.pitchService.AddAsync(model.Name, addressId);
+                await this.pitchService.SaveCoverAsync(pitchId, model.Cover, this.pitchCoverHostingPath);
             }
 
-            return this.RedirectToAction("Index");
+
+            return this.RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
         public IActionResult Edit(string id)
         {
-            var model = this.pitchService.GetById<PitchEditViewModel>(id);
-
-            if (model == null)
+            if (this.pitchService.Exist(id))
             {
-                return this.NotFound();
+                return this.View(this.pitchService.GetById<PitchEditViewModel>(id));
             }
 
-            return this.View(model);
+            return this.NotFound();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(PitchEditInputModel model)
+        public async Task<IActionResult> Edit(PitchEditViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return this.View(this.mapper.Map<PitchEditViewModel>(model));
-            }
-            
-            await this.pitchService.UpdateAsync(this.mapper.Map<Pitch>(model));
-
-            var folderPath = hostingEnvironment.WebRootPath + "/img/fields/";
-            Directory.CreateDirectory(folderPath);
-
-
-            using (var stream = System.IO.File.OpenWrite(hostingEnvironment.WebRootPath +$"/img/fields/{model.Id}.jpg"))
-            {
-                await model.Cover.CopyToAsync(stream);
+                return this.View(model);
             }
 
-            return this.RedirectToAction("Index");
+            await this.pitchService.UpdateAsync(model.Id, model.Name, model.Address.Id);
+            await this.pitchService.SaveCoverAsync(model.Id, model.Cover, this.pitchCoverHostingPath);
+
+            return this.RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
-
-            var field =  this.pitchService.GetById<PitchNameAndIdViewModel>(id);
-
-            if (field == null)
+            if (!this.pitchService.Exist(id))
             {
                 return this.NotFound();
             }
 
-            await this.pitchService.RemoveAsync(this.mapper.Map<Pitch>(field));
+            await this.pitchService.RemoveAsync(id);
 
             return this.RedirectToAction("Index");
         }

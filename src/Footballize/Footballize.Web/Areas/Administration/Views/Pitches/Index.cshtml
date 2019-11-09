@@ -33,7 +33,7 @@
                             <tr>
                                 <th scope="row">@(i + 1)</th>
                                 <td><img class="img-circle" src="/img/fields/@(Model.Items.ToList()[i].Id).jpg" width="32px" /></td>
-                                <td><a asp-action="Details" asp-route-id="@Model.Items.ToList()[i].Id">@Model.Items.ToList()[i].Name</a></td>
+                                <td><a asp-action="Details" asp-route-countryId="@Model.Items.ToList()[i].Id">@Model.Items.ToList()[i].Name</a></td>
                                 <td>@Model.Items.ToList()[i].CountryName</td>
                                 <td>@Model.Items.ToList()[i].TownName</td>
                                 <td>@Model.Items.ToList()[i].AddressStreet, @Model.Items.ToList()[i].AddressNumber</td>
@@ -52,7 +52,7 @@
                     {
                         <li class="page-item">
                             <a class="page-link" asp-action="Index" asp-route-id="@this.Model.PreviousPage" aria-label="Предишна">
-                                <span aria-hidden="true">&laquo;</span>
+                                <span aria-hcountryIdden="true">&laquo;</span>
                             </a>
                         </li>
                     }
@@ -97,7 +97,7 @@
                     {
                         <li class="page-item">
                             <a class="page-link" asp-action="Index" asp-route-id="@Model.NextPage" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
+                                <span aria-hcountryIdden="true">&raquo;</span>
                             </a>
                         </li>
                     }

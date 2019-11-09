@@ -63,7 +63,7 @@
 
             [DataType(DataType.Upload)]
             [MaxFileSize(5 * 1024 * 1024)]
-            [AllowedExtensions(new[] { ".jpg", ".png" })]
+            [AllowedExtensions("jpg", "png")]
             public IFormFile ProfilePicture { get; set; }
         }
 

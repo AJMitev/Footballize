@@ -6,7 +6,7 @@
     using Data.Repositories;
     using Microsoft.AspNetCore.Mvc;
     using Models;
-    using Services.Data;
+    using Services;
 
     public class TownsController : ApiController
     {

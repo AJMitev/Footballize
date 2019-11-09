@@ -1,103 +1,94 @@
 ﻿namespace Footballize.Web.Areas.Administration.Controllers
 {
     using System.Threading.Tasks;
-    using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Rendering;
-    using Models;
-    using Services.Data;
-    using ViewModels.Countries;
+    using Services;
     using ViewModels.Provinces;
 
     public class ProvincesController : AdminController
     {
         private readonly IProvinceService provinceService;
         private readonly ICountryService countryService;
-        private readonly IMapper mapper;
 
-        public ProvincesController(IProvinceService provinceService, ICountryService countryService, IMapper mapper)
+        public ProvincesController(IProvinceService provinceService, ICountryService countryService)
         {
             this.provinceService = provinceService;
             this.countryService = countryService;
-            this.mapper = mapper;
         }
 
-        
+
         [HttpGet]
         public IActionResult Add(string countryId)
         {
-            var country = this.countryService.GetById<CountryNameAndIdViewModel>(countryId);
-
-            if (country ==  null)
+            if (!this.countryService.Exist(countryId))
             {
                 return this.NotFound();
             }
 
-            var model = this.mapper.Map<ProvinceAddViewModel>(country);
-
-
-            return this.View(model);
+            return this.View(this.countryService.GetById<ProvinceAddViewModel>(countryId));
         }
 
         [HttpPost]
         public async Task<IActionResult> Add(ProvinceAddInputModel model)
         {
             if (!ModelState.IsValid)
+            {
                 return this.View();
+            }
 
-            await this.provinceService.AddAsync(this.mapper.Map<Province>(model));
+            await this.provinceService.AddAsync(model.Name, model.CountryId);
 
-            return this.RedirectToAction("Details", "Countries", new { id = model.CountryId});
+            return this.RedirectToAction("Details", "Countries", new { id = model.CountryId });
         }
 
 
         [HttpGet]
         public IActionResult Edit(string id)
         {
-            var province = provinceService.GetById<ProvinceEditViewModel>(id);
-
-            if (province == null)
+            if (!this.provinceService.Exist(id))
             {
                 return this.NotFound();
             }
 
-            return this.View(province);
+            return this.View(this.provinceService.GetById<ProvinceEditViewModel>(id));
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(ProvinceEditInputModel model)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || !this.provinceService.Exist(model.Id) || this.countryService.Exist(model.CountryId))
             {
                 return this.NotFound();
             }
 
-            await this.provinceService.UpdateAsync(this.mapper.Map<Province>(model));
+            await this.provinceService.UpdateAsync(model.Id, model.Name, model.CountryId);
 
-            return this.RedirectToAction("Details", "Countries", new {id = model.CountryId});
+            return this.RedirectToAction("Details", "Countries", new { id = model.CountryId });
         }
 
 
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
+            if (!this.provinceService.Exist(id))
+            {
+                return this.NotFound();
+            }
+
             await this.provinceService.RemoveAsync(id);
 
-            return this.RedirectToAction("Index","Countries");
+            return this.RedirectToAction("Index", "Countries");
         }
 
         [HttpGet]
         public IActionResult Details(string id)
         {
-            var province = this.provinceService.GetById<ProvinceDetailsViewModel>(id);
-
-
-            if (province == null)
+            if (!this.provinceService.Exist(id))
             {
                 return this.NotFound();
             }
 
-            return this.View(province);
+            return this.View(this.provinceService.GetById<ProvinceDetailsViewModel>(id));
         }
     }
 }

@@ -3,21 +3,16 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
-    using Services.Data;
+    using Services;
     using ViewModels.Countries;
 
     public class CountriesController : AdminController
     {
         private readonly ICountryService countryService;
-        private readonly IMapper mapper;
 
-        public CountriesController(ICountryService countryService, IMapper mapper)
-        {
-            this.countryService = countryService;
-            this.mapper = mapper;
-        }
+        public CountriesController(ICountryService countryService)
+            => this.countryService = countryService;
 
         [HttpGet]
         public IActionResult Index(int id)
@@ -54,7 +49,9 @@
         public async Task<IActionResult> Add(CountryInputModel model)
         {
             if (!ModelState.IsValid)
+            {
                 return this.View(model);
+            }
 
             var id = await this.countryService.AddAsync(model.Name, model.IsoCode);
 
@@ -64,28 +61,26 @@
         [HttpGet]
         public IActionResult Edit(string id)
         {
-            var model = this.countryService.GetById<CountryInputModel>(id);
+            if (!this.countryService.Exist(id))
+            {
+                return this.NotFound();
+            }
 
-            if (model == null)
-                this.NotFound();
-
-            return this.View(model);
+            return this.View(this.countryService.GetById<CountryInputModel>(id));
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(CountryInputModel model)
         {
             if (!ModelState.IsValid)
+            {
                 return this.View(model);
+            }
 
-            var country = await this.countryService.GetByIdAsync(model.Id);
-
-            if (country == null)
+            if (!this.countryService.Exist(model.Id))
             {
                 return this.NotFound();
             }
-
-            this.mapper.Map(model, country);
 
             await this.countryService.UpdateAsync(model.Id, model.Name, model.IsoCode);
 
@@ -95,6 +90,11 @@
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
+            if (!this.countryService.Exist(id))
+            {
+                return this.NotFound();
+            }
+
             await this.countryService.DeleteAsync(id);
 
             return this.RedirectToAction(nameof(Index));
@@ -103,15 +103,12 @@
         [HttpGet]
         public IActionResult Details(string id)
         {
-            var country = this.countryService.GetById<CountryDetailsViewModel>(id);
-
-            if (country == null)
+            if (!this.countryService.Exist(id))
             {
                 return this.NotFound();
             }
-
-
-            return this.View(country);
+            
+            return this.View(this.countryService.GetById<CountryDetailsViewModel>(id));
         }
     }
 }
