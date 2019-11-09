@@ -11,7 +11,7 @@
         private const string InvalidExtensionErrorMessage = "This extension is not allowed!";
         private readonly string[] extensions;
 
-        public AllowedExtensionsAttribute(string[] extensions)
+        public AllowedExtensionsAttribute(params string[] extensions)
         {
             this.extensions = extensions;
         }
@@ -19,8 +19,7 @@
         protected override ValidationResult IsValid(
             object value, ValidationContext validationContext)
         {
-            var file = value as IFormFile;
-            if (file == null) return ValidationResult.Success;
+            if (!(value is IFormFile file)) return ValidationResult.Success;
 
             
             using (var stream = new MemoryStream())
