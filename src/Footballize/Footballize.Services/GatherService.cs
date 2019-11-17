@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
-    using Exceptions;
     using Footballize.Data.Repositories;
     using Footballize.Models;
     using Footballize.Models.Enums;

@@ -39,6 +39,11 @@
                 .Any(x => x.Street.Equals(street)
                           && x.Number.Equals(number));
 
+        public bool Exists(string id)
+            => this.addressRepository
+                .All()
+                .Any(x => x.Id == id);
+
         public TViewModel GetById<TViewModel>(string id)
             => this.addressRepository
                 .All()

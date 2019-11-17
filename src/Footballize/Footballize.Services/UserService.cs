@@ -7,7 +7,6 @@
     using System.Threading.Tasks;
     using Common;
     using Data.Repositories;
-    using Exceptions;
     using Footballize.Models;
     using Footballize.Models.Enums;
     using Mapping;
@@ -72,13 +71,6 @@
         {
             var player = await this.userRepository.GetByIdAsync(userId);
 
-            if (player == null)
-            {
-                throw new ServiceException(
-                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(User)));
-            }
-
-
             player.IsBanned = true;
             player.BanUntil = DateTime.UtcNow.AddMinutes(minutes);
 
@@ -89,12 +81,6 @@
         public async Task RemoveBan(string userId)
         {
             var player = await this.userRepository.GetByIdAsync(userId);
-
-            if (player == null)
-            {
-                throw new ServiceException(
-                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(User)));
-            }
 
             player.IsBanned = false;
             player.BanUntil = null;

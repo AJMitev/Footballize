@@ -9,5 +9,6 @@
         AddressServiceModel GetByName(string street, int number);
         Task<string> AddAsync(string street, int number, double latitude, double longitude);
         bool Exists(string street, int number);
+        bool Exists(string id);
     }
 }

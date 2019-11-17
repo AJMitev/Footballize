@@ -3,8 +3,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Common;
-    using Exceptions;
     using Footballize.Data.Repositories;
     using Footballize.Models;
     using Mapping;
@@ -48,11 +46,6 @@
         {
             var provinceToRemove = await this.provincesRepository.GetByIdAsync(id);
 
-            if (provinceToRemove == null)
-            {
-                throw new ServiceException(string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Province)));
-            }
-
             this.provincesRepository.Delete(provinceToRemove);
             await this.provincesRepository.SaveChangesAsync();
         }
@@ -68,11 +61,8 @@
         {
             var province = await this.provincesRepository.GetByIdAsync(id);
 
-            if (province == null)
-            {
-                throw new ServiceException(
-                    string.Format(GlobalConstants.EntityCannotBeNullErrorMessage, nameof(Province)));
-            }
+            province.Name = name;
+            province.CountryId = countryId;
 
             this.provincesRepository.Update(province);
             await this.provincesRepository.SaveChangesAsync();
