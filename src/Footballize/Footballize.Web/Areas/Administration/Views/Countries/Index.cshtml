@@ -29,7 +29,7 @@
                         {
                             <tr>
                                 <th scope="row">@(i + 1)</th>
-                                <td><img src="/img/flags/@(Model.Items.ToList()[i]?.Name.ToLower()).png" width="32px" /></td>
+                                <td><img src="/img/flags/@(Model.Items.ToList()[i]?.Name.ToLower()).png" width="32" /></td>
                                 <td><a asp-action="Details" asp-route-id="@Model.Items.ToList()[i].Id">@Model.Items.ToList()[i].Name</a></td>
                                 <td>@Model.Items.ToList()[i].IsoCode</td>
                                 <td>@Model.Items.ToList()[i].ProvincesCount</td>
@@ -108,9 +108,9 @@
 <p>We have @Model.ItemsCount records in total.</p>
 <div class="text-right">
     <a asp-action="Add">
-        <button class="btn btn-primary btn-round">
+        <div class="btn btn-primary btn-round">
             <i class="material-icons">add</i> New Country
             <div class="ripple-container"></div>
-        </button>
+        </div>
     </a>
 </div>

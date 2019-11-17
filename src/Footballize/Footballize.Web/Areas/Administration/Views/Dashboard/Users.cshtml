@@ -66,14 +66,14 @@
                 <div class="table-responsive">
                     <table class="table">
                         <thead class=" text-primary">
-                        <th class="text-center"></th>
-                        <th>Name</th>
-                        <th>Username</th>
-                        <th class="text-center">Member Since</th>
-                        <th class="text-center">Gathers</th>
-                        <th class="text-center">Recruiting Games</th>
-                        <th class="text-center"></th>
-                        <th class="text-center">Actions</th>
+                            <th class="text-center"></th>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th class="text-center">Member Since</th>
+                            <th class="text-center">Gathers</th>
+                            <th class="text-center">Recruiting Games</th>
+                            <th class="text-center"></th>
+                            <th class="text-center">Actions</th>
                         </thead>
                         <tbody>
                             @foreach (var player in Model.Items.OrderBy(x => x.FullName).ThenBy(x => x.Username))
@@ -83,7 +83,7 @@
                                     <td>@player.FullName</td>
                                     <td>
                                         @player.Username @if (@player.IsBanned)
-                                    {<i class="material-icons">gavel</i>}
+                                        {<i class="material-icons">gavel</i>}
                                     </td>
                                     <td class="text-center">@player.CreatedOn</td>
                                     <td class="text-center">@player.GathersPlayedCount</td>
@@ -106,7 +106,7 @@
                     @if (this.Model.CurrentPage > 1)
                     {
                         <li class="page-item">
-                            <a class="page-link"  asp-action="Users" asp-route-id="@this.Model.PreviousPage" aria-label="Предишна">
+                            <a class="page-link" asp-action="Users" asp-route-id="@this.Model.PreviousPage" aria-label="Предишна">
                                 <span aria-hcountryIdden="true">&laquo;</span>
                             </a>
                         </li>
@@ -144,9 +144,9 @@
                         }
                         if (i > 0 && pageNumber - 1 != pagesToShow[i - 1])
                         {
-                            <li class="page-item @className"><a class="page-link"  asp-action="Users" asp-route-id="@(pagesToShow[i - 1] + 1)">...</a></li>
+                            <li class="page-item @className"><a class="page-link" asp-action="Users" asp-route-id="@(pagesToShow[i - 1] + 1)">...</a></li>
                         }
-                        <li class="page-item @className"><a class="page-link"  asp-action="Users" asp-route-id="@pageNumber">@pageNumber</a></li>
+                        <li class="page-item @className"><a class="page-link" asp-action="Users" asp-route-id="@pageNumber">@pageNumber</a></li>
                     }
                     @if (this.Model.CurrentPage < this.Model.PagesCount)
                     {
