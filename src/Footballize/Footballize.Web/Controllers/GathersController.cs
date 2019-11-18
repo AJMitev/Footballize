@@ -12,7 +12,6 @@
     using Models;
     using Models.Enums;
     using Services;
-    using Services.Exceptions;
     using ViewModels.Gathers;
 
     [Authorize]
