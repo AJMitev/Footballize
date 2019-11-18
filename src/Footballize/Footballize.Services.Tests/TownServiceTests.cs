@@ -1,11 +1,13 @@
 ﻿namespace Footballize.Services.Tests
 {
+    using System.Threading.Tasks;
     using Footballize.Data.Repositories;
-    using Footballize.Models;
+    using Models;
     using Moq;
     using Xunit;
 
-    public class PitchServiceTests
+    public class TownServiceTests
     {
+        // TODO: Write some tests.
     }
 }

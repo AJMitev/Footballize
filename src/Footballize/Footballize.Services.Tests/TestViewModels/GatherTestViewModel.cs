@@ -1,9 +1,9 @@
 ﻿namespace Footballize.Services.Tests.TestViewModels
 {
     using System;
+    using Footballize.Models;
+    using Footballize.Models.Enums;
     using Mapping;
-    using Models;
-    using Models.Enums;
 
     public class GatherTestViewModel : IMapFrom<Gather>
     {
