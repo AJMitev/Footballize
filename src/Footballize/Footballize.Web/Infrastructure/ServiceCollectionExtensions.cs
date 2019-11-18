@@ -17,6 +17,7 @@
     using Models;
     using Services.Mapping;
     using Services.Messaging;
+    using Services.Models.User;
     using ViewModels;
 
     public static class ServiceCollectionExtensions
@@ -110,7 +111,7 @@
 
         public static IServiceCollection AddAutoMapper(this IServiceCollection services)
         {
-            AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
+            AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly, typeof(UserServiceModel).GetTypeInfo().Assembly);
             services.AddSingleton<IMapper>(AutoMapperConfig.MapperInstance);
 
             return services;

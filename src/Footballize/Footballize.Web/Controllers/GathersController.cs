@@ -5,17 +5,17 @@
     using System.Threading.Tasks;
     using AutoMapper;
     using Common;
+    using Infrastructure;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Models.Enums;
-    using Services.Data;
-    using Services.Exceptions;
+    using Services;
     using ViewModels.Gathers;
 
     [Authorize]
-    public class GathersController : Controller
+    public class GathersController : ControllerBase
     {
         private const int ItemsPerPage = 10;
 
@@ -38,11 +38,13 @@
             var skip = (id - 1) * ItemsPerPage;
 
 
-            var gathers = this.gatherService.GetGathers<GatherIndexViewModel>(x => x.StartingAt > DateTime.UtcNow);
+            var gathers = this.gatherService.GetAll<GatherIndexViewModel>(x => x.StartingAt > DateTime.UtcNow);
 
-            var filtered = gathers.Skip(skip).Take(ItemsPerPage).ToList();
+            var filtered = gathers.Skip(skip)
+                .Take(ItemsPerPage)
+                .ToList();
 
-            var gathersCount = gathers.Count;
+            var gathersCount = gathers.Count();
             var pagesCount = (int)Math.Ceiling(gathersCount / (decimal)ItemsPerPage);
 
             var model = new GatherListViewModel
@@ -50,10 +52,10 @@
                 Gathers = filtered,
                 PagesCount = pagesCount,
                 CurrentPage = id,
-                GathersCount =  gathersCount
+                GathersCount = gathersCount
             };
 
-            return View(model);
+            return this.View(model);
         }
 
         [HttpGet]
@@ -70,26 +72,15 @@
                 return this.View(this.mapper.Map<GatherAddViewModel>(model));
             }
 
-            var newGather = this.mapper.Map<Gather>(model);
-            newGather.Creator = await userManager.GetUserAsync(HttpContext.User);
-            newGather.Status = GameStatus.Registration;
+            var gatherId = await this.gatherService.AddAsync(model.Title, model.Description, model.StartingAt, model.TeamFormat, model.PitchId, this.User.GetId());
 
-            switch (newGather.TeamFormat)
-            {
-                case TeamFormat.FourPlusOne: newGather.MaximumPlayers = 10; break;
-                case TeamFormat.FivePlusOne: newGather.MaximumPlayers = 12; break;
-                case TeamFormat.SixPlusOne: newGather.MaximumPlayers = 14; break;
-                case TeamFormat.ElevenPlayers: newGather.MaximumPlayers = 22; break;
-            }
-
-            await this.gatherService.AddGatherAsync(newGather);
-            return await this.Enroll(newGather.Id);
+            return await this.Enroll(gatherId);
         }
 
         [HttpGet]
         public IActionResult Details(string id)
         {
-            var gather = this.gatherService.GetGather<GatherDetailsViewModel>(id);
+            var gather = this.gatherService.GetById<GatherDetailsViewModel>(id);
 
             if (gather == null)
             {
@@ -102,146 +93,164 @@
         [HttpGet]
         public async Task<IActionResult> Leave(string id)
         {
-            try
+            var currentUser = await this.userManager.GetUserAsync(User);
+
+            if (currentUser == null)
             {
-                var currentUser = await this.userManager.GetUserAsync(User);
-
-                if (currentUser == null)
-                {
-                    return this.Forbid();
-                }
-
-                var gather = this.gatherService.GetGatherWithPlayers(id);
-
-                if (gather == null)
-                {
-                    return this.NotFound();
-                }
-
-                await this.gatherService.LeaveGatherAsync(gather, currentUser.Id);
-
-                return this.RedirectToAction("Details", new { id });
+                return this.Forbid();
             }
-            catch (ServiceException e)
+
+            var gather = await this.gatherService.GetByIdAsync(id);
+
+            if (gather == null)
             {
-                this.TempData["Error"] = e.Message;
-                return this.RedirectToAction("Details", new { id });
+                return this.NotFound();
             }
+
+            if (gather.Status != GameStatus.Registration)
+            {
+
+                this.DisplayError(GlobalConstants.KickPlayerOnlyInRegistrationModeErrorMessage);
+                return this.RedirectToAction(nameof(Details), new { id });
+            }
+
+            if (gather.Players.All(x => x.UserId != currentUser.Id))
+            {
+                this.DisplayError(GlobalConstants.InvalidRequestParametersErrorMessage);
+                return this.RedirectToAction(nameof(Details), new { id });
+            }
+
+            await this.gatherService.LeaveAsync(gather.Id, currentUser.Id);
+
+            return this.RedirectToAction(nameof(Details), new { id });
+
         }
 
         [HttpGet]
         public async Task<IActionResult> Enroll(string id)
         {
-            try
+            var gather = await this.gatherService.GetByIdAsync(id);
+            var user = await this.userManager.GetUserAsync(User);
+
+            if (user == null || gather == null)
             {
-                var gather = this.gatherService.GetGatherWithPlayers(id);
-                var currentUser = await this.userManager.GetUserAsync(User);
-
-                if (currentUser == null || gather == null)
-                {
-                    return this.NotFound();
-                }
-
-                await this.gatherService.EnrollGatherAsync(gather, currentUser);
-
-                return this.RedirectToAction("Details", new { id });
+                return this.NotFound();
             }
-            catch (ServiceException e)
+
+            if (gather.Status != GameStatus.Registration || gather.Players.Count >= gather.MaximumPlayers)
             {
-                this.TempData["Error"] = e.Message;
-                return this.RedirectToAction("Details", new { id });
+                this.DisplayError(GlobalConstants.NotInRegistrationOrNoFreeSlotErrorMessage);
             }
+
+            if (user.IsBanned)
+            {
+                this.DisplayError(GlobalConstants.PlayerIsBannedErrorMessage);
+            }
+
+            if (gather.Players.Any(x => x.UserId == user.Id))
+            {
+                this.DisplayError(GlobalConstants.AlreadyJoinedErrorMessage);
+            }
+
+            await this.gatherService.EnrollAsync(gather.Id, user.Id);
+
+            return this.RedirectToAction(nameof(Details), new { id });
         }
 
         [HttpGet]
         public async Task<IActionResult> Kick(string gatherId, string playerId)
         {
-            try
+            var gather = await this.gatherService.GetByIdAsync(gatherId);
+
+            if (gather == null)
             {
-                var gather = await this.gatherService.GetGatherAsync(gatherId);
-                var currentUser = await this.userManager.GetUserAsync(User);
-
-                if (currentUser == null)
-                {
-                    return this.NotFound();
-                }
-
-                if (gather.Creator != currentUser)
-                {
-                    return this.Forbid();
-                }
-
-                await this.gatherService.LeaveGatherAsync(gather, playerId);
-                return this.RedirectToAction("Details", new { gatherId });
+                return this.NotFound();
             }
-            catch (ServiceException e)
+
+            if (gather.CreatorId != this.User.GetId())
             {
-                this.TempData["Error"] = e.Message;
-                return this.RedirectToAction("Details", new { gatherId });
+                return this.Forbid();
             }
+
+            if (gather.Status != GameStatus.Registration)
+            {
+
+                this.DisplayError(GlobalConstants.KickPlayerOnlyInRegistrationModeErrorMessage);
+                return this.RedirectToAction(nameof(Details), new { gatherId });
+            }
+
+            if (gather.Players.All(x => x.UserId != playerId))
+            {
+                this.DisplayError(GlobalConstants.InvalidRequestParametersErrorMessage);
+                return this.RedirectToAction(nameof(Details), new { gatherId });
+            }
+
+            await this.gatherService.LeaveAsync(gather.Id, playerId);
+            return this.RedirectToAction(nameof(Details), new { gatherId });
         }
 
         [HttpGet]
         public async Task<IActionResult> Start(string id)
         {
-            try
+            var gather = await this.gatherService.GetByIdAsync(id);
+
+            if (gather == null)
             {
-                var game = this.gatherService.GetGatherWithPlayers(id);
-                var currentUser = await this.userManager.GetUserAsync(User);
-
-                if (game == null || currentUser == null)
-                {
-                    return this.NotFound();
-                }
-
-                if (game.Creator != currentUser)
-                {
-                    return this.Unauthorized();
-                }
-
-                await this.gatherService.StartGatherAsync(id);
-
-                return this.RedirectToAction("Details", new { id });
+                return this.NotFound();
             }
-            catch (ServiceException e)
+
+            if (gather.CreatorId != this.User.GetId())
             {
-                this.TempData["Error"] = e.Message;
-                return this.RedirectToAction("Details", new { id });
+                return this.Unauthorized();
             }
+
+            if (gather.Players.Count != gather.MaximumPlayers)
+            {
+                this.DisplayError(GlobalConstants.RequiredNumberOfPlayersNotReachedErrorMessage);
+                return this.RedirectToAction(nameof(Details), new { id });
+            }
+
+            if (gather.Status != GameStatus.Registration)
+            {
+                this.DisplayError( GlobalConstants.ThisGameIsAlreadyStartedErrorMessage);
+                return this.RedirectToAction(nameof(Details), new { id });
+            }
+
+
+            await this.gatherService.StartAsync(id);
+            return this.RedirectToAction(nameof(Details), new { id });
+
         }
 
         [HttpGet]
         public async Task<IActionResult> Complete(string id)
         {
-            try
-            {
-                var game = this.gatherService.GetGather<GatherDetailsViewModel>(id);
-                var currentUser = await this.userManager.GetUserAsync(User);
+                var game = this.gatherService.GetById<GatherDetailsViewModel>(id);
 
-                if (game == null || currentUser == null)
+                if (game == null)
                 {
                     return this.NotFound();
                 }
 
-                if (game.Creator != currentUser)
+                if (game.Creator.Id != this.User.GetId())
                 {
                     return this.Unauthorized();
                 }
 
-                await this.gatherService.CompleteGatherAsync(id);
-                return this.RedirectToAction("Details", new { id });
-            }
-            catch (ServiceException e)
-            {
-                this.TempData["Error"] = e.Message;
-                return this.RedirectToAction("Details", new { id });
-            }
+                if (game.Status != GameStatus.Started)
+                {
+                    this.DisplayError(GlobalConstants.ThisGameIsNotStartedYetErrorMessage);
+                    return this.RedirectToAction(nameof(Details), new { id });
+                }
+
+                await this.gatherService.CompleteAsync(id);
+                return this.RedirectToAction(nameof(Details), new { id });
         }
 
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
-            var game = this.gatherService.GetGather<GatherDetailsViewModel>(id);
+            var game = this.gatherService.GetById<GatherDetailsViewModel>(id);
             var currentUser = await this.userManager.GetUserAsync(User);
 
             if (game == null || currentUser == null)
@@ -254,9 +263,9 @@
                 return this.Unauthorized();
             }
 
-            await this.gatherService.DeleteGatherAsync(id);
+            await this.gatherService.DeleteAsync(id);
 
-            return this.RedirectToAction("Index");
+            return this.RedirectToAction(nameof(Index));
         }
     }
 }

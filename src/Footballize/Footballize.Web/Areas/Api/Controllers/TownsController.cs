@@ -6,7 +6,7 @@
     using Data.Repositories;
     using Microsoft.AspNetCore.Mvc;
     using Models;
-    using Services.Data;
+    using Services;
 
     public class TownsController : ApiController
     {
@@ -40,7 +40,7 @@
         [HttpGet("all/{id}")]
         public IEnumerable<TownWithProvinceViewModel> GetAll(string id)
         {
-            return this.townService.GetTownsByCountry<TownWithProvinceViewModel>(id);
+            return this.townService.GetByCountryId<TownWithProvinceViewModel>(id);
         }
     }
 }

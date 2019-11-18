@@ -1,24 +1,16 @@
 ﻿namespace Footballize.Web.Areas.Administration.Controllers
 {
     using System.Threading.Tasks;
-    using AutoMapper;
-    using Common;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Models;
-    using Services.Data;
+    using Services;
     using ViewModels.Towns;
 
     public class TownsController : AdminController
     {
         private readonly ITownService townService;
-        private readonly IMapper mapper;
 
-        public TownsController(ITownService townService, IMapper mapper)
-        {
-            this.townService = townService;
-            this.mapper = mapper;
-        }
+        public TownsController(ITownService townService)
+            => this.townService = townService;
 
 
         [HttpGet]
@@ -34,15 +26,14 @@
         }
 
         [HttpPost]
-        public IActionResult Add(TownInputModel model)
+        public IActionResult Add(TownAddViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return this.View(new TownAddViewModel());
+                return this.View(model);
             }
 
-            var newTown = this.mapper.Map<Town>(model);
-            this.townService.AddTownAsync(newTown);
+            this.townService.AddAsync(model.Name, model.ProvinceId);
 
             return this.RedirectToAction("Details", "Provinces", new { id = model.ProvinceId });
         }
@@ -50,42 +41,42 @@
         [HttpGet]
         public IActionResult Edit(string id)
         {
-            var townToEdit = this.townService.GetTown<TownEditViewModel>(id);
-
-            if (townToEdit ==  null)
+            if (!this.townService.Exists(id))
             {
                 return this.NotFound();
             }
 
-            return this.View(townToEdit);
+            return this.View(this.townService.GetById<TownEditViewModel>(id));
         }
 
         [HttpPost]
-        public async  Task<IActionResult> Edit(TownEditInputModel model)
+        public async Task<IActionResult> Edit(TownEditViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return this.View(this.mapper.Map<TownEditViewModel>(model));
+                return this.View(model);
             }
 
+            if (!this.townService.Exists(model.Id))
+            {
+                this.NotFound();
+            }
 
-            await this.townService.UpdateTownAsync(this.mapper.Map<Town>(model));
+            await this.townService.UpdateAsync(model.Id, model.Name, model.ProvinceId);
             return this.RedirectToAction("Details", "Provinces", new { id = model.ProvinceId });
         }
 
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
-            var provinceId = this.townService.GetTown<TownEditViewModel>(id).ProvinceId;
-
-            if (provinceId ==  null)
+            if (!this.townService.Exists(id))
             {
                 return this.NotFound();
             }
 
-            await this.townService.DeleteTownAsync(id);
+            await this.townService.DeleteAsync(id);
 
-            return this.RedirectToAction("Details", "Provinces", new { id = provinceId });
+            return this.RedirectToAction("Details", "Provinces", new { id = await this.townService.GetProvinceId(id) });
         }
     }
 }

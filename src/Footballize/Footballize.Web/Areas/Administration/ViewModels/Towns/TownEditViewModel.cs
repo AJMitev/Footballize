@@ -9,7 +9,9 @@
     {
         private const int NameMinLength = 5;
 
+        [Required]
         public string Id { get; set; }
+
         [Required]
         [MinLength(NameMinLength)]
         public string Name { get; set; }

@@ -31,7 +31,7 @@
             <input asp-for="CountryId" class="text-hide" id="countryId" />
             <input asp-for="ProvinceId" class="text-hide" id="provinceId" />
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Add" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -68,7 +68,7 @@
                 $.ajax({
                     url: "/api/provinces/"+ $("#country").val(),
                     type: "GET",
-                    data: { id: $("#country").val() }, //id of the state which is used to extract cities
+                    data: { id: $("#country").val() }, //countryId of the state which is used to extract cities
                     traditional: true,
                     success: function (result) {
                         $provinceList.empty();

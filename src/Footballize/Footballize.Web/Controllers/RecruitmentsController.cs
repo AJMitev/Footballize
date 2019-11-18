@@ -3,30 +3,28 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using AutoMapper;
     using Common;
+    using Models.Enums;
+    using Infrastructure;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Models;
-    using Services.Data;
-    using Services.Exceptions;
+    using Services;
     using ViewModels.Recruitments;
 
     [Authorize]
-    public class RecruitmentsController : Controller
+    public class RecruitmentsController : ControllerBase
     {
         private const int ItemsPerPage = 10;
 
         private readonly IRecruitmentService recruitmentService;
         private readonly UserManager<User> userManager;
-        private readonly IMapper mapper;
 
-        public RecruitmentsController(IRecruitmentService recruitmentService, UserManager<User> userManager,IMapper mapper)
+        public RecruitmentsController(IRecruitmentService recruitmentService, UserManager<User> userManager)
         {
             this.recruitmentService = recruitmentService;
             this.userManager = userManager;
-            this.mapper = mapper;
         }
 
         [AllowAnonymous]
@@ -36,18 +34,20 @@
             id = Math.Max(1, id);
             var skip = (id - 1) * ItemsPerPage;
 
-            var games = this.recruitmentService.GetRecruitments<RecruitmentIndexViewModel>(x => x.StartingAt > DateTime.UtcNow);
+            var games = this.recruitmentService.GetAll<RecruitmentIndexViewModel>(x => x.StartingAt > DateTime.UtcNow);
 
-            var filtered = games.Skip(skip).Take(ItemsPerPage).ToList();
+            var filtered = games.Skip(skip)
+                .Take(ItemsPerPage)
+                .ToList();
 
-            var gathersCount = games.Count;
+            var gathersCount = games.Count();
             var pagesCount = (int)Math.Ceiling(gathersCount / (decimal)ItemsPerPage);
 
             var model = new RecruitmentsListViewModel
             {
                 PagesCount = pagesCount,
                 CurrentPage = id,
-                RecruitmentsCount =  gathersCount,
+                RecruitmentsCount = gathersCount,
                 Recruitments = filtered
             };
 
@@ -68,26 +68,15 @@
                 return this.View();
             }
 
-            var newRecruitment = this.mapper.Map<Recruitment>(model);
-            newRecruitment.Creator = await userManager.GetUserAsync(HttpContext.User);
+            var id = await this.recruitmentService.AddAsync(model.Title, model.StartingAt, model.PitchId, this.User.GetId(), model.MaximumPlayers);
 
-            try
-            {
-                await this.recruitmentService.AddRecruitmentAsync(newRecruitment);
-
-                return this.RedirectToAction("Index");
-            }
-            catch (ServiceException e)
-            {
-                this.TempData["Error"] = e.Message;
-                return this.RedirectToAction("Index");
-            }
+            return this.RedirectToAction(nameof(Details), new { id });
         }
 
         [HttpGet]
         public IActionResult Details(string id)
         {
-            var game = this.recruitmentService.GetRecruitment<RecruitmentDetailsViewModel>(id);
+            var game = this.recruitmentService.GetById<RecruitmentDetailsViewModel>(id);
 
             if (game == null)
             {
@@ -100,150 +89,169 @@
         [HttpGet]
         public async Task<IActionResult> Start(string id)
         {
-            var game = this.recruitmentService.GetRecruitment<RecruitmentDetailsViewModel>(id);
-            var currentUser = await this.userManager.GetUserAsync(User);
 
-            if (game == null || currentUser == null)
+            if (!this.recruitmentService.Exists(id))
             {
                 return this.NotFound();
+
             }
 
-            if (game.Creator != currentUser)
+            var game = await this.recruitmentService.GetByIdAsync(id);
+
+
+            if (game.CreatorId != this.User.GetId())
             {
                 return this.Unauthorized();
             }
 
-            try
+            if (game.Players.Count != game.MaximumPlayers)
             {
-                await this.recruitmentService.StartRecruitmentAsync(id);
+                this.DisplayError(GlobalConstants.RequiredNumberOfPlayersNotReachedErrorMessage);
 
-                return this.RedirectToAction("Details", new { id });
+                return this.RedirectToAction(nameof(Details), new { id });
             }
-            catch (ServiceException e)
+
+            if (game.Status != GameStatus.Registration)
             {
-                this.TempData["Error"] = e.Message;
-                return this.RedirectToAction("Details", new { id });
+                this.DisplayError(GlobalConstants.ThisGameIsAlreadyStartedErrorMessage);
+
+                return this.RedirectToAction(nameof(Details), new { id });
             }
+
+
+            await this.recruitmentService.StartAsync(id);
+
+            return this.RedirectToAction(nameof(Details), new { id });
+
         }
 
         [HttpGet]
         public async Task<IActionResult> Complete(string id)
         {
-            var game = this.recruitmentService.GetRecruitment<RecruitmentDetailsViewModel>(id);
-            var currentUser = await this.userManager.GetUserAsync(User);
+            var game = this.recruitmentService.GetById<RecruitmentDetailsViewModel>(id);
 
-            if (game == null || currentUser == null)
+            if (game == null)
             {
                 return this.NotFound();
             }
 
-            if (game.Creator != currentUser)
+            if (game.Creator.Id != this.User.GetId())
             {
                 return this.Unauthorized();
             }
 
-            try
+            if (game.Status != GameStatus.Started)
             {
-                await this.recruitmentService.CompleteRecruitmentAsync(id);
+                this.DisplayError(GlobalConstants.ThisGameIsNotStartedYetErrorMessage);
+                return this.RedirectToAction(nameof(Details), new { id });
+            }
 
-                return this.RedirectToAction("Details", new { id });
-            }
-            catch (ServiceException e)
-            {
-                this.TempData["Error"] = e.Message;
-                return this.RedirectToAction("Details", new { id });
-            }
+            await this.recruitmentService.CompleteAsync(id);
+
+            return this.RedirectToAction(nameof(Details), new { id });
+
         }
 
         [HttpGet]
         public async Task<IActionResult> Enroll(string id)
         {
-            var currentUser = await this.userManager.GetUserAsync(User);
-            var game = this.recruitmentService.GetRecruitment<RecruitmentDetailsViewModel>(id);
+            var recruitment = this.recruitmentService.GetById<RecruitmentDetailsViewModel>(id);
+            var user = await this.userManager.GetUserAsync(this.User);
 
-            if (currentUser == null)
+            if (recruitment.Status != GameStatus.Registration || recruitment.Players.Count >= recruitment.MaximumPlayers)
             {
-                return this.NotFound();
+                this.DisplayError(GlobalConstants.NotInRegistrationOrNoFreeSlotErrorMessage);
+                return this.RedirectToAction(nameof(Details), new { id });
             }
 
-            try
+            if (user.IsBanned)
             {
-                await this.recruitmentService.EnrollRecruitmentAsync(game.Id, currentUser);
+                this.DisplayError(GlobalConstants.PlayerIsBannedErrorMessage);
+                return this.RedirectToAction(nameof(Details), new { id });
+            }
 
-                return this.RedirectToAction("Details", new { id });
-            }
-            catch (ServiceException e)
+            if (recruitment.Players.Any(x => x.Id == user.Id))
             {
-                this.TempData["Error"] = e.Message;
-                return this.RedirectToAction("Details", new { id });
+                this.DisplayError(GlobalConstants.AlreadyJoinedErrorMessage);
+                return this.RedirectToAction(nameof(Details), new { id });
             }
+
+            await this.recruitmentService.EnrollAsync(recruitment.Id, this.User.GetId());
+            return this.RedirectToAction(nameof(Details), new { id });
         }
 
         [HttpGet]
         public async Task<IActionResult> Leave(string id)
         {
-            var currentUser = await this.userManager.GetUserAsync(User);
-            var game = await this.recruitmentService.GetRecruitmentAsync(id);
+            if (!this.recruitmentService.Exists(id))
+            {
+                return this.NotFound();
+            }
+            var game = await this.recruitmentService.GetByIdAsync(id);
 
-            if (currentUser == null || game == null)
+            if (game == null)
             {
                 return this.NotFound();
             }
 
-            try
+            if (game.Status != GameStatus.Registration)
             {
-                await this.recruitmentService.LeaveRecruitmentAsync(game, currentUser.Id);
-
-                return this.RedirectToAction("Details", new { id });
-
+                this.DisplayError(GlobalConstants.KickPlayerOnlyInRegistrationModeErrorMessage);
+                return this.RedirectToAction(nameof(Details), new { id });
             }
-            catch (ServiceException e)
+
+            if (game.Players.All(x => x.Id != User.GetId()))
             {
-                this.TempData["Error"] = e.Message;
-                return this.RedirectToAction("Details", new { id });
+                this.DisplayError(GlobalConstants.PlayerIsNotPartOfTheGameErrorMessage);
+                return this.RedirectToAction(nameof(Details), new { id });
             }
+
+            await this.recruitmentService.LeaveAsync(id, this.User.GetId());
+
+            return this.RedirectToAction(nameof(Details), new { id });
         }
 
         [HttpGet]
         public async Task<IActionResult> Kick(string gameId, string playerId)
         {
-            var game = await this.recruitmentService.GetRecruitmentAsync(gameId);
-            var currentUser = await this.userManager.GetUserAsync(User);
+            if (!this.recruitmentService.Exists(gameId))
+            {
+                return this.NotFound();
+            }
 
-            if (game.Creator != currentUser)
+            var game = await this.recruitmentService.GetByIdAsync(gameId);
+
+            if (game.CreatorId != this.User.GetId())
             {
                 return this.Unauthorized();
             }
 
-            try
+            if (game.Status != GameStatus.Registration)
             {
-                await this.recruitmentService.LeaveRecruitmentAsync(game, playerId);
-                return this.RedirectToAction("Details", new { gameId });
+                this.DisplayError(GlobalConstants.KickPlayerOnlyInRegistrationModeErrorMessage);
+                return this.RedirectToAction(nameof(Details), new { id = gameId });
             }
-            catch (ServiceException e)
-            {
-                this.TempData["Error"] = e.Message;
-                return this.RedirectToAction("Details", new { gameId });
-            }
+
+            await this.recruitmentService.LeaveAsync(gameId, playerId);
+            return this.RedirectToAction(nameof(Details), new { id = gameId });
         }
 
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
-            var game = await this.recruitmentService.GetRecruitmentAsync(id);
-            var currentUser = await this.userManager.GetUserAsync(User);
-
-            if (game == null || currentUser == null)
+            if (!this.recruitmentService.Exists(id))
             {
                 return this.NotFound();
             }
 
-            if (game.Creator != currentUser && !this.User.IsInRole(GlobalConstants.CanDeleteRecruitmentRoleName))
+            var game = await this.recruitmentService.GetByIdAsync(id);
+
+            if (game.CreatorId != this.User.GetId() && !this.User.IsInRole(GlobalConstants.CanDeleteRecruitmentRoleName))
             {
                 return this.Unauthorized();
             }
 
-            await this.recruitmentService.DeleteRecruitmentAsync(id);
+            await this.recruitmentService.DeleteAsync(id);
 
             return this.RedirectToAction("Index");
         }

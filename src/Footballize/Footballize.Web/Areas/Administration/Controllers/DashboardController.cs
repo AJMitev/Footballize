@@ -2,44 +2,40 @@
 {
     using System;
     using System.Linq;
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Identity;
+    using Infrastructure;
     using Microsoft.AspNetCore.Mvc;
-    using Models;
-    using Services.Data;
+    using Services;
     using ViewModels.Dashboard;
-    using Web.ViewModels.Recruitments;
 
-   
+
     public class DashboardController : AdminController
     {
-        private readonly UserManager<User> userManager;
+        private const int InactivityDays = 10;
+        private const int NewbiePeriodInDays = 30;
+
         private readonly IRecruitmentService recruitmentService;
         private readonly IUserService userService;
         private readonly IGatherService gatherService;
 
-        public DashboardController(UserManager<User> userManager, IRecruitmentService recruitmentService, IUserService userService, IGatherService gatherService)
+        public DashboardController(IRecruitmentService recruitmentService, IUserService userService, IGatherService gatherService)
         {
-            this.userManager = userManager;
             this.recruitmentService = recruitmentService;
             this.userService = userService;
             this.gatherService = gatherService;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-
-            var currentUser = await this.userManager.GetUserAsync(User);
-            var bannedPlayers = this.userService.GetUsers<BannedUsersViewModel>(x => x.IsBanned);
+            var bannedPlayers = this.userService.GetAll<BannedUsersViewModel>(x => x.IsBanned);
 
             var indexModel = new IndexViewModel
             {
-                Id = currentUser.Id,
-                RecruitmentsCount = this.recruitmentService.GetRecruitments<RecruitmentIndexViewModel>().Count,
-                BannedPlayersCount = bannedPlayers.Count,
+                Id = this.User.GetId(),
+                RecruitmentsCount = this.recruitmentService.GetCount(),
+                BannedPlayersCount = bannedPlayers.Count(),
                 BannedUsers = bannedPlayers,
                 RegisteredUsersCount = this.userService.GetUsersCount(),
-                GathersPlayedCount = this.gatherService.GetGatherCount(),
+                GathersPlayedCount = this.gatherService.GetCount(),
                 ReportedUsers = this.userService.GetUserReports<ReportedUsersViewModel>()
             };
 
@@ -48,23 +44,24 @@
 
         public IActionResult Users(int id)
         {
-            var users = this.userService.GetUsers<UserDetailsViewModel>();
-            var bannedPlayersCount = this.userService.GetUsers<BannedUsersViewModel>(x => x.IsBanned).Count;
-            var inactiveUsersCount = this.userService.GetUsers<UserDetailsViewModel>(
-                x => x.GathersPlayed.Any(y => (DateTime.UtcNow - y.CreatedOn).TotalDays >= 10) 
-                && x.GamesRecruited.Any(y => (DateTime.UtcNow - y.CreatedOn).TotalDays >= 10)).Count;
+            var users = this.userService.GetAll<UserDetailsViewModel>();
+            var bannedPlayersCount =  this.userService.GetAll<BannedUsersViewModel>(x => x.IsBanned)
+                .Count();
 
-            var newUsersCount =
-                this.userService.GetUsers<UserDetailsViewModel>(x => (DateTime.UtcNow - x.CreatedOn).TotalDays <= 30).Count;
+            var inactiveUsersCount = this.userService.GetInactiveUsers<UserDetailsViewModel>(InactivityDays)
+                .Count();
 
-
+            var newUsersCount = this.userService.GetAll<UserDetailsViewModel>()
+                .Count(x => (DateTime.UtcNow - x.CreatedOn).TotalDays <= NewbiePeriodInDays);
             
             id = Math.Max(1, id);
             var skip = (id - 1) * AdminUsersViewModel.ItemsPerPage;
 
-            var filteredItems = users.Skip(skip).Take(AdminUsersViewModel.ItemsPerPage).ToList();
+            var filteredItems = users.Skip(skip).
+                Take(AdminUsersViewModel.ItemsPerPage)
+                .ToList();
 
-            var usersCount = users.Count;
+            var usersCount = users.Count();
             var pagesCount = (int)Math.Ceiling(usersCount / (decimal)AdminUsersViewModel.ItemsPerPage);
 
 

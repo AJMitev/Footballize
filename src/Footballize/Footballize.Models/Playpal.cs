@@ -6,9 +6,9 @@
     public class Playpal : IDeletableEntity, IAuditInfo
     {
         public string FromUserId { get; set; }
-        public virtual User FromUser { get; set; }
+        public User FromUser { get; set; }
         public string ToUserId { get; set; }
-        public virtual User ToUser { get; set; }
+        public User ToUser { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime? DeletedOn { get; set; }
         public DateTime CreatedOn { get; set; }

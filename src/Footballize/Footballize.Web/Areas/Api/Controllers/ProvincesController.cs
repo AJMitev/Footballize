@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using Administration.ViewModels.Provinces;
     using Microsoft.AspNetCore.Mvc;
-    using Services.Data;
+    using Services;
 
     public class ProvincesController : ApiController
     {
@@ -18,7 +18,7 @@
         [HttpGet("{id}")]
         public IEnumerable<ProvinceNameAndIdViewModel> Get(string id)
         {
-            var provinces = this.provinceService.GetProvincesByCountry<ProvinceNameAndIdViewModel>(id);
+            var provinces = this.provinceService.GetAllByCountry<ProvinceNameAndIdViewModel>(id);
 
             return provinces;
         }

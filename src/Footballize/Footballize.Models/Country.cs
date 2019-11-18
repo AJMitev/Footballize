@@ -14,6 +14,6 @@
 
         public string Name { get; set; }
         public string IsoCode { get; set; }
-        public virtual ICollection<Province> Provinces { get; set; }
+        public ICollection<Province> Provinces { get; set; }
     }
 }

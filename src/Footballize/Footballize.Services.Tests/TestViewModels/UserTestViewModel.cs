@@ -1,7 +1,7 @@
 ﻿namespace Footballize.Services.Tests.TestViewModels
 {
+    using Footballize.Models;
     using Mapping;
-    using Models;
 
     public class UserTestViewModel : IMapFrom<User>
     {

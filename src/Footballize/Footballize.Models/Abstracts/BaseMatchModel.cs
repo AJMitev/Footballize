@@ -7,9 +7,9 @@
     {
         public string Title { get; set; }
         public DateTime StartingAt { get; set; }
-        public virtual Pitch Pitch { get; set; }
+        public Pitch Pitch { get; set; }
         public string PitchId { get; set; }
         public string CreatorId { get; set; }
-        public virtual User Creator { get; set; }
+        public User Creator { get; set; }
     }
 }

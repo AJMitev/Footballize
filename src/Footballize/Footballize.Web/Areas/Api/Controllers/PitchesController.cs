@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using Administration.ViewModels.Pitches;
     using Microsoft.AspNetCore.Mvc;
-    using Services.Data;
+    using Services;
 
     public class PitchesController : ApiController
     {
@@ -18,7 +18,7 @@
         [HttpGet("{id}")]
         public IEnumerable<PitchNameAndIdViewModel> Get(string id)
         {
-            return this.pitchService.GetPitchesByTownId<PitchNameAndIdViewModel>(id);
+            return this.pitchService.GetByTownId<PitchNameAndIdViewModel>(id);
         }
     }
 }

@@ -11,12 +11,10 @@
         public string Name { get; set; }
         public string IsoCode { get; set; }
         public int ProvincesCount { get; set; }
-        public int TownsCount { get; set; }
         public void CreateMappings(IProfileExpression configuration)
         {
-            configuration.CreateMap<Country,CountryIndexViewModel>()
-                .ForMember(x=>x.ProvincesCount,o=>o.MapFrom(p=>p.Provinces.Count))
-                .ForMember(x=>x.TownsCount,o=>o.MapFrom(p=>p.Provinces.Sum(t=>t.Towns.Count)));
+            configuration.CreateMap<Country, CountryIndexViewModel>()
+                .ForMember(x => x.ProvincesCount, o => o.MapFrom(p => p.Provinces.Count));
         }
     }
 }

@@ -6,7 +6,7 @@
     using Data.Repositories;
     using Microsoft.AspNetCore.Mvc;
     using Models;
-    using Services.Data;
+    using Services;
 
     public class CountriesController : ApiController
     {
@@ -36,9 +36,9 @@
         }
 
         [HttpGet("all/")]
-        public IEnumerable<CountryNameAndIdViewModel> GetAll(string id)
+        public IEnumerable<CountryNameAndIdViewModel> GetAll()
         {
-            return this.countryService.GetCountries<CountryNameAndIdViewModel>();
+            return this.countryService.All<CountryNameAndIdViewModel>();
         }
     }
 }

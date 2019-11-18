@@ -1,6 +1,9 @@
-﻿namespace Footballize.Services.DTOs
+﻿namespace Footballize.Services.Models.Pitch
 {
-    public class MostUsedPitchDTO
+    using Footballize.Models;
+    using Mapping;
+
+    public class MostUsedPitchServiceModel : IMapFrom<Pitch>
     {
         public string Id { get; set; }
         public string Name { get; set; }
