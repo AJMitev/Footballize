@@ -5,13 +5,12 @@
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
-    using Footballize.Data.Repositories;
+    using Data.Repositories;
     using Footballize.Models;
     using Footballize.Models.Enums;
     using Mapping;
     using Microsoft.EntityFrameworkCore;
     using Models.Gather;
-    using GlobalConstants = Common.GlobalConstants;
 
     public class GatherService : IGatherService
     {
@@ -30,14 +29,7 @@
 
         public async Task<string> AddAsync(string title, string description, DateTime startingAt, TeamFormat teamFormat, string pitchId, string creatorId)
         {
-            var maximumPlayers = 0;
-            switch (teamFormat)
-            {
-                case TeamFormat.FourPlusOne: maximumPlayers = 10; break;
-                case TeamFormat.FivePlusOne: maximumPlayers = 12; break;
-                case TeamFormat.SixPlusOne: maximumPlayers = 14; break;
-                case TeamFormat.ElevenPlayers: maximumPlayers = 22; break;
-            }
+            var maximumPlayers = CalculateMaximumPlayers(teamFormat);
 
             var gather = new Gather
             {
@@ -57,15 +49,19 @@
             return gather.Id;
         }
 
+
         public async Task LeaveAsync(string gatherId, string userId)
         {
-            var gather = this.gatherRepository.All().Include(x=>x.Players).SingleOrDefault(x => x.Id == gatherId);
+            var gather = this.gatherRepository.All().Include(x => x.Players).SingleOrDefault(x => x.Id == gatherId);
             var gatherUser = gather?.Players.SingleOrDefault(u => u.UserId.Equals(userId));
 
             this.gatherUserRepository.Delete(gatherUser);
 
-            gather.Players.Remove(gatherUser);
-            this.gatherRepository.Update(gather);
+            if (gather != null)
+            {
+                gather.Players.Remove(gatherUser);
+                this.gatherRepository.Update(gather);
+            }
 
             await this.gatherRepository.SaveChangesAsync();
         }
@@ -101,8 +97,6 @@
         public async Task CompleteAsync(string id)
         {
             var game = await this.gatherRepository.GetByIdAsync(id);
-
-
 
             game.Status = GameStatus.Finished;
 
@@ -153,5 +147,22 @@
                 .ThenBy(x => x.Status)
                 .To<TViewModel>()
                 .ToList();
+
+        private static int CalculateMaximumPlayers(TeamFormat teamFormat)
+        {
+            switch (teamFormat)
+            {
+                case TeamFormat.FourPlusOne:
+                    return 10;
+                case TeamFormat.FivePlusOne:
+                    return 12;
+                case TeamFormat.SixPlusOne:
+                    return 14;
+                case TeamFormat.ElevenPlayers:
+                    return 22;
+                default:
+                    return -1;
+            }
+        }
     }
 }
